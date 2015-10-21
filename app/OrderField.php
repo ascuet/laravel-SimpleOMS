@@ -26,6 +26,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('select',['date'=>'fuzzy|full'],['order_date','modified_at']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['is_deliver','source']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['status'],['']);
+				$this->setFieldsBatch('select',['hidden'=>''],['status'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('select',['select'=>''],['belongsToSupply_supply']);
 
 				break;

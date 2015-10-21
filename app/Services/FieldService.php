@@ -232,6 +232,9 @@ class FieldService{
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
+			case 'hidden':
+				$html = '<input type="hidden" name="'.$name.'" value="'.$old.'">';
+				break;
 			default:
 				$html='	<input type="text" name="'.$name.'" class="form-control" value="'.$old.'">';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
