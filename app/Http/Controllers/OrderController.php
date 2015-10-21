@@ -252,6 +252,7 @@ class OrderController extends Controller {
 		$arrRequest = $request->all();
 		$status = isset($arrRequest['status'])?$arrRequest['status']:'';
 		$fieldService->currentRole($this->user->auth);
+		is_array($status)&&$status='';
 		$fieldService->currentStatus($status===''?$status:intval($status));
 		$data=array();
 		$data['title']='订单';
@@ -260,7 +261,7 @@ class OrderController extends Controller {
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		$data['actions']=['create','delete','import'];
-		return view('home')->with($data);
+		return view('home')->with($data)->withInput($request->flash());
 	}
 
 	/**

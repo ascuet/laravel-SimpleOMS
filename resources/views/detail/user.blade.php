@@ -11,13 +11,13 @@
 			{!! $field->editFieldHTML('auth','权限',$user) !!}
 		</div>
 		<div class="row">
-			{!! $field->editFieldHTML('password','设置密码') !!}	
+			{!! $field->editFieldHTML('password','设置密码',$user) !!}	
 
 		</div>
 		<div class="row">
 			<div class="form-group col-md-6">
 				<label for="" class="col-sm-2 col-sm-offset-1">确认密码</label>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<input class="form-control" type="password" name="password_confirmation" required>
 					</div>				
 				</div>

@@ -146,12 +146,11 @@ use App\Commands\WriteLog;
 		$status;
 		$role = $this->user->auth;
 		if(!empty($opt)){
-			isset($opt['status'])&&$status=$opt['status'];
-			$fields = $this->fieldService->getFieldsByMethod('select',$role,$status);
+			$fields = $this->fieldService->getFieldsByMethod('select',$role,$this->fieldService->currentStatus());
 			foreach ($fields as $k => $v) {
 				switch (key($v['type'])) {
 					case 'checkbox':
-						isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->whereIn($k,explode(',', $opt[$k]));
+						isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->whereIn($k,$opt[$k]);
 						break;
 					case 'select':
 						isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->where($k,$opt[$k]);
@@ -176,15 +175,15 @@ use App\Commands\WriteLog;
 						if(!isset($opt[$k])) continue;
 						$options  = explode('|',current($v['type']));
 						$method=explode('_',$k)[0];
-						if(method_exists($obj, $method)){
+						if(method_exists(new $this->class, $method)){
 							$has = explode('_',$k)[1];
 							if(!in_array('fuzzy', $options)){
-								$obj = $obj->whereHas($method,function($q){
+								$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
 									$q->where($has,$opt[$k]);
 								});
 							}
 							else{
-								$obj = $obj->whereHas($method,function($q){
+								$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
 									$q->where($has,'like','%'.$opt[$k].'%');
 								});
 							}

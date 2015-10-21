@@ -14,6 +14,10 @@ class Product extends Model {
 	];
 	protected $statusName=['0'=>'在库','1'=>'禁用','out'=>'出库',''=>''];
 	protected $dates=['sent_at'];
+	protected $array=[
+		'belongsToSupply_name'=>[],
+		'pstatus'=>['在库','禁用'],
+	];
 	public function belongsToSupply(){
 
 		return $this->belongsTo('App\Supply','house','id');

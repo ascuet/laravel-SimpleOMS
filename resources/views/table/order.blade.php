@@ -1,5 +1,6 @@
 <thead>
 	<tr>
+		<th>#</th>
 		{!!$field->tableHead('gid','淘宝ID')!!}
 		{!!$field->tableHead('gname','客户姓名')!!}
 		{!!$field->tableHead('order_date','订单时间')!!}
@@ -20,8 +21,8 @@
 </thead>
 <tbody>
 	@foreach($data as $key=>$value)
-		<tr onclick="location.herf='{{url('order').'/'.$key}}'">
-			<th><input type="checkbox" name="id" value="{{$key}}"></th>
+		<tr onclick="location.href='{{url('order').'/'.$valud->id}}'" style="cursor:pointer">
+			<th><input type="checkbox" name="id" value="{{$valud->id}}"></th>
 			{!!$field->tableCell('gid',$value)!!}
 			{!!$field->tableCell('gname',$value)!!}
 			{!!$field->tableCell('order_date',$value)!!}

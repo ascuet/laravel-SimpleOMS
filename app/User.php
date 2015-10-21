@@ -33,7 +33,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	protected $casts = [
 		'logs'=>'array'
 	];
-
+	protected $array=[
+		'auth'=>['管理员','柜台','订单','物流','库管','客服']
+	];
 	protected $roleName=['管理员','柜台','订单','物流','库管','客服'];
 
 	public function roleName(){
@@ -49,6 +51,31 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	public function statusType(){
-		return [];
+		return [''=>''];
+	}
+
+	public function arrayField($name){
+		if(!isset($this->array[$name]))return [];
+
+		if(empty($this->array[$name])){
+			$method = explode('_', $name)[0];
+			$fieldName = explode('_', $name)[1];
+			switch ($method) {
+				case 'belongsToSupply':
+					$list= \App\Supply::distinct()->lists($fieldName);
+					$rtn = array();
+					foreach ($list as $key => $value) {
+						$rtn[$value]=$value;
+					}
+					return $rtn;
+					break;
+				
+				default:
+					# code...
+					break;
+			}			
+		}
+
+		return $this->array[$name];
 	}
 }

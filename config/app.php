@@ -147,7 +147,7 @@ return [
 		'App\Providers\FieldServiceProvider',
 
 		//debug
-		//'Barryvdh\Debugbar\ServiceProvider',
+		'Barryvdh\Debugbar\ServiceProvider',
 		'Maatwebsite\Excel\ExcelServiceProvider',
 		//mongodb
 		//'Jenssegers\Mongodb\MongodbServiceProvider',

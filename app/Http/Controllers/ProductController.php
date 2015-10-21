@@ -75,6 +75,7 @@ class ProductController extends Controller {
 	{
 		$arrRequest = $request->all();
 		$status = isset($arrRequest['status'])?$arrRequest['status']:'';
+		is_array($status)&&$status='';
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus($status===''?$status:intval($status));
 		$data=array();
@@ -84,7 +85,7 @@ class ProductController extends Controller {
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		$data['actions']=['create','delete'];
-		return view('home')->with($data);
+		return view('home')->with($data)->withInput($request->flash());
 	}
 
 	/**

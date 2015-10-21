@@ -133,12 +133,13 @@ class FieldService{
 	 */
 	public function getFieldsByMethod($name,$role,$status=''){
 		if(isset($this->methodFields[$name]))return $this->methodFields[$name];
-
 		if($this->get()->where('method',$name)->isEmpty()){
 			$this->setFields($name);			
 		}
 		$status=$status===''?$status:intval($status);
+
 		$arrFields = $this->get()->where('method',$name)->where('role',$role)->where('status',$status)->toArray();
+		
 		$rtn=[];
 		foreach ($arrFields as $arrField) {
 			$rtn[$arrField['name']]=['type'=>$arrField['type']];
@@ -186,7 +187,7 @@ class FieldService{
 	 * @param string $label
 	 * @return string
 	 */
-	public function selectFieldHTML($name,$label,$value=''){
+	public function selectFieldHTML($name,$label,$old=''){
 		$methodFields = $this->getFieldsByMethod('select',$this->currentRole,$this->currentStatus);
 		isset($methodFields[$name])&&$field = $methodFields[$name];
 		if(!isset($field))return '';
@@ -198,9 +199,9 @@ class FieldService{
 				$dateFormat = 'yyyy-mm-dd';
 				in_array('full', $options)&&$dateFormat='yyyy-mm-dd hh:ii';
 				$html='<div class="input-daterange input-group datetimepicker">
-	    		<input type="text" class="input-sm form-control" name="'.$name.'_start" data-date-format="'.$dateFormat.'" value="'.$value.'" />
+	    		<input type="text" class="input-sm form-control" name="'.$name.'_start" data-date-format="'.$dateFormat.'" value="'.$old.'" />
 	    		<span class="input-group-addon">到</span>
-	    		<input type="text" class="input-sm form-control" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$value.'" />
+	    		<input type="text" class="input-sm form-control" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$old.'" />
 				</div>';
 				$html = '<div class="col-sm-9">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
@@ -209,9 +210,10 @@ class FieldService{
 			case 'checkbox':
 				$array = $this->model->arrayField($name);
 				foreach ($array as $key => $value) {
-					$checked = $key===$value?'checked':'';
+					if(gettype($old)=='string')$old=[];
+					$checked =in_array( $key,$old)?'checked':'';
 					$html.='<div class="checkbox-inline">
-					  <label><input type="checkbox" name="'.$name.'" value="'.$key.'" '.$checked.'>' .$value.'</label>
+					  <label><input type="checkbox" name="'.$name.'[]" value="'.$key.'" '.$checked.'>' .$value.'</label>
 					</div>';
 				}
 				$html = '<div class="col-sm-9">'.$html.'</div>';
@@ -222,7 +224,7 @@ class FieldService{
 				$array = $this->model->arrayField($name);
 				$html.='<option value="">未选择</option>';
 				foreach ($array as $key => $value) {
-					$selected = $key===$value?'selected':'';
+					$selected = $key==$old?'selected':'';
 					$html.='<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
 				}
 				$html='<select class="form-control">'.$html.'</select>';
@@ -231,7 +233,7 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			default:
-				$html='	<input type="text" name="'.$name.'" class="form-control" value="'.$value.'">';
+				$html='	<input type="text" name="'.$name.'" class="form-control" value="'.$old.'">';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -278,8 +280,8 @@ class FieldService{
 			default:
 				$rtn = $value->$name;
 				$method = explode('_', $name,2)[0];
-				$fieldName = explode('_', $name,2)[1];
 				if(method_exists($value, $method)){
+				$fieldName = explode('_', $name,2)[1];
 					if(!empty($rtn)){
 						$rtn = $value->{$method}()->first()->$fieldName;
 					}else{
@@ -311,6 +313,7 @@ class FieldService{
 		$options = explode('|',current($field['type']));
 		$readonly = in_array('readonly', $options)?'readonly':'';
 		$required = in_array('required', $options)?'required':'';
+		$disabled = in_array('disabled', $options)?'disabled':'';
 		switch (key($field['type'])) {
 			case 'date':
 				$value = $value===''&&$required==='required'?Carbon::now():$value;
@@ -335,24 +338,24 @@ class FieldService{
 				break;
 			case 'select':
 				$array = $this->model->arrayField($name);
-				if($required!==''){
+				if($required===''){
 					$html.='<option value="">未选择</option>';
 				}
-				foreach ($array as $key => $value) {
+				foreach ($array as $key => $v) {
 					$selected = $key===$value?'selected':'';
-					$html.='<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
+					$html.='<option value="'.$key.'" '.$selected.'>'.$v.'</option>';
 				}
-				$html='<select class="form-control" '.$readonly.'>'.$html.'</select>';
+				$html='<select class="form-control" '.$readonly.' '.$disabled.'>'.$html.'</select>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'radio':
 				$array=$this->model->arrayField($name);
-				foreach ($array as $key => $value) {
+				foreach ($array as $key => $v) {
 					$selected = $key===$value?'selected':'';
 					$html.='<div class="radio-inline">
-					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$selected.'> '.$value.'</label>
+					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$selected.'> '.$v.'</label>
 					</div>';
 				}
 				$html = '<div class="col-sm-9">'.$html.'</div>';
@@ -390,7 +393,7 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'password':
-				$html='	<input type="password" name="'.$name.'" class="form-control" value="'.$value.'" '.$required.' '.$readonly.'>';
+				$html='	<input type="password" name="'.$name.'" class="form-control" value="" '.$required.' '.$readonly.'>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
