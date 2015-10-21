@@ -24,6 +24,8 @@ class ProductField extends FieldService {
 				$this->setFieldsBatch('select',['text'=>''],['pid']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['belongsToSupply_name']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['pstatus'],['']);
+				$this->setFieldsBatch('select',['hidden'=>''],['pstatus'],[0,1]);
+
 				break;
 			case 'data':
 				$this->setFieldsBatch('data',['string'=>''],['pid','belongsToSupply_name']);
