@@ -49,10 +49,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	public function hasManyLog(){
-		return $this->hasMany('App\Userlog','object_id','id');
+		return $this->hasMany('App\UserLog','object_id','id');
 	}
 	public function didManyLog(){
-		return $this->hasMany('App\Userlog','user_id','id');
+		return $this->hasMany('App\UserLog','user_id','id');
 	}
 	public function statusType(){
 		return [''=>''];

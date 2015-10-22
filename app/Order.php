@@ -30,7 +30,7 @@ class Order extends Model {
 	}
 
 	public function hasManyLog(){
-		return $this->hasMany('App\Userlog','object_id','id');
+		return $this->hasMany('App\UserLog','object_id','id');
 	}
 	public function statusName($status=null){
 		if(is_null($status)){
