@@ -8,7 +8,7 @@
 			<a href="{{url($class.'/create')}}" class="btn navbar-btn btn-primary">新增</a>
 			@endif
 			@if(in_array('delete',$actions))
-			<button type="button" class="btn navbar-btn btn-danger">批量删除</button>
+			<button type="submit" form="destroy" class="btn navbar-btn btn-danger">批量删除</button>
 			@endif
 			@if (in_array('import',$actions))
 				@if($class==='order')
@@ -17,7 +17,7 @@
 			@endif
 
 			@if(in_array('submit',$actions))
-				<button type="submit" class="btn navbar-btn btn-primary">提交</button>
+				<button type="submit" form="form" class="btn navbar-btn btn-primary">提交</button>
 			@endif
 
 			@if(in_array('backpage',$actions))

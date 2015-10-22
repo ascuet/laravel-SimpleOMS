@@ -1,14 +1,17 @@
 <?php namespace App;
 
 use App\Services\FieldService;
-
+use App\UserLog;
 class UserLogField extends FieldService {
 
 
 	//
-	public function __construct(){
+	
+	protected $model;
+	//
+	public function __construct(UserLog $model){
 		parent::__construct();
-		$this->setFields();
+		$this->model = $model;
 	}
 
 	/**

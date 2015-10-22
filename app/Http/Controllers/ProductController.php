@@ -20,8 +20,12 @@ class ProductController extends Controller {
 	 *
 	 *
 	 */
-	public function getEntry($pid,ProductField $fieldService){
+	public function getEntry(Request $request ,ProductField $fieldService){
+		$pid = $request->input('pid');
 		$product = $this->service->fetchOne(['pid'=>$pid]);
+		if(is_null($product)){
+			return view('product-entry');			
+		}
 		$order = $this->service->currentOrder($product);
 		if(is_null($order)){
 			return redirect()->back()->withErrors('未找到当前订单');

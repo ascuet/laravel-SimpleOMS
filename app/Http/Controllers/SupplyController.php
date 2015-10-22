@@ -58,6 +58,8 @@ class SupplyController extends Controller {
 	public function store(Request $request,SupplyField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
 		$fields = $fieldService->parseValidator('add');
 		$this->validate($request,$fields);
 
@@ -106,9 +108,10 @@ class SupplyController extends Controller {
 	public function update($id,Request $request,SupplyField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
 		$fields = $fieldService->parseValidator('edit');
 		$this->validate($request,$fields);
-
 		if($this->service->edit($request->all(),$id)){
 			return redirect()->back()->withSuccess('更新成功');
 		}

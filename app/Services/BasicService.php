@@ -5,19 +5,20 @@ use DB;
 use Carbon\Carbon;
 use Request;
 use App\Commands\WriteLog;
+use Queue;
  class BasicService{
 
 	protected $fieldService,$user,
 	$logAction=[
 		'create'=>[
-			'body'=>'创建 {object}'
+			'body'=>'创建{object}'
 		],
 		'update'=>[
-			'body'=>'修改 {object}, {dirty}',
+			'body'=>'修改{object}, {dirty}',
 			'dirty'=>''
 		],
 		'delete'=>[
-			'body'=>'删除 {object}'
+			'body'=>'删除{object}'
 		],
 	];
 
@@ -38,9 +39,8 @@ use App\Commands\WriteLog;
 
 		$class->fill($data);
 		
-		$this->createLogs($class);
-
 		if($class->save()){
+			$this->createLogs($class);
 			return $class;
 		}
 		else{
@@ -95,7 +95,8 @@ use App\Commands\WriteLog;
 	 */
 	public function updateInstance($data,$obj){
 		$role = $this->user->auth;
-		if(!$status = $this->checkStatus($obj,$data)){
+		$status = $this->checkStatus($obj,$data);
+		if($status===false){
 			Log::info( 'statusChanged');
 			return false;
 		}
@@ -109,7 +110,13 @@ use App\Commands\WriteLog;
 			if($readonly){
 				continue;
 			}
-			$obj->$k=$data[$k];				
+			if(key($v['type'])=='password'){
+				isset($data[$k])&&!empty($data[$k])&&$obj->$k=$data[$k];
+			}
+			else{
+				isset($data[$k])&&$obj->$k=$data[$k];				
+			}
+			
 		}
 
 		$this->updateLogs($obj);
@@ -173,6 +180,7 @@ use App\Commands\WriteLog;
 						break;
 					default:
 						if(!isset($opt[$k])) continue;
+						if(isset($opt[$k])&&empty($opt[$k])) continue;
 						$options  = explode('|',current($v['type']));
 						$method=explode('_',$k)[0];
 						if(method_exists(new $this->class, $method)){
@@ -260,7 +268,7 @@ use App\Commands\WriteLog;
 	 * @return bool|string
 	 */
 	public function checkStatus($object,$data){
-				
+		return '';
 	} 
 
 	/**
@@ -274,19 +282,19 @@ use App\Commands\WriteLog;
 		$arr=[];
 		switch ($obj->getTable()) {
 			case 'orders':
-				$tpl['object']='订单 '.$obj->oid;
+				$tpl['object']='订单->'.$obj->oid;
 				break;
 			case 'products':
 				# code...
-				$tpl['object']='设备 '.$obj->pid;
+				$tpl['object']='设备->'.$obj->pid;
 				break;
 			case 'supplies':
 				# code...
-				$tpl['object']='库存 '.$obj->name;
+				$tpl['object']='库存->'.$obj->name;
 				break;
 			case 'users':
 				# code...
-				$tpl['object']='用户 '.$obj->uid;
+				$tpl['object']='用户->'.$obj->uid;
 				break;
 			default:
 				return;

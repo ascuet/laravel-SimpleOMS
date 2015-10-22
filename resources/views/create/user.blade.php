@@ -2,9 +2,12 @@
 @section('content')
 	
 <div class="container">
+		@include('partials.info')
+
 	<h1>新增用户</h1>
 	
-	<form action="{{url('user')}}" method="POST" class="form-horizontal">
+	<form action="{{url('user')}}" id="form" method="POST" class="form-horizontal">
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<h3>基本信息</h3>
 		<div class="row">
 			{!! $field->addFieldHTML('uid','用户名') !!}
@@ -15,9 +18,9 @@
 
 		</div>
 		<div class="row">
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-6 form-group-sm">
 				<label for="" class="col-sm-2 col-sm-offset-1">确认密码</label>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<input class="form-control" type="password" name="password_confirmation" required>
 					</div>				
 				</div>

@@ -2,9 +2,13 @@
 @section('content')
 	
 <div class="container">
+		@include('partials.info')
+
 	<h1>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h1>
 	
-	<form action="{{url('order/'.$order->id)}}" method="POST" class="form-horizontal">
+	<form action="{{url('order/'.$order->id)}}" id="form" method="POST" class="form-horizontal">
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">
+		<input type="hidden" name="_method" value="PUT">
 		<h3>基本信息</h3>
 		<div class="row">
 			{!! $field->editFieldHTML('oid','订单号',$order) !!}

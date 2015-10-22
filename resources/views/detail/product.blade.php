@@ -2,9 +2,13 @@
 @section('content')
 	
 <div class="container">
+		@include('partials.info')
+
 	<h1>设备{{$product->pid}} <small>{{$field->statusName($product->pstatus)}}</small></h1>
 	
-	<form action="{{url('product/'.$product->id)}}" method="POST" class="form-horizontal">
+	<form action="{{url('product/'.$product->id)}}" id="form" method="POST" class="form-horizontal">
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">
+		<input type="hidden" name="_method" value="PUT">
 		<h3>基本信息</h3>
 		<div class="row">
 			{!! $field->editFieldHTML('pid','设备号',$product) !!}

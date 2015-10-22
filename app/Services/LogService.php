@@ -10,4 +10,13 @@ class LogService extends BasicService{
 		parent::__construct();
 		$this->fieldService = $fieldService;
 	}
+
+	/**
+	 * append create logs for object
+	 * @param Object $obj
+	 * @return void
+	 */
+	public function createLogs($obj){
+		return;
+	}
 }

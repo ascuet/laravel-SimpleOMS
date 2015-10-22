@@ -57,7 +57,11 @@ class UserController extends Controller {
 	public function store(Request $request,UserField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
 		$fields = $fieldService->parseValidator('add');
+		$fields['uid']='required|alpha_dash|min:5';
+		$fields['password']='required|confirmed|alpha_dash|min:6';
 		$this->validate($request,$fields);
 
 		if($this->service->create($request->all())){
@@ -87,6 +91,7 @@ class UserController extends Controller {
 	public function edit($id,UserField $fieldService)
 	{
 		//
+
 		$user = $this->service->listOne($id);
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
@@ -105,7 +110,10 @@ class UserController extends Controller {
 	public function update($id,Request $request,UserField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
 		$fields = $fieldService->parseValidator('edit');
+		$fields['password']='confirmed|alpha_dash|min:6';
 		$this->validate($request,$fields);
 
 		if($this->service->edit($request->all(),$id)){
@@ -122,11 +130,11 @@ class UserController extends Controller {
 	 * @param  string  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Request $request)
 	{
 		//
+		$arrId = $request->input('id',[]);
 		$i=0;
-		$arrId = explode(',', $id);
 		foreach ($arrId as $v) {
 			if($this->service->delete($v)){
 				$i++;

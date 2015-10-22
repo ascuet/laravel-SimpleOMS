@@ -2,9 +2,12 @@
 @section('content')
 	
 <div class="container">
+		@include('partials.info')
+
 	<h1>新增仓库</h1>
 	
-	<form action="{{url('supply')}}" method="POST" class="form-horizontal">
+	<form action="{{url('supply')}}" id="form" method="POST" class="form-horizontal">
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<h3>基本信息</h3>
 		<div class="row">
 			{!! $field->addFieldHTML('name','仓库名') !!}

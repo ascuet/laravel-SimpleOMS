@@ -137,9 +137,7 @@ class FieldService{
 			$this->setFields($name);			
 		}
 		$status=$status===''?$status:intval($status);
-
 		$arrFields = $this->get()->where('method',$name)->where('role',$role)->where('status',$status)->toArray();
-		
 		$rtn=[];
 		foreach ($arrFields as $arrField) {
 			$rtn[$arrField['name']]=['type'=>$arrField['type']];
@@ -178,7 +176,16 @@ class FieldService{
 	 * @return array
 	 */
 	public function parseValidator($method){
-
+		$arrFields = $this->getFieldsByMethod($method,$this->currentRole(),$this->currentStatus());
+		$validate=[];
+		foreach ($arrFields as $name => $type) {
+			$options = explode('|', current($type['type']));
+			$tmp=[];
+			in_array('required', $options)&&$tmp[]='required';
+			in_array('confirmed', $options)&&$tmp[]='confirmed'; 
+			$validate[$name]=implode('|', $tmp);
+		}
+		return $validate;
 	}
 
 	/**
@@ -197,11 +204,13 @@ class FieldService{
 			case 'date':
 				$options = explode('|',current($field['type']));
 				$dateFormat = 'yyyy-mm-dd';
-				in_array('full', $options)&&$dateFormat='yyyy-mm-dd hh:ii';
-				$html='<div class="input-daterange input-group datetimepicker">
-	    		<input type="text" class="input-sm form-control" name="'.$name.'_start" data-date-format="'.$dateFormat.'" value="'.$old.'" />
+				$dateCSS='datepicker';
+				in_array('full', $options)&&$dateFormat='yyyy-mm-dd hh:00';
+				in_array('full', $options)&&$dateCSS = 'datetimepicker';
+				$html='<div class="input-daterange input-group ">
+	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_start" data-date-format="'.$dateFormat.'" value="'.$old.'" />
 	    		<span class="input-group-addon">到</span>
-	    		<input type="text" class="input-sm form-control" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$old.'" />
+	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$old.'" />
 				</div>';
 				$html = '<div class="col-sm-9">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
@@ -227,7 +236,7 @@ class FieldService{
 					$selected = $key==$old?'selected':'';
 					$html.='<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
 				}
-				$html='<select class="form-control">'.$html.'</select>';
+				$html='<select class="form-control" name="'.$name.'">'.$html.'</select>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -322,7 +331,9 @@ class FieldService{
 				$value = $value===''&&$required==='required'?Carbon::now():$value;
 				$value = in_array('full', $options)&&$value!==''?$value->toDateTimeString():$value->toDateString();
 				$dateFormat = in_array('full', $options)?'yyyy-mm-dd hh:ii':'yyyy-mm-dd';
-				$html='<input type="text" class="input-sm form-control" name="'.$name.'" data-date-format="'.$dateFormat.'" value="'.$value.'" '.$readonly.' '.$required.' />';
+				$dateCSS = in_array('full', $options)?'datetimepicker':'datepicker';
+				$readonly==='readonly'&&$dateCSS='';
+				$html='<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'" data-date-format="'.$dateFormat.'" value="'.$value.'" '.$readonly.' '.$required.' />';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -348,7 +359,7 @@ class FieldService{
 					$selected = $key===$value?'selected':'';
 					$html.='<option value="'.$key.'" '.$selected.'>'.$v.'</option>';
 				}
-				$html='<select class="form-control" '.$readonly.' '.$disabled.'>'.$html.'</select>';
+				$html='<select class="form-control" name="'.$name.'" '.$readonly.' '.$disabled.'>'.$html.'</select>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';

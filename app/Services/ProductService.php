@@ -59,6 +59,7 @@ class ProductService extends BasicService{
 	 * @return App\Order
 	 */
 	public function currentOrder($product){
+		if(is_null($product))return false;
 		return $product->belongsToOrder()->first();
 	}
 	/**

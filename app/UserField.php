@@ -33,13 +33,13 @@ class UserField extends FieldService {
 				# code...
 				$this->setFieldsBatch('add',['text'=>'required'],['uid'],[],[0]);
 				$this->setFieldsBatch('add',['select'=>'required'],['auth'],[],[0]);
-				$this->setFieldsBatch('add',['password'=>'required'],['password'],[],[0]);
+				$this->setFieldsBatch('add',['password'=>'required|confirmed'],['password'],[],[0]);
 				break;
 			case 'edit':
 				# code...
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['uid'],[],[0]);
-				$this->setFieldsBatch('edit',['password'=>''],['password'],[],[0]);
-				$this->setFieldsBatch('edit',['select'=>'required|disabled'],['auth'],[],[0]);
+				$this->setFieldsBatch('edit',['password'=>'confirmed'],['password'],[],[0]);
+				$this->setFieldsBatch('edit',['select'=>'disabled'],['auth'],[],[0]);
 				break;
 			default:
 				# code...

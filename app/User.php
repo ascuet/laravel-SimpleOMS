@@ -5,9 +5,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Hash;
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 	//用户模型
-	use Authenticatable, CanResetPassword;
+	use Authenticatable, CanResetPassword,SoftDeletes;
 
 	/**
 	 * The database table used by the model.
@@ -49,11 +51,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function hasManyLog(){
 		return $this->hasMany('App\Userlog','object_id','id');
 	}
-
+	public function didManyLog(){
+		return $this->hasMany('App\Userlog','user_id','id');
+	}
 	public function statusType(){
 		return [''=>''];
 	}
-
+	public function setPasswordAttribute($value){
+		$this->attributes['password']=Hash::make($value);
+	}
 	public function arrayField($name){
 		if(!isset($this->array[$name]))return [];
 

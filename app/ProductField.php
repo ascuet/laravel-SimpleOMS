@@ -47,7 +47,7 @@ class ProductField extends FieldService {
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],[],[1,2,3,5]);
 				$this->setFieldsBatch('edit',['select'=>'required'],['pstatus'],[0,1],[0,4]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['pstatus'],['out'],[0,4]);
-				$this->setFieldsBatch('edit',['select'=>'required|readonly'],['pstatus'],[],[0,1,2,3,4,5]);
+				$this->setFieldsBatch('edit',['select'=>'disabled'],['pstatus'],[],[0,1,2,3,4,5]);
 				$this->setFieldsBatch('edit',['textarea'=>''],['memo'],[0,1],[0,4]);	
 				$this->setFieldsBatch('edit',['textarea'=>'readonly'],['memo'],[],[1,2,3,5]);	
 				$this->setFieldsBatch('edit',['textarea'=>'readonly'],['memo'],['out'],[0,4]);

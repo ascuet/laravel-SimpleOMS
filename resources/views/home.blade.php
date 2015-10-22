@@ -2,7 +2,7 @@
 @section('content')
 	
 <div class="container">
-	
+	@include('partials.info')
 	<div class="panel panel-default">
 		<div class="panel-heading"><h4>{{$title}} <small>{{$stitle}}</small></h4></div>
 
@@ -20,12 +20,15 @@
 		</div>
 	</div>
 	<div class="table-responsive">
-		<table class="table table-striped table-bordered table-condensed table-hover">
-			<caption>共查询到 {{$data->count()}} 个结果</caption>
-			<?php echo $data->render();?>
-			@include('table.'.$class)
-		</table>
-	
+		<form action="{{url($class.'/0')}}" id="destroy" method="POST">
+			<input type="hidden" name="_token" value="{{ csrf_token() }}">
+			<input type="hidden" name="_method" value="DELETE">
+			<table class="table table-striped table-bordered table-condensed table-hover">
+				<caption>共查询到 {{$data->count()}} 个结果</caption>
+				<?php echo $data->render();?>
+				@include('table.'.$class)
+			</table>
+		</form>
 	</div>
 
 

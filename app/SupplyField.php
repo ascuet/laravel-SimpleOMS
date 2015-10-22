@@ -43,7 +43,7 @@ class SupplyField extends FieldService {
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['name','supply']);
 				$this->setFieldsBatch('edit',['text'=>''],['slocation','saddress'],[],[0,4]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['slocation','saddress'],[],[1,2,3,5]);
-				$this->setFieldsBatch('edit',['select'=>'required|readonly'],['is_self']);
+				$this->setFieldsBatch('edit',['select'=>'disabled'],['is_self']);
 				break;
 			default:
 				# code...

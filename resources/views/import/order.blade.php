@@ -6,7 +6,8 @@
 @section('content')
 
 <div class="container">
-    
+    @include('partials.info')
+
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <span class="btn btn-success fileinput-button">
@@ -30,7 +31,9 @@
     </div>
     <hr>
     <h3>已上传文件</h3>
-    <div id="files" class="files"></div>
+    <div id="files" class="files">
+        
+    </div>
 
 
      
@@ -41,5 +44,6 @@
 @endsection
 
 @section('js')
+    @parent
     <script src="{{ asset('/js/jquery.fileupload.js') }}"></script>
 @endsection

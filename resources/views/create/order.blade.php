@@ -2,9 +2,12 @@
 @section('content')
 	
 <div class="container">
+		@include('partials.info')
+
 	<h1>创建订单</h1>
 	
-	<form action="{{url('order')}}" method="POST" class="form-horizontal">
+	<form action="{{url('order')}}" id="form" method="POST" class="form-horizontal">
+		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<h3>基本信息</h3>
 		<div class="row">
 			{!! $field->addFieldHTML('oid','订单号') !!}
