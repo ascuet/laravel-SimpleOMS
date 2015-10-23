@@ -180,11 +180,14 @@ class ProductController extends Controller {
 	 * @param  string  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Request $request)
 	{
 		//
+		$arrId = $request->input('id',[]);
 		$i=0;
-		$arrId = explode(',', $id);
+		if(empty($arrId)){
+			return redirect()->back();
+		}
 		foreach ($arrId as $v) {
 			if($this->service->delete($v)){
 				$i++;
@@ -192,5 +195,4 @@ class ProductController extends Controller {
 		}
 		return redirect()->back()->withSuccess('成功删除 '.$i.' 条数据');
 	}
-
 }

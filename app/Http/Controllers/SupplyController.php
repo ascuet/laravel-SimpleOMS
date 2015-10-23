@@ -15,6 +15,24 @@ class SupplyController extends Controller {
 		$this->service = $service;
 		$this->user = Auth::user();
 	}
+
+	/**
+	 * 显示 selecttable
+	 *
+	 *
+	 */
+	public function getSelecttable(Request $request, SupplyField $fieldService){
+		$arrRequest = $request->all();
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
+		$data['title']='选择仓库';
+		$data['class']='supply';
+		$data['field']=$fieldService;
+		$data['multi']=false;
+		$data['data']=$this->service->lists($arrRequest,'',20);
+		return view('partials.select-modal')->with($data);
+
+	}
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -126,11 +144,14 @@ class SupplyController extends Controller {
 	 * @param  string  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Request $request)
 	{
 		//
+		$arrId = $request->input('id',[]);
 		$i=0;
-		$arrId = explode(',', $id);
+		if(empty($arrId)){
+			return redirect()->back();
+		}
 		foreach ($arrId as $v) {
 			if($this->service->delete($v)){
 				$i++;

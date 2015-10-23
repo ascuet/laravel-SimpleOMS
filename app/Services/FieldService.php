@@ -293,16 +293,22 @@ class FieldService{
 				$rtn = $value->$name;
 				$method = explode('_', $name,2)[0];
 				if(method_exists($value, $method)){
-				$fieldName = explode('_', $name,2)[1];
-					if(!empty($rtn)){
-						$rtn = $value->{$method}()->first()->$fieldName;
-					}else{
-						$rtn = '未选择';
+					$fieldName = explode('_', $name,2)[1];
+
+					if(is_null($rtn)){
+						$relation = $value->{$method}()->first();
+						if(is_null($relation)){
+							$rtn = '未选择';
+						}
+						else{
+							$rtn = $relation->$fieldName;
+						}
+
 					}
 				}
 				break;
 		}
-		echo '<td>'.$rtn.'</td>';
+		echo '<td class="td-'.$name.'">'.$rtn.'</td>';
 	}
 
 	/**
@@ -356,7 +362,7 @@ class FieldService{
 					$html.='<option value="">未选择</option>';
 				}
 				foreach ($array as $key => $v) {
-					$selected = $key===$value?'selected':'';
+					$selected = $key==$value?'selected':'';
 					$html.='<option value="'.$key.'" '.$selected.'>'.$v.'</option>';
 				}
 				$html='<select class="form-control" name="'.$name.'" '.$readonly.' '.$disabled.'>'.$html.'</select>';
@@ -397,9 +403,13 @@ class FieldService{
 					list($relation,$attr)=explode('_', $param['related']);
 					$static = $obj->{$relation}()->first()->$attr;
 				}
+				$filter='';
+				if(isset($param['filter'])){
+					$filter= 'data-filter="'.$param['filter'].'"';
+				}
 				$html='<input type="text" class="form-control" value="'.$static.'" readonly >
 				<span class="input-group-btn">
-				<button type="button" class="btn btn-success" data-toggle="modal" data-table="'.$param['table'].'" data-field="'.$param['field'].'" data-target="#selecttableModal">选择</button>
+				<button type="button" class="btn btn-success" data-toggle="modal" data-name="'.$name.'" data-table="'.$param['table'].'" data-field="'.$param['field'].'" '.$filter.' data-event="selecttable" data-target="#selecttableModal">选择</button>
 				</span>
 				<input type="hidden" name="'.$name.'" value="'.$value.'" '.$required.' >';
 				$html = '<div class=" col-sm-5"><div class="input-group input-group-sm">'.$html.'</div></div>';
@@ -416,10 +426,15 @@ class FieldService{
 				$method = explode('_', $name,2)[0];
 				if(method_exists($obj, $method)){
 					$fieldName = explode('_', $name,2)[1];
-					if(!empty($value)){
-						$value = $obj->{$method}()->first()->$fieldName;
-					}else{
-						$value = '未选择';
+					if(empty($value)){
+						$relation = $obj->{$method}()->first();
+						if(is_null($relation)){
+							$rtn = '未选择';
+						}
+						else{
+							$rtn = $relation->$fieldName;
+						}
+
 					}
 				}
 				$html='	<input type="text" name="'.$name.'" class="form-control" value="'.$value.'" '.$required.' '.$readonly.'>';

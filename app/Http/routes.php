@@ -28,6 +28,10 @@ Route::group(['middleware'=>'auth'],function(){
 		Route::post('import','OrderController@postImport');
 
 	});
+	Route::group(['prefix'=>'supply'],function(){
+		Route::get('selecttable','SupplyController@getSelecttable');
+
+	});
 	Route::group(['prefix'=>'product'],function(){
 		Route::get('entry','ProductController@getEntry');
 		Route::post('entry','ProductController@postEntry');

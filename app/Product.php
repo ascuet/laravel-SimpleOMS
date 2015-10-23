@@ -7,7 +7,7 @@ class Product extends Model {
 	use SoftDeletes;
 
 	//
-	protected $fillable = ['pid','traffic','memo','house'];
+	protected $fillable = ['pid','traffic','memo','house','pstatus'];
 
 	protected $casts = [
 		'logs'=>'array'
@@ -16,7 +16,7 @@ class Product extends Model {
 	protected $dates=['sent_at'];
 	protected $array=[
 		'belongsToSupply_name'=>[],
-		'pstatus'=>['在库','禁用'],
+		'pstatus'=>['0'=>'在库','1'=>'禁用'],
 	];
 	public function belongsToSupply(){
 

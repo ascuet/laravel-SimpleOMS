@@ -3,20 +3,35 @@ var Action = $gary.callAction;
 
 Component.events={
 	register:{
-		page_type:{
-			selector:'[data-event="page_type"]',
-			type:'change',
+		selecttable:{
+			selector:'[data-event="selecttable"]',
+			type:'click',
 			isAjax:'get',
-			path:function(e){
-				return '/admin/page/type';
+			opt:'',
+			path:function(){
+				var self = this;
+				return '/'+self.opt.table+'/selecttable';
 			},
-			param:function(e){
-				var value=$(this.selector).filter(':checked').val();
-				var pageId=$('input[name="page_id"]').val()!=''?'&id='+$('input[name="page_id"]').val():'';
-				return 'page_type='+value+pageId;
+			param:function(){
+				var self = this;
+				var filter = $('[name="'+self.opt.filter+'"]').val();
+				if(typeof(filter)!='undefined'){
+					return self.opt.filter+'='+filter;					
+				}
+				else{
+					return '';
+				}
 			},
 			callback:function(data){
-				$('#page_content').empty().append(data);
+				var self = this;
+				console.log(data);
+				$('#selecttableModal .modal-content').empty().html(data);
+				$('#selecttableModal table tbody tr').click(function(){
+					var $this = $(this);
+					$('input:hidden[name="'+self.opt.name+'"]').val($this.find('[name="id"]').val());
+					$('input:hidden[name="'+self.opt.name+'"]').siblings('input[type="text"]').val($this.find('.td-'+self.opt.field).text());
+					$('#selecttableModal').modal('hide');
+				});
 			},
 			errorCallback:function(data){
 
@@ -32,11 +47,12 @@ Component.events={
 		for(regEvent in self.register){
 			var oCurrent = self.register[regEvent];
 
-			$(oCurrent.selector).on(oCurrent.type,function(e){
+			$('[data-event="'+regEvent+'"]').on(oCurrent.type,function(e){
 				var reg = self.register[$(this).data('event')];
 				if(reg.isAjax){
-					var sPath = reg.path(e);
-					var sParam = reg.param(e);
+					reg.opt=$(this).data();
+					var sPath = reg.path();
+					var sParam = reg.param();
 					Action.call(reg.isAjax,sPath,sParam,function(data){
 						reg.callback(data);
 					},function(data){

@@ -354,11 +354,14 @@ class OrderController extends Controller {
 	 * @param  string  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Request $request)
 	{
 		//
+		$arrId = $request->input('id',[]);
+		if(empty($arrId)){
+			return redirect()->back();
+		}
 		$i=0;
-		$arrId = explode(',', $id);
 		foreach ($arrId as $v) {
 			if($this->service->delete($v)){
 				$i++;

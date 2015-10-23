@@ -135,6 +135,9 @@ class UserController extends Controller {
 		//
 		$arrId = $request->input('id',[]);
 		$i=0;
+		if(empty($arrId)){
+			return redirect()->back();
+		}
 		foreach ($arrId as $v) {
 			if($this->service->delete($v)){
 				$i++;

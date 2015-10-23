@@ -23,7 +23,13 @@
 
 		
 	</form>
-
+	<div class="modal fade" id="selecttableModal" tabindex="-1" role="dialog" aria-labelledby="Selecttable">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      
+	    </div>
+	  </div>
+	</div>
 
 </div>
 @endsection
