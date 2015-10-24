@@ -44,7 +44,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('add',['date'=>'required|full|readonly'],['order_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['number'=>'required'],['amount'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['decimal'=>'required'],['sum'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['date'=>'required'],['go_date','back_date'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['date'=>'required|event:calculate_days'],['go_date','back_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['date'=>'required|readonly|noDefault'],['send_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['number'=>'required|readonly'],['days'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['select'=>''],['belongsToSupply_supply'],[''],[0,1,2]);
@@ -64,7 +64,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['decimal'=>'required'],['sum'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['decimal'=>'required|readonly'],['sum'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['decimal'=>'required|readonly'],['sum'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['date'=>'required'],['go_date','back_date'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['date'=>'required|event:calculate_days'],['go_date','back_date'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['go_date','back_date'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['go_date','back_date'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly|noDefault'],['send_date'],[0,1,2,3,-1]);

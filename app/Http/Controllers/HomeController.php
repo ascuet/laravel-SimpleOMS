@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 use App\Services\ExcelService;
+use Illuminate\Http\Request;
 class HomeController extends Controller {
 
 	/*
@@ -12,7 +13,7 @@ class HomeController extends Controller {
 	| controller as you wish. It is just here to get your app started!
 	|
 	*/
-	protected $fileinput = 'fileinput';
+	protected $fileinput = 'files';
 	/**
 	 * Create a new controller instance.
 	 *
@@ -36,18 +37,25 @@ class HomeController extends Controller {
 		if(!$request->hasFile($this->fileinput)){
 			return response('Error!',400);
 		}
-		$error=$service->validator($request->file($this->fileinput));
-		if (count($error)>0)
-		{
-
-			return response($error,400);
+		$files = $request->file($this->fileinput);
+		$rtn=[];
+		foreach ($files as  $file) {
+			$validator=$service->validator(['file'=>$file]);
+			if($validator->fails()){
+				return response($validator->getMessageBag()->all(),400);
+			}
+			$rtnFile = [];
+			if(!$fileName=$service->save($file)){
+				return response('保存失败',400);
+			}
+			
+			$rtnFile['old_name']=$file->getClientOriginalName();
+			$rtnFile['name']=$fileName;
+			$rtn[]=$rtnFile;
 		}
-
-		if(!$fileName=$service->save($request->file($this->fileinput))){
-			return response('保存失败',400);
-		}
-
-		return response($fileName,200);
+			
+		
+		return response()->json($rtn);
 
 	}
 }

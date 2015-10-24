@@ -81,4 +81,15 @@
         return this.bind('input',callback);
     }
 
+    String.prototype.charLeftAll = function (bchar,alength){
+         var xchar = ''+this;
+         for(var i=0;i<alength;i++){
+             if(xchar.length==alength)
+            break; 
+             xchar = bchar+xchar;
+              
+           }
+          return(xchar);
+     } 
+
 }));

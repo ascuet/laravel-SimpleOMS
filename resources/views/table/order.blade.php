@@ -21,8 +21,8 @@
 </thead>
 <tbody>
 	@foreach($data as $key=>$value)
-		<tr onclick="location.href='{{url('order/'.$valud->id.'/edit')}}'" style="cursor:pointer">
-			<th onclick="event.stopPropagation()"><input type="checkbox" name="id[]" value="{{$valud->id}}"></th>
+		<tr onclick="location.href='{{url('order/'.$value->id.'/edit')}}'" style="cursor:pointer">
+			<th onclick="event.stopPropagation()"><input type="checkbox" name="id[]" value="{{$value->id}}"></th>
 			{!!$field->tableCell('gid',$value)!!}
 			{!!$field->tableCell('gname',$value)!!}
 			{!!$field->tableCell('order_date',$value)!!}

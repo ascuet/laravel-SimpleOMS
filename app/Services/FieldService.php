@@ -282,14 +282,26 @@ class FieldService{
 		if(!isset($field))return '';
 		switch (key($field['type'])) {
 			case 'date':
+				if(is_null($value->$name)){
+					$rtn = '未选择';
+					continue;
+				}
 				$options = explode('|',current($field['type']));
-				!in_array('full', $options)&&$rtn=$value->$name->toDateString();
+				$rtn = in_array('full', $options)?$value->$name->toDatetimeString():$value->$name->toDateString();
 				break;
 			case 'array':
+				if(is_null($value->$name)){
+					$rtn = '未选择';
+					continue;
+				}
 				$array = $this->model->arrayField($name);
 				$rtn = $array[$value->$name];
 				break;
 			default:
+				if(is_null($value->$name)){
+					$rtn = '未选择';
+					continue;
+				}
 				$rtn = $value->$name;
 				$method = explode('_', $name,2)[0];
 				if(method_exists($value, $method)){
@@ -332,14 +344,28 @@ class FieldService{
 		$readonly = in_array('readonly', $options)?'readonly':'';
 		$required = in_array('required', $options)?'required':'';
 		$disabled = in_array('disabled', $options)?'disabled':'';
+
 		switch (key($field['type'])) {
 			case 'date':
-				$value = $value===''&&$required==='required'?Carbon::now():$value;
-				$value = in_array('full', $options)&&$value!==''?$value->toDateTimeString():$value->toDateString();
-				$dateFormat = in_array('full', $options)?'yyyy-mm-dd hh:ii':'yyyy-mm-dd';
-				$dateCSS = in_array('full', $options)?'datetimepicker':'datepicker';
+				$noDefault = in_array('noDefault', $options)?true:false;
+				$full = in_array('full', $options)?true:false;
+				$param='';
+				foreach ($options as $option) {
+					if (strpos($option, ':') !== false)
+					{
+						list($option, $set) = explode(':', $option, 2);
+
+						$param.='data-'.$option.'="'.$set.'" ';
+					}
+				}
+				$value = empty($value)&&$required==='required'&&!$noDefault?Carbon::now():$value;
+				if(!empty($value)){
+					$value = $full?$value->toDateTimeString():$value->toDateString();
+				}
+				$dateFormat = $full?'yyyy-mm-dd hh:ii':'yyyy-mm-dd';
+				$dateCSS = $full?'datetimepicker':'datepicker';
 				$readonly==='readonly'&&$dateCSS='';
-				$html='<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'" data-date-format="'.$dateFormat.'" value="'.$value.'" '.$readonly.' '.$required.' />';
+				$html='<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'" data-date-format="'.$dateFormat.'" value="'.$value.'" '.$param.' readonly '.$required.' />';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -373,9 +399,9 @@ class FieldService{
 			case 'radio':
 				$array=$this->model->arrayField($name);
 				foreach ($array as $key => $v) {
-					$selected = $key===$value?'selected':'';
+					$checked = $key==$value?'checked':'';
 					$html.='<div class="radio-inline">
-					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$selected.'> '.$v.'</label>
+					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$checked.'> '.$v.'</label>
 					</div>';
 				}
 				$html = '<div class="col-sm-9">'.$html.'</div>';

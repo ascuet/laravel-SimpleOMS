@@ -53,9 +53,12 @@ class OrderService extends BasicService{
 	 */
 	public function importOrders($fileName){
 		$sheets = Excel::selectSheetsByIndex(0)->load($this->importPath.$fileName)->get();
-		foreach ($sheets as $row) {
-			if(!$this->parseBeforeImport($row->toArray())){
-				return ['errcode'=>'importError','msg'=>'订单号:'.$row->oid];
+		foreach ($sheets as $sheet) {
+			foreach ($sheet as $row) {
+				if(!$this->parseBeforeImport($row->toArray())){
+					return ['errcode'=>'importError','msg'=>'订单号:'.$row[0]];
+				}
+				
 			}
 		}
 		return true;
@@ -75,11 +78,18 @@ class OrderService extends BasicService{
 			foreach ($fields as $k => $v) {
 				$options = explode('|',current($v['type']));
 				$required = in_array('required', $options)?true:false;
-				if($required&&empty($data[$k])){
-					Log::info('importing error: '.$k.' is required',$data);
+				$index =array_search($k, $this->importField);
+				if($index!==false){
+					if($required&&empty($data[$index])){
+						Log::info('importing error: '.$k.' is required',$data);
+						return false;
+					}
+					$import[$k] = $data[$index];
+				}
+				else{
 					return false;
 				}
-				$import[$this->importField[$k]] = $data[$k];
+				
 			}
 		return $this->create($import);
 	}

@@ -36,7 +36,37 @@ Component.events={
 			errorCallback:function(data){
 
 			}
+		},
+		calculate_days:{
+			type:'change',
+			isAjax:false,
+			opt:'',
+			handler:function($this){
+				var date1 = new Date ($('input[name="go_date"]').val());
+				var date2 = new Date ($('input[name="back_date"]').val());
+				var day = 24*60*60*1000;
+				$('input[name="days"]').val((date2.getTime()-date1.getTime())/day);
+			}
+		},
+		days_before:{
+			type:'input',
+			isAjax:false,
+			opt:'',
+			handler:function($this){
+				if($('input[name="send_date"]').val()==""){
+					$this.val(4);
+				}
+				var days_before = $this.val();
+				if(days_before>=0){
+					var  date1 = new Date ($('input[name="go_date"]').val());
+					var day = 24*60*60*1000;
+					var date2 = date1.getTime()-day*days_before;
+					var send_date = new Date();
+					send_date.setTime(date2);
+					$('input[name="send_date"]').val(send_date.getFullYear()+'-'+String(send_date.getMonth()+1).charLeftAll(0,2)+'-'+String(send_date.getDate()).charLeftAll(0,2));
 
+				}
+			}
 
 		}
 
@@ -49,8 +79,8 @@ Component.events={
 
 			$('[data-event="'+regEvent+'"]').on(oCurrent.type,function(e){
 				var reg = self.register[$(this).data('event')];
-				if(reg.isAjax){
 					reg.opt=$(this).data();
+				if(reg.isAjax){
 					var sPath = reg.path();
 					var sParam = reg.param();
 					Action.call(reg.isAjax,sPath,sParam,function(data){
@@ -59,7 +89,7 @@ Component.events={
 						reg.errorCallback(data);
 					});
 				}else{
-					reg.handler();
+					reg.handler($(this));
 				}
 				
 			});
@@ -71,6 +101,8 @@ Component.events={
 
 $(document).ready(function(){
 	Component.events.init();
+	$('[data-event="calculate_days"]').trigger('change');
+	$('[data-event="days_before"]').trigger('input');
 	$('.datetimepicker').datetimepicker({
 		language:'zh-CN',
 		autoclose:1,

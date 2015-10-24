@@ -25,13 +25,13 @@ class CreateOrdersTable extends Migration {
 	        $table->integer('days')->default(0);
 	        $table->timestamp('go_date')->nullable();
 	        $table->timestamp('back_date')->nullable();
-	        $table->integer('gmobile')->nullable();
+	        $table->string('gmobile')->nullable();
 	        $table->text('address')->nullable();
 	        $table->text('memo')->nullable();
 	        $table->text('message')->nullable();
 	        $table->integer('status')->default(1);
-	        $table->integer('source')->default(0);
-	        $table->integer('house')->default(0);
+	        $table->integer('source')->default(0)->nullable();
+	        $table->integer('house')->default(0)->nullable();
 	        $table->timestamp('send_date')->nullable();
 	        $table->integer('is_deliver')->default(0);
 	        $table->string('delivery_no')->nullable();

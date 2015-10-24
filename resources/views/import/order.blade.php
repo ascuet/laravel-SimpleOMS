@@ -14,7 +14,7 @@
                 <i class="glyphicon glyphicon-plus"></i>
                 <span>选择上传文件</span>
                 <!-- The file input field used as target for the file upload widget -->
-                <input id="fileupload" type="file" name="files[]" multiple>
+                <input id="fileupload" type="file" name="files[]">
             </span>
             <span><a href="{{asset('order_tpl.xlsx')}}">下载模板文件</a></span>
             <span style="color:red">模板内带星号*的是必填项,请勿更改数据列的顺序</span>
@@ -31,9 +31,19 @@
     </div>
     <hr>
     <h3>已上传文件</h3>
-    <div id="files" class="files">
-        
-    </div>
+    <table id="files" class="table">
+        <thead>
+             <tr>
+                 <th>#</th>
+                 <th>文件名</th>
+                 <th>操作</th>
+             </tr>
+         </thead> 
+         <tbody>
+             
+
+         </tbody>
+    </table>
 
 
      
@@ -45,5 +55,47 @@
 
 @section('js')
     @parent
+    <script src="{{asset('/js/vendor/jquery.ui.widget.js')}}"></script>
     <script src="{{ asset('/js/jquery.fileupload.js') }}"></script>
+    <script>
+    $('#fileupload').fileupload({
+        url: "{{url('upload')}}",
+        dataType: 'json',
+        done: function (e, data) {
+            console.log(data);
+            $.each(data.result, function (index, file) {
+                console.log(file);
+                $row = $('<tr></tr>');
+                $row.append('<td><span class="glyphicon glyphicon-ok"></span></td>');
+                $row.append('<td>'+file.old_name+'</td');
+                $row.append('<td><button type="button" data-file="'+file.name+'" class="btn btn-sm btn-primary">导入</button></td>');
+                $('#files tbody').append($row);
+                    $('#files tbody button').click(function(){
+                        $this = $(this);
+                        $.ajax({
+                            type:'POST',
+                            url:"{{url('order/import')}}"+'?file_name='+$this.data('file'),
+                            dataType: 'json',
+                            success:function(msg){
+
+                            },
+                            error:function(msg){
+
+                            }
+
+                        });
+                    });
+                
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .progress-bar').css(
+                'width',
+                progress + '%'
+            );
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    </script>
 @endsection

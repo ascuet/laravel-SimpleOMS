@@ -10,7 +10,9 @@ use Auth;
 class OrderController extends Controller {
 
 	protected $service,$user;
-	protected $errorMessage = [];
+	protected $errorMessage = [
+		'importError'=>'导入时错误:'
+	];
 
 	public function __construct(OrderService $service){
 		$this->service = $service;
