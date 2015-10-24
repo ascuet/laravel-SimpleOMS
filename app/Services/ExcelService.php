@@ -6,7 +6,7 @@ class ExcelService{
 	public function __construct(){
 		$this->folder= 'uploads/excel';
 		$this->valid = [
-			'file'=>'required|mimes:xls,xlsx'
+			'file'=>'required|mimes:xls,xlsx,zip'
 		];
 
 	}
