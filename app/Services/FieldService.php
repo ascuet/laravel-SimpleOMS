@@ -300,17 +300,13 @@ class FieldService{
 				$rtn = $array[$value->$name];
 				break;
 			default:
-				if(is_null($value->$name)){
-					$rtn = '未选择';
-					continue;
-				}
 				$rtn = $value->$name;
 				$method = explode('_', $name,2)[0];
 				if(method_exists($value, $method)){
 					$fieldName = explode('_', $name,2)[1];
 
 					if(is_null($rtn)){
-						$relation = $value->{$method}()->first();
+						$relation = $value->$method;
 						if(is_null($relation)){
 							$rtn = '未选择';
 						}

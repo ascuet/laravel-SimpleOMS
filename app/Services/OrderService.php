@@ -355,7 +355,7 @@ class OrderService extends BasicService{
 	public function lists( $opt=array(),$col=array('*'),$page=false){
 		$obj = $this->selectQuery($opt);
 		if($page){
-			return $obj->latest('modified_at')->latest('order_date')->paginate($page);
+			return $obj->with('belongsToSupply')->latest('modified_at')->latest('order_date')->paginate($page);
 		}
 		return $obj->get($col);
 	}
