@@ -29,7 +29,7 @@ class CreateOrdersTable extends Migration {
 	        $table->text('address')->nullable();
 	        $table->text('memo')->nullable();
 	        $table->text('message')->nullable();
-	        $table->integer('status')->default(1);
+	        $table->integer('status')->default(0);
 	        $table->integer('source')->default(0)->nullable();
 	        $table->integer('house')->default(0)->nullable();
 	        $table->timestamp('send_date')->nullable();

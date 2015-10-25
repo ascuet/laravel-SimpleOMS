@@ -8,7 +8,7 @@
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
 		<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">操作记录</a></li>
-		<li role="presentation"><a href="#userlogs" aria-controls="userlogs" role="tab" data-toggle="tab">用户行为</a></li>
+		<li role="presentation"><a href="{{url('/user/userlog/'.$user->id)}}">用户行为</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="detail" role="tabpanel">
@@ -40,10 +40,7 @@
 			@include('partials.logs',['obj'=>$user])
 
 		</div>
-		<div class="tab-pane" id="userlogs" role="tabpanel">
-			@include('partials.userlogs',['obj'=>$user])
-
-		</div>
+		
 	</div>
 	<div class="modal fade" id="selecttableModal" tabindex="-1" role="dialog" aria-labelledby="Selecttable">
 	  <div class="modal-dialog" role="document">

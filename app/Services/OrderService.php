@@ -344,6 +344,21 @@ class OrderService extends BasicService{
 		DB::commit();
 		return true;
 	}
+
+
+	/**
+	* List object
+	* @param array $col
+	* @param array $opt
+	* @return object
+	*/
+	public function lists( $opt=array(),$col=array('*'),$page=false){
+		$obj = $this->selectQuery($opt);
+		if($page){
+			return $obj->latest('modified_at')->latest('order_date')->paginate($page);
+		}
+		return $obj->get($col);
+	}
 	/**
 	 * 回退订单操作记录
 	 * @param App\Order $order
@@ -414,10 +429,20 @@ class OrderService extends BasicService{
 	}
 	public function checkStatus($obj,$data){
 		if(is_array($data)&&isset($data['status'])){
-			return $obj->status == $data['status'];
+			if($obj->status == $data['status']){
+				return $data['status'];
+			}
+			else{
+				return false;
+			}
 		}
-		elseif(is_int($data)){
-			return $obj->status == $data;
+		elseif(is_int($data)||is_string($data)){
+			if($obj->status == $data){
+				return $data;
+			}
+			else{
+				return false;
+			}
 		}
 		else{
 			return true;

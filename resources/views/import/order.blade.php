@@ -62,30 +62,37 @@
         url: "{{url('upload')}}",
         dataType: 'json',
         done: function (e, data) {
-            console.log(data);
             $.each(data.result, function (index, file) {
-                console.log(file);
-                $row = $('<tr></tr>');
-                $row.append('<td><span class="glyphicon glyphicon-ok"></span></td>');
-                $row.append('<td>'+file.old_name+'</td');
-                $row.append('<td><button type="button" data-file="'+file.name+'" class="btn btn-sm btn-primary">导入</button></td>');
-                $('#files tbody').append($row);
-                    $('#files tbody button').click(function(){
-                        $this = $(this);
-                        $.ajax({
-                            type:'POST',
-                            url:"{{url('order/import')}}"+'?file_name='+$this.data('file'),
-                            dataType: 'json',
-                            success:function(msg){
+                if(typeof(file.error)=='undefined'){
+                    $row = $('<tr></tr>');
+                    $row.append('<td><span class="glyphicon glyphicon-ok"></span></td>');
+                    $row.append('<td>'+file.old_name+'</td');
+                    $row.append('<td><button type="button" data-file="'+file.name+'" class="btn btn-sm btn-primary">导入</button></td>');
+                    $('#files tbody').append($row);
+                        $('#files tbody button').click(function(){
+                            $this = $(this);
+                            $this.prop('disabled','disabled');
+                            $.ajax({
+                                type:'POST',
+                                url:"{{url('order/import')}}"+'?file_name='+$this.data('file'),
+                                success:function(msg){
+                                    $this.parent().text(msg);
+                                },
+                                error:function(msg){
+                                    $this.parent().text(msg);
+                                }
 
-                            },
-                            error:function(msg){
-
-                            }
-
+                            });
                         });
-                    });
-                
+
+                }else{
+                    $row = $('<tr></tr>');
+                    $row.append('<td><span class="glyphicon glyphicon-remove"></span></td>');
+                    $row.append('<td>'+file.old_name+'</td');
+                    $row.append('<td>'+file.error+'</td>');
+                    $('#files tbody').append($row);
+                }
+                    
             });
         },
         progressall: function (e, data) {

@@ -47,7 +47,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('add',['date'=>'required|event:calculate_days'],['go_date','back_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['date'=>'required|readonly|noDefault'],['send_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['number'=>'required|readonly'],['days'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['select'=>''],['belongsToSupply_supply'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['select'=>'readonly'],['belongsToSupply_supply'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|filter:belongsToSupply_supply'],['house'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['radio'=>'required'],['is_deliver'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['textarea'=>''],['memo','message'],[''],[0,1,2]);
@@ -69,12 +69,12 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['go_date','back_date'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly|noDefault'],['send_date'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['days'],[0,1,2,3,-1]);
-				$this->setFieldsBatch('edit',['select'=>''],['belongsToSupply_supply'],[0,1],[0,1,2]);
-				$this->setFieldsBatch('edit',['select'=>'disabled'],['belongsToSupply_supply'],[2,3,-1],[0,1,2]);
-				$this->setFieldsBatch('edit',['select'=>'disabled'],['belongsToSupply_supply'],[0,1,2,3,-1],[3,4,5]);		
+				$this->setFieldsBatch('edit',['select'=>'readonly'],['belongsToSupply_supply'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['select'=>'readonly|disabled'],['belongsToSupply_supply'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['select'=>'readonly|disabled'],['belongsToSupply_supply'],[0,1,2,3,-1],[3,4,5]);		
 				$this->setFieldsBatch('edit',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|filter:belongsToSupply_supply'],['house'],[0,1],[0,1,2]);
-				$this->setFieldsBatch('edit',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|readonly'],['house'],[2,3,-1],[0,1,2]);
-				$this->setFieldsBatch('edit',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|readonly'],['house'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['radio'=>'required'],['is_deliver'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['radio'=>'required|readonly'],['is_deliver'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['radio'=>'required|readonly'],['is_deliver'],[0,1,2,3,-1],[3,4,5]);
@@ -83,6 +83,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['select'=>'required'],['source'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'disabled'],['source'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'disabled'],['source'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['hidden'=>''],['status']);
 				break;
 			case 'import':
 				$this->setFieldsBatch('import',['string'=>'required'],['oid','country','amount'],[''],[0,1,2]);

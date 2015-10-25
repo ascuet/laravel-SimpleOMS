@@ -37,6 +37,10 @@ Route::group(['middleware'=>'auth'],function(){
 		Route::post('entry','ProductController@postEntry');
 
 	});
+	Route::group(['prefix'=>'user'],function(){
+		Route::get('userlog/{id}','UserController@getUserLog');
+
+	});
 	Route::resources([
 			'order'=>'OrderController',
 			'product'=>'ProductController',

@@ -1,4 +1,7 @@
-<?php $logs=$obj->didManyLog()->latest('log_at')->get();?>
+<?php 
+$logs=$obj->didManyLog()->latest('log_at')->with('belongsToUser')->paginate(20);
+echo '<div class="pull-right">'.$logs->render().'</div>';
+?>
 
 <table class="table table-condensed table-hover">
 	<thead>

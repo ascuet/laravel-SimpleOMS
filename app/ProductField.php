@@ -63,4 +63,18 @@ class ProductField extends FieldService {
 	public function statusName($status){
 		return $this->model->statusName($status);
 	}
+	/**
+	 * 设置/获取当前状态
+	 * @param int $status
+	 * @return int
+	 */
+	public function currentStatus($status=null){
+		if(is_null($status))return $this->currentStatus;
+		if(!in_array($status, $this->model->statusType())){
+			$this->currentStatus='out';
+		}
+		else{
+			$this->currentStatus=$status===''?$status:intval($status);
+		}
+	}
 }

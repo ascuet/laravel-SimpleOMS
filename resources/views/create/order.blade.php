@@ -22,13 +22,15 @@
 		<div class="row">
 			{!! $field->addFieldHTML('gid','淘宝ID') !!}
 			{!! $field->addFieldHTML('gname','客户姓名') !!}
-			{!! $field->addFieldHTML('gmobile','客户电话') !!}
 
 		</div>
 		<div class="row">
+			{!! $field->addFieldHTML('gmobile','客户电话') !!}			
 			{!! $field->addFieldHTML('address','地址') !!}
+		</div>
+		<div class="row">
 			{!! $field->addFieldHTML('message','买家留言') !!}
-
+			{!! $field->addFieldHTML('memo','客服备注') !!}
 		</div>
 		<hr>
 		<h3>行程</h3>
@@ -67,9 +69,7 @@
 
 		</div>
 		<hr>
-		<div class="row">
-			{!! $field->addFieldHTML('memo','客服备注') !!}
-		</div>
+
 	</form>
 
 	<div class="modal fade" id="selecttableModal" tabindex="-1" role="dialog" aria-labelledby="Selecttable">

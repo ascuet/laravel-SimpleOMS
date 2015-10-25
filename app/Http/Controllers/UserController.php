@@ -13,6 +13,13 @@ class UserController extends Controller {
 		$this->service = $service;
 		$this->user = Auth::user();
 	}
+
+	public function getUserLog($id,UserField $fieldService){
+		$user = $this->service->listOne($id);
+		$data['user']=$user;
+		$data['actions']=['submit','backpage'];
+		return view('detail.userlog')->with($data);
+	}
 	/**
 	 * Display a listing of the resource.
 	 *

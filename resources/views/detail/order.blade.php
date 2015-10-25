@@ -28,13 +28,16 @@
 				<div class="row">
 					{!! $field->editFieldHTML('gid','淘宝ID',$order) !!}
 					{!! $field->editFieldHTML('gname','客户姓名',$order) !!}
-					{!! $field->editFieldHTML('gmobile','客户电话',$order) !!}
 
 				</div>
 				<div class="row">
+					{!! $field->editFieldHTML('gmobile','客户电话',$order) !!}
 					{!! $field->editFieldHTML('address','地址',$order) !!}
-					{!! $field->editFieldHTML('message','买家留言',$order) !!}
 
+				</div>
+				<div class="row">
+					{!! $field->editFieldHTML('message','买家留言',$order) !!}
+					{!! $field->editFieldHTML('memo','客服备注',$order) !!}
 				</div>
 				<hr>
 				<h3>行程</h3>
@@ -73,9 +76,7 @@
 
 				</div>
 				<hr>
-				<div class="row">
-					{!! $field->editFieldHTML('memo','客服备注',$order) !!}
-				</div>
+				{!! $field->editFieldHTML('status','订单状态',$order) !!}
 			</form>
 		</div>
 		<div class="tab-pane" id="logs" role="tabpanel">

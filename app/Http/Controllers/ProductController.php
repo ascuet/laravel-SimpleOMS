@@ -163,6 +163,8 @@ class ProductController extends Controller {
 	public function update($id,Request $request,ProductField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus($request->input('pstatus'));
 		$fields = $fieldService->parseValidator('edit');
 		$this->validate($request,$fields);
 

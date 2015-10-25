@@ -6237,6 +6237,6 @@ body{
   padding-bottom: 70px;
 }
 
-input.form-control[readonly].datetimepicker,input.form-control[readonly].datepicker{
+input.form-control[readonly].datetimepicker,input.form-control[readonly].datepicker,select.form-control[readonly]{
   cursor: pointer;
 }

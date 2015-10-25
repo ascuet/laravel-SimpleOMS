@@ -1,4 +1,4 @@
-<?php $logs=$obj->hasManyLog()->where('object',str_singular($obj->getTable()))->latest('log_at')->get();?>
+<?php $logs=$obj->hasManyLog()->where('object',str_singular($obj->getTable()))->latest('log_at')->with('belongsToUser')->get();?>
 
 <table class="table table-condensed table-hover">
 	<thead>

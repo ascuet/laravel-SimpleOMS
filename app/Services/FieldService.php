@@ -137,6 +137,8 @@ class FieldService{
 			$this->setFields($name);			
 		}
 		$status=$status===''?$status:intval($status);
+		//dd($role.','.$status);
+
 		$arrFields = $this->get()->where('method',$name)->where('role',$role)->where('status',$status)->toArray();
 		$rtn=[];
 		foreach ($arrFields as $arrField) {
@@ -447,6 +449,9 @@ class FieldService{
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
+				break;
+			case 'hidden':
+				$html='<input type="hidden" name="'.$name.'" value="'.$value.'"/>';
 				break;
 			default:
 				$method = explode('_', $name,2)[0];

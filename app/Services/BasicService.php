@@ -102,7 +102,6 @@ use Queue;
 		}
 		//获取可以更新的字段
 		$fields = $this->fieldService->getFieldsByMethod('edit',$role,$status);
-
 		//只更新允许/变化字段
 		foreach ($fields as $k => $v) {
 			$options  = explode('|',current($v['type']));
@@ -149,6 +148,20 @@ use Queue;
 	* @return object
 	*/
 	public function lists( $opt=array(),$col=array('*'),$page=false){
+		$obj = $this->selectQuery($opt);
+		if($page){
+			return $obj->paginate($page);
+		}
+		return $obj->get($col);
+	}
+
+	/**
+	 * build select query
+	 * @param $opt
+	 * @return query
+	 *
+	 */
+	public function selectQuery($opt=array()){
 		$obj= new $this->class;
 		$status;
 		$role = $this->user->auth;
@@ -180,7 +193,7 @@ use Queue;
 						break;
 					default:
 						if(!isset($opt[$k])) continue;
-						if(isset($opt[$k])&&empty($opt[$k])) continue;
+						if(isset($opt[$k])&&$opt[$k]=='') continue;
 						$options  = explode('|',current($v['type']));
 						$method=explode('_',$k)[0];
 						if(method_exists(new $this->class, $method)){
@@ -209,12 +222,8 @@ use Queue;
 				}
 			}
 		}
-		if($page){
-			return $obj->paginate($page);
-		}
-		return $obj->get($col);
+		return $obj;
 	}
-
 	/**
 	 * fetch one record by options
 	 * @param array $opt

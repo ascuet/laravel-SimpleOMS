@@ -339,6 +339,8 @@ class OrderController extends Controller {
 	public function update($id,Request $request,OrderField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus($request->input('status'));
 		$fields = $fieldService->parseValidator('edit');
 		$this->validate($request,$fields);
 

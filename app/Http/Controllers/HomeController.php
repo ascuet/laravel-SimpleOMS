@@ -41,10 +41,13 @@ class HomeController extends Controller {
 		$rtn=[];
 		foreach ($files as  $file) {
 			$validator=$service->validator(['file'=>$file]);
-			if($validator->fails()){
-				return response($validator->getMessageBag()->all(),400);
-			}
 			$rtnFile = [];
+			if($validator->fails()){
+				$rtnFile['error']=$validator->getMessageBag()->all();
+				$rtnFile['old_name']=$file->getClientOriginalName();
+				$rtn[]=$rtnFile;
+				return response()->json($rtn);
+			}
 			if(!$fileName=$service->save($file)){
 				return response('保存失败',400);
 			}
