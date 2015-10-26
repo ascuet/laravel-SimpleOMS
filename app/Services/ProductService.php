@@ -156,6 +156,24 @@ class ProductService extends BasicService{
 		return $product->save();
 
 	}
+
+
+	/**
+	* List object
+	* @param array $col
+	* @param array $opt
+	* @return object
+	*/
+	public function lists( $opt=array(),$col=array('*'),$page=false){
+		$obj = $this->selectQuery($opt);
+		if($page){
+			if(isset($opt['pstatus'])&&$opt['pstatus']=='out'){
+				return $obj->with('belongsToSupply')->latest('sent_at')->paginate($page);				
+			}
+			return $obj->with('belongsToSupply')->orderBy('pid')->paginate($page);
+		}
+		return $obj->get($col);
+	}
 	/**
 	 * 入库记录
 	 * @param App\Product $product

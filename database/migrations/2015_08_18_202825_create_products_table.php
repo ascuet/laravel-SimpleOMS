@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('pid');
+			$table->string('country')->nullable();
 			$table->string('pstatus')->default('0');
 			$table->timestamp('sent_at')->nullable();
 			$table->string('traffic')->nullable();

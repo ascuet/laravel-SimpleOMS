@@ -23,7 +23,7 @@ class SupplyField extends FieldService {
 	protected function setFields($method){
 		switch ($method) {
 			case 'select':
-				$this->setFieldsBatch('select',['text'=>''],['name']);
+				$this->setFieldsBatch('select',['text'=>'fuzzy'],['name']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['is_self']);
 				$this->setFieldsBatch('select',['select'=>''],['supply']);
 				break;
@@ -33,7 +33,7 @@ class SupplyField extends FieldService {
 				break;
 			case 'add':
 				# name slocation saddress is_self supply
-				$this->setFieldsBatch('add',['text'=>'required'],['name'],[],[0,4]);
+				$this->setFieldsBatch('add',['text'=>'required|unique:supplies,name,NULL,id,deleted_at,NULL'],['name'],[],[0,4]);
 				$this->setFieldsBatch('add',['text'=>''],['slocation','saddress'],[],[0,4]);
 				$this->setFieldsBatch('add',['text'=>'required|autocomplete'],['supply'],[],[0,4]);
 				$this->setFieldsBatch('add',['select'=>'required'],['is_self'],[],[0,4]);

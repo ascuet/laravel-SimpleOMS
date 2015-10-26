@@ -21,9 +21,10 @@
 				</div>
 				<div class="row">
 					{!! $field->editFieldHTML('pstatus','设备状态',$product) !!}
-					{!! $field->editFieldHTML('traffic','当前流量',$product) !!}
+					{!! $field->editFieldHTML('country','国家',$product) !!}
 				</div>
 				<div class="row">
+					{!! $field->editFieldHTML('traffic','当前流量',$product) !!}
 					{!! $field->editFieldHTML('memo','备注',$product) !!}			
 				</div>
 

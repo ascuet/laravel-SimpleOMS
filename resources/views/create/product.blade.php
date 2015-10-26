@@ -15,9 +15,10 @@
 		</div>
 		<div class="row">
 			{!! $field->addFieldHTML('pstatus','设备状态') !!}
-			{!! $field->addFieldHTML('traffic','当前流量') !!}
+			{!! $field->addFieldHTML('country','国家') !!}
 		</div>
 		<div class="row">
+			{!! $field->addFieldHTML('traffic','当前流量') !!}
 			{!! $field->addFieldHTML('memo','备注') !!}			
 		</div>
 

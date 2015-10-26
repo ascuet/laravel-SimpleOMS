@@ -31,7 +31,7 @@ class UserField extends FieldService {
 				break;
 			case 'add':
 				# code...
-				$this->setFieldsBatch('add',['text'=>'required'],['uid'],[],[0]);
+				$this->setFieldsBatch('add',['text'=>'required|unique:users,uid,NULL,id,deleted_at,NULL,id'],['uid'],[],[0]);
 				$this->setFieldsBatch('add',['select'=>'required'],['auth'],[],[0]);
 				$this->setFieldsBatch('add',['password'=>'required|confirmed'],['password'],[],[0]);
 				break;

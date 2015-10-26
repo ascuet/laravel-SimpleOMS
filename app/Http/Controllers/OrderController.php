@@ -321,7 +321,7 @@ class OrderController extends Controller {
 	public function edit($id,OrderField $fieldService)
 	{
 		//
-		$order = $this->service->listOne($id);
+		$order = $this->service->listOne($id,['belongsToSupply']);
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus($order->status);
 		$data['order']=$order;

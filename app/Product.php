@@ -7,7 +7,7 @@ class Product extends Model {
 	use SoftDeletes;
 
 	//
-	protected $fillable = ['pid','traffic','memo','house','pstatus'];
+	protected $fillable = ['pid','traffic','memo','house','pstatus','country'];
 
 	protected $casts = [
 		'logs'=>'array'

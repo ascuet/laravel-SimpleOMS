@@ -4,5 +4,6 @@
 
 </div>
 <div class="row">
+	{!!$field->selectFieldHTML('country','国家',is_null(old('country'))?'':old('country'))!!}	
 	{!!$field->selectFieldHTML('pstatus','设备状态',is_null(old('pstatus'))?'':old('pstatus'))!!}	
 </div>

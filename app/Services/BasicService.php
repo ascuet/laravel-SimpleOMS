@@ -136,9 +136,15 @@ use Queue;
 	 * @param int $id
 	 * @return object
 	 */
-	public function listOne($id){
+	public function listOne($id,$with=false){
 		$class = new $this->class;
-		return $class->where('id',$id)->lockForUpdate()->first();
+		$class = $class->where('id',$id);
+		if(is_array($with)){
+			foreach ($with as $w) {
+				$class = $class->with($w);
+			}
+		}
+		return $class->lockForUpdate()->first();
 	}
 
 	/**
@@ -170,10 +176,30 @@ use Queue;
 			foreach ($fields as $k => $v) {
 				switch (key($v['type'])) {
 					case 'checkbox':
-						isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->whereIn($k,$opt[$k]);
-						break;
+						if(!isset($opt[$k])) continue;
+						if(isset($opt[$k])&&empty($opt[$k])) continue;
+						$method=explode('_',$k)[0];
+						if(method_exists(new $this->class, $method)){
+							$has = explode('_', $k,2)[1];
+							$obj=$obj->whereHas($method,function($q)use ($has,$opt,$k){
+								$q->whereIn($k,$opt[$k]);
+							});
+						}else{
+							isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->whereIn($k,$opt[$k]);						
+						}
+							break;
 					case 'select':
-						isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->where($k,$opt[$k]);
+						if(!isset($opt[$k])) continue;
+						if(isset($opt[$k])&&$opt[$k]=='') continue;
+						$method=explode('_',$k)[0];
+						if(method_exists(new $this->class, $method)){
+							$has = explode('_', $k,2)[1];
+							$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
+								$q->where($has,$opt[$k]);
+							});
+						}else{
+							isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->where($k,$opt[$k]);							
+						}
 					break;
 					case 'date':
 						$options  = explode('|',current($v['type']));

@@ -184,7 +184,12 @@ class FieldService{
 			$options = explode('|', current($type['type']));
 			$tmp=[];
 			in_array('required', $options)&&$tmp[]='required';
-			in_array('confirmed', $options)&&$tmp[]='confirmed'; 
+			in_array('confirmed', $options)&&$tmp[]='confirmed';
+			foreach ($options as $option) {
+			 	if(explode(':', $option)[0]=='unique'){
+			 		$tmp[]=$option;
+			 	}
+			 } 
 			$validate[$name]=implode('|', $tmp);
 		}
 		return $validate;
@@ -381,6 +386,16 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'select':
+				$method = explode('_', $name,2)[0];
+				if(method_exists($obj, $method)){
+					$fieldName = explode('_', $name,2)[1];
+					if(empty($value)){
+						$relation = $obj->$method;
+						if(!is_null($relation)){
+							$value = $relation->$fieldName;							
+						}
+					}
+				}
 				$array = $this->model->arrayField($name);
 				if($required===''){
 					$html.='<option value="">未选择</option>';
@@ -425,7 +440,7 @@ class FieldService{
 				$static='未选择';
 				if(!empty($value)){
 					list($relation,$attr)=explode('_', $param['related']);
-					$static = $obj->{$relation}()->first()->$attr;
+					$static = $obj->$relation->$attr;
 				}
 				$filter='';
 				if(isset($param['filter'])){
@@ -454,7 +469,7 @@ class FieldService{
 				if(method_exists($obj, $method)){
 					$fieldName = explode('_', $name,2)[1];
 					if(empty($value)){
-						$relation = $obj->{$method}()->first();
+						$relation = $obj->$method;
 						if(is_null($relation)){
 							$rtn = '未选择';
 						}
