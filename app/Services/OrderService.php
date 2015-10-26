@@ -7,6 +7,7 @@ use Excel;
 use Carbon\Carbon;
 use Log;
 use Queue;
+use DB;
 class OrderService extends BasicService{
 	protected $class='App\Order';
 	protected $importPath;
@@ -244,10 +245,10 @@ class OrderService extends BasicService{
 		}
 		$prepare = ['oid','gid','gname','order_date','country','amount','sum','days','go_date','back_date','gmobile','address','house','send_date','is_deliver'];
 		foreach ($prepare as $field) {
-			if($order->$field==''||is_null($order->$field)){
+			if($order->$field===''||is_null($order->$field)){
 				Log::info($field.' not set, prepare failed');
 				DB::rollback();
-				return 'fieldNotSet';
+				return $order->$field;
 			}
 		}
 		$order->status = 1;
@@ -368,7 +369,7 @@ class OrderService extends BasicService{
 		$tpl = $this->logAction['backward'];
 		$tpl['reasons']=$order->reasons;
 		$tpl['log_at']=$order->modified_at;
-		$this->appendLog($obj,$tpl,'backward');
+		$this->appendLog($order,$tpl,'backward');
 	}
 
 	/**
@@ -379,7 +380,7 @@ class OrderService extends BasicService{
 	public function combineLog($order){
 		$tpl = $this->logAction['combine'];
 		$tpl['products']=$order->products()->get(['pid','id'])->toArray();
-		$this->appendLog($obj,$tpl,'combine');
+		$this->appendLog($order,$tpl,'combine');
 	}
 
 	/**
@@ -391,7 +392,7 @@ class OrderService extends BasicService{
 		$tpl = $this->logAction['send'];
 		$tpl['reasons']=$order->reasons;
 		$tpl['log_at']=$order->modified_at;
-		$this->appendLog($obj,$tpl,'send');
+		$this->appendLog($order,$tpl,'send');
 	}
 
 	/**
@@ -403,7 +404,7 @@ class OrderService extends BasicService{
 		$tpl = $this->logAction['prepare'];
 		$tpl['reasons']=$order->reasons;
 		$tpl['log_at']=$order->modified_at;
-		$this->appendLog($obj,$tpl,'prepare');
+		$this->appendLog($order,$tpl,'prepare');
 	}
 	/**
 	 * 取消记录
@@ -414,7 +415,7 @@ class OrderService extends BasicService{
 		$tpl = $this->logAction['cancel'];
 		$tpl['reasons']=$order->reasons;
 		$tpl['log_at']=$order->modified_at;
-		$this->appendLog($obj,$tpl,'cancel');
+		$this->appendLog($order,$tpl,'cancel');
 	}
 	/**
 	 * 完成记录
@@ -425,7 +426,7 @@ class OrderService extends BasicService{
 		$tpl = $this->logAction['finish'];
 		$tpl['reasons']=$order->reasons;
 		$tpl['log_at']=$order->modified_at;
-		$this->appendLog($obj,$tpl,'finish');
+		$this->appendLog($order,$tpl,'finish');
 	}
 	public function checkStatus($obj,$data){
 		if(is_array($data)&&isset($data['status'])){

@@ -26,6 +26,7 @@ Route::group(['middleware'=>'auth'],function(){
 	Route::group(['prefix'=>'order'],function(){
 		Route::get('import','OrderController@getImport');
 		Route::post('import','OrderController@postImport');
+		Route::post('ready/{id}','OrderController@postReady');
 
 	});
 	Route::group(['prefix'=>'supply'],function(){

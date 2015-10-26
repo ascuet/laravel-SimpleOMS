@@ -110,12 +110,10 @@ class OrderController extends Controller {
 	 * 转入待发货
 	 *
 	 */
-	public function postReady(Request $request){
+	public function postReady($id,Request $request){
 		$this->validate($request,[
-			'id'=>'required',
 			'reasons'=>'string|max:150'
 			]);
-		$id = $request->input('id');
 		$reasons = $request->input('reasons','');
 		if(!$this->service->edit($request->all(),$id)){
 			return redirect()->back()->withErrors('更新数据失败');			

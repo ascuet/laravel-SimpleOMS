@@ -42,12 +42,13 @@ class OrderField extends FieldService {
 			case 'add':
 				$this->setFieldsBatch('add',['text'=>'required|unique:orders,oid,NULL,id,deleted_at,NULL'],['oid'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['text'=>'required'],['country','gid','gname','gmobile','address'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['date'=>'required|full|readonly'],['order_date'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['textarea'=>'required'],['address'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['date'=>'required|full'],['order_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['number'=>'required'],['amount'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['decimal'=>'required'],['sum'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['date'=>'required|event:calculate_days'],['go_date','back_date'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['date'=>'required|readonly|noDefault'],['send_date'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['number'=>'required|readonly'],['days'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['date'=>'required|noDefault'],['send_date'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['number'=>'required|event:calculate_days'],['days'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['select'=>'readonly'],['belongsToSupply_supply'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|filter:belongsToSupply_supply'],['house'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['radio'=>'required'],['is_deliver'],[''],[0,1,2]);
@@ -56,8 +57,11 @@ class OrderField extends FieldService {
 				break;
 			case 'edit':
 				$this->setFieldsBatch('edit',['text'=>'required'],['oid','country','gid','gname','gmobile','address'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['textarea'=>'required'],['address'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile','address'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['textarea'=>'required|readonly'],['address'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile','address'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['textarea'=>'required|readonly'],['address'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['date'=>'required|full|readonly'],['order_date'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('edit',['number'=>'required'],['amount'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['amount'],[2,3,-1],[0,1,2]);
@@ -68,8 +72,10 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['date'=>'required|event:calculate_days'],['go_date','back_date'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['go_date','back_date'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['go_date','back_date'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['date'=>'required|readonly|noDefault'],['send_date'],[0,1,2,3,-1]);
-				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['days'],[0,1,2,3,-1]);
+				$this->setFieldsBatch('edit',['date'=>'required|noDefault'],['send_date'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['send_date'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['send_date'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['number'=>'required|event:calculate_days'],['days'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('edit',['select'=>'readonly'],['belongsToSupply_supply'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'readonly|disabled'],['belongsToSupply_supply'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'readonly|disabled'],['belongsToSupply_supply'],[0,1,2,3,-1],[3,4,5]);		

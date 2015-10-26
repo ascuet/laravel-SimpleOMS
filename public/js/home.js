@@ -14,24 +14,33 @@ Component.events={
 			},
 			param:function(){
 				var self = this;
-				var filter = $('[name="'+self.opt.filter+'"]').val();
-				if(typeof(filter)!='undefined'){
-					return self.opt.filter+'='+filter;					
-				}
-				else{
-					return '';
-				}
+				if(typeof(self.opt.filter)=='undefined')return;
+				var arrFilter = self.opt.filter.split(',');
+				var arrParam = [];
+				for (var i = arrFilter.length - 1; i >= 0; i--) {
+					var value = $('[name="'+arrFilter[i]+'"]').val();
+					if(typeof(value)!='undefined'){
+						arrParam[arrFilter[i]] = value;					
+					}
+				};
+				return arrParam;
 			},
 			callback:function(data){
 				var self = this;
 				console.log(data);
 				$('#selecttableModal .modal-content').empty().html(data);
-				$('#selecttableModal table tbody tr').click(function(){
-					var $this = $(this);
-					$('input:hidden[name="'+self.opt.name+'"]').val($this.find('[name="id"]').val());
-					$('input:hidden[name="'+self.opt.name+'"]').siblings('input[type="text"]').val($this.find('.td-'+self.opt.field).text());
-					$('#selecttableModal').modal('hide');
-				});
+				if(self.opt.field=='row'){
+
+				}
+				else{
+					$('#selecttableModal table tbody tr').click(function(){
+						var $this = $(this);
+						$('input:hidden[name="'+self.opt.name+'"]').val($this.find('[name="id"]').val());
+						$('input:hidden[name="'+self.opt.name+'"]').siblings('input[type="text"]').val($this.find('.td-'+self.opt.field).text());
+						$('#selecttableModal').modal('hide');
+					});
+				}
+				
 			},
 			errorCallback:function(data){
 
@@ -46,6 +55,7 @@ Component.events={
 				var date2 = new Date ($('input[name="back_date"]').val());
 				var day = 24*60*60*1000;
 				$('input[name="days"]').val((date2.getTime()-date1.getTime())/day);
+				$('[data-event="days_before"]').trigger('input');
 			}
 		},
 		days_before:{
@@ -53,13 +63,22 @@ Component.events={
 			isAjax:false,
 			opt:'',
 			handler:function($this){
+				var day = 24*60*60*1000;
+				$('input[name="send_date"]').removeClass('datepicker');
 				if($('input[name="send_date"]').val()==""){
-					$this.val(4);
+					$('input[name="days_before"]').val(4);
+
+				}else{
+					if($('input[name="days_before"]').val()==''){
+						var date1 = new Date ($('input[name="send_date"]').val());
+						var date2 = new Date ($('input[name="go_date"]').val());
+						$('input[name="days_before"]').val((date2.getTime()-date1.getTime())/day);
+
+					}
 				}
-				var days_before = $this.val();
+				var days_before = $('input[name="days_before"]').val();
 				if(days_before>=0){
 					var  date1 = new Date ($('input[name="go_date"]').val());
-					var day = 24*60*60*1000;
 					var date2 = date1.getTime()-day*days_before;
 					var send_date = new Date();
 					send_date.setTime(date2);
@@ -67,8 +86,22 @@ Component.events={
 
 				}
 			}
+		},
+		confirm:{
+			type:'click',
+			isAjax:false,
+			opt:'',
+			handler:function($this){
+				$('#confirmModal').find('.modal-title').text($this.data('description'));
+				$('#confirmModal').find('button[type="submit"]').attr('formaction',$this.data('action'));
+				$('#confirmModal').find('button[type="submit"]').click(function(){
+					$('#form').find('input[name="_method"]').remove();
+				});
+			}
 
 		}
+
+		
 
 	},
 	init:function(){

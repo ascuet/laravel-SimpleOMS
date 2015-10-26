@@ -56,10 +56,20 @@ class ProductController extends Controller {
 	}
 
 	/**
-	 * selecttable操作
+	 * 显示 selecttable
+	 *
 	 *
 	 */
-	public function getSelecttable(){
+	public function getSelecttable(Request $request, ProductField $fieldService){
+		$arrRequest = $request->all();
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus(0);
+		$data['title']='选择设备';
+		$data['class']='product';
+		$data['field']=$fieldService;
+		$data['multi']=false;
+		$data['data']=$this->service->lists($arrRequest,'',20);
+		return view('partials.select-modal')->with($data);
 
 	}
 	/**

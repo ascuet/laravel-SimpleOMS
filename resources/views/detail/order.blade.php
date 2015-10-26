@@ -3,10 +3,12 @@
 	
 <div class="container">
 		@include('partials.info')
-
 	<h1>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h1>
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
+		@if($order->status>0 && $order->belongsToSupply->is_self==1)
+		<li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">关联设备</a></li>
+		@endif
 		<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">操作记录</a></li>
 	</ul>
 	<div class="tab-content">
@@ -76,9 +78,36 @@
 
 				</div>
 				<hr>
+				
 				{!! $field->editFieldHTML('status','订单状态',$order) !!}
 			</form>
 		</div>
+		@if($order->status>0 && $order->belongsToSupply->is_self==1)
+		<div class="tab-pane" id="products" role="tabpanel">
+			<?php $products = $order->products()->with('belongsToSupply')->get()?>
+			<h3>关联设备<button type="button"  data-toggle="modal" data-table="product" data-field="row" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button></h3>
+			<table class="table table-hover table-striped table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th>设备号</th>
+						<th>国家</th>
+						<th>库存名</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($products as $product)
+					<tr id="{{$product->id}}">
+						<td>{{$product->pid}}</td>
+						<td>{{$product->country}}</td>
+						<td>{{$product->belongsToSupply->name}}</td>
+						<td><button type="button" class="btn btn-alert btn-sm">移除</button></td>						
+					</tr>
+						@endforeach
+				</tbody>
+			</table>
+		</div>
+		@endif
 		<div class="tab-pane" id="logs" role="tabpanel">
 			@include('partials.logs',['obj'=>$order])
 

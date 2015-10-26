@@ -23,6 +23,35 @@
 			@if(in_array('backpage',$actions))
 				<a href="{{URL::previous()}}" class="btn navbar-btn btn-default">返回</a>
 			@endif
+
+			@if(in_array('orderReady',$actions)&&$order->status==0)
+				<button type="button" class="btn btn-success"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/ready/'.$order->id)}}" data-description="将订单转入待发货" data-target="#confirmModal">准备发货</button>
+			@endif
     	</div>
   	</div>
+  	<div class="modal fade" id="confirmModal"   tabindex="-1" role="dialog" aria-labelledby="Confirm">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	    	<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="confirmModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="form-group">
+						<label class=" col-sm-2 col-sm-offset-1" for="reasons">操作意见</label>
+						<div class="col-sm-9">
+							<textarea class="form-control" name="reasons" form="form" rows="3"></textarea>
+							<p class="help-block">操作意见可选填,会显示在操作记录中</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="submit" form="form" formmethod="POST" class="btn btn-primary">提交</button>
+			</div>
+	    </div>
+	  </div>
+	</div>
 </nav>

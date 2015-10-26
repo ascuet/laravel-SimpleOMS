@@ -181,7 +181,7 @@ class ProductService extends BasicService{
 	 * @param string $reason
 	 * @return void
 	 */
-	public function entryLog($product,$order,$reason='常规入库'){
+	public function entryLog($obj,$order,$reason='常规入库'){
 		$tpl = $this->logAction['entry'];
 		$tpl['reasons']=$reasons;
 		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id)];
@@ -195,7 +195,7 @@ class ProductService extends BasicService{
 	 * @param string $reason
 	 * @return void
 	 */
-	public function sendLog($product,$order,$reason='常规出库'){
+	public function sendLog($obj,$order,$reason='常规出库'){
 		$tpl = $this->logAction['send'];
 		$tpl['reasons']=$reasons;
 		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id)];

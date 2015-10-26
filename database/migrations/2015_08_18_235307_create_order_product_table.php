@@ -18,7 +18,7 @@ class CreateOrderProductTable extends Migration {
 			$table->increments('id');
 			$table->integer('order_id');
 			$table->integer('product_id');
-			$table->timestamp('return_date')->nullable();
+			$table->timestamp('return_at')->nullable();
 			$table->timestamps();
 		});
 	}

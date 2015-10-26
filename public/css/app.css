@@ -6240,3 +6240,8 @@ body{
 input.form-control[readonly].datetimepicker,input.form-control[readonly].datepicker,select.form-control[readonly]{
   cursor: pointer;
 }
+.modal-backdrop{
+  bottom: 0;
+  position: fixed;
+  z-index: 2;
+}
