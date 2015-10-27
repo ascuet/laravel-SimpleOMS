@@ -85,26 +85,9 @@
 		@if($order->status>0 && $order->belongsToSupply->is_self==1)
 		<div class="tab-pane" id="products" role="tabpanel">
 			<?php $products = $order->products()->with('belongsToSupply')->get()?>
-			<h3>关联设备<button type="button"  data-toggle="modal" data-table="product" data-field="row" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button></h3>
+			<h3>关联设备 <small>仓库: {{$order->belongsToSupply->name}}</small> <button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-orderid="{{$order->id}}" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button></h3>
 			<table class="table table-hover table-striped table-bordered table-condensed">
-				<thead>
-					<tr>
-						<th>设备号</th>
-						<th>国家</th>
-						<th>库存名</th>
-						<th>操作</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($products as $product)
-					<tr id="{{$product->id}}">
-						<td>{{$product->pid}}</td>
-						<td>{{$product->country}}</td>
-						<td>{{$product->belongsToSupply->name}}</td>
-						<td><button type="button" class="btn btn-alert btn-sm">移除</button></td>						
-					</tr>
-						@endforeach
-				</tbody>
+				@include('partials.productCombinition')
 			</table>
 		</div>
 		@endif

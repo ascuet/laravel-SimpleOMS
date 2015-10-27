@@ -93,7 +93,8 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['hidden'=>''],['status']);
 				break;
 			case 'import':
-				$this->setFieldsBatch('import',['string'=>'required'],['oid','country','amount'],[''],[0,1,2]);
+				$this->setFieldsBatch('import',['text'=>'required|unique:orders,oid,NULL,id,deleted_at,NULL'],['oid'],[''],[0,1,2]);
+				$this->setFieldsBatch('import',['string'=>'required'],['country','amount'],[''],[0,1,2]);
 				$this->setFieldsBatch('import',['date'=>'required'],['order_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('import',['string'=>''],['gid','gname','sum','message','gmobile','address','memo','source'],[''],[0,1,2]);
 				break;

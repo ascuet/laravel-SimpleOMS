@@ -28,7 +28,7 @@ class Product extends Model {
 	}
 
 	public function orders(){
-		return $this->belongsToMany('App\Product')->withPivot('return_at');
+		return $this->belongsToMany('App\Order')->withPivot('return_at');
 	}
 	public function hasManyLog(){
 		return $this->hasMany('App\UserLog','object_id','id');

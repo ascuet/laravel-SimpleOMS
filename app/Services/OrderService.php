@@ -2,6 +2,7 @@
 
 use App\Order;
 use Validator;
+use Illuminate\Validation\Validator as ValidatorClass;
 use App\OrderField;
 use Excel;
 use Carbon\Carbon;
@@ -45,6 +46,10 @@ class OrderService extends BasicService{
 			'body'=>' 完成 {object}, 操作意见: {reasons}',
 			'reasons'=>''
 		];
+		$this->logAction['unbind']=[
+			'body'=>'从 {object} 移除设备 {products}',
+			'products'=>''
+		];
 	}
 
 	/**
@@ -56,10 +61,10 @@ class OrderService extends BasicService{
 		$sheets = Excel::selectSheetsByIndex(0)->load($this->importPath.$fileName)->get();
 		foreach ($sheets as $sheet) {
 			foreach ($sheet as $row) {
-				if(!$this->parseBeforeImport($row->toArray())){
-					return ['errcode'=>'importError','msg'=>'订单号:'.$row[0]];
+				$rtn = $this->parseBeforeImport($row->toArray());
+				if($rtn instanceof ValidatorClass){
+					return $rtn;
 				}
-				
 			}
 		}
 		return true;
@@ -76,22 +81,16 @@ class OrderService extends BasicService{
 		}
 		$import = array();
 		$fields = $this->fieldService->getFieldsByMethod('import',$this->user->auth);
-			foreach ($fields as $k => $v) {
-				$options = explode('|',current($v['type']));
-				$required = in_array('required', $options)?true:false;
-				$index =array_search($k, $this->importField);
-				if($index!==false){
-					if($required&&empty($data[$index])){
-						Log::info('importing error: '.$k.' is required',$data);
-						return false;
-					}
-					$import[$k] = $data[$index];
-				}
-				else{
-					return false;
-				}
-				
-			}
+		foreach ($fields as $k => $v) {
+			$index =array_search($k, $this->importField);
+			if($index!==false){
+				$import[$k] = $data[$index];
+			}		
+		}
+		$validator=Validator::make($import,$this->fieldService->parseValidator('import',$this->user->auth));
+		if($validator->fails()){
+			return $validator;
+		}
 		return $this->create($import);
 	}
 
@@ -130,11 +129,11 @@ class OrderService extends BasicService{
 	/**
 	 * 在待发货时关联订单与设备 
 	 * @param int $order_id
-	 * @param string $product_id
+	 * @param int $product_id
 	 * @param App\Services\ProductService $productService
 	 * @return bool
 	 */
-	public function combineProducts($order_id,$product_id,$productService){
+	public function combineProduct($order_id,$product_id,$productService){
 		//条件(待发货)
 		DB::beginTransaction();
 		$order= $this->listOne($id);
@@ -179,10 +178,13 @@ class OrderService extends BasicService{
 		$supply = $order->belongsToSupply()->first();
 		switch ($supply->is_self) {
 			case 0://非自有
+				$order->products()->detach();
 				if($order->is_deliver==1&&!empty($order->delivery_company)&&!empty($order->delivery_no)){
 					continue;
 				}
 				elseif($order->is_deliver==0){
+					$order->delivery_company='';
+					$order->delivery_no='';
 					continue;
 				}
 				else{
@@ -207,6 +209,8 @@ class OrderService extends BasicService{
 					}
 				}
 				elseif($order->is_deliver==0){
+					$order->delivery_company='';
+					$order->delivery_no='';
 					continue;
 				}
 				else{
@@ -379,8 +383,19 @@ class OrderService extends BasicService{
 	 */
 	public function combineLog($order){
 		$tpl = $this->logAction['combine'];
-		$tpl['products']=$order->products()->get(['pid','id'])->toArray();
+		$tpl['products']=$order->products()->get(['pid'])->toArray();
 		$this->appendLog($order,$tpl,'combine');
+	}
+	/**
+	 * 绑定设备记录
+	 * @param App\Order $order
+	 * @param App\Product $product
+	 * @return void
+	 */
+	public function unbindLog($order,$product){
+		$tpl = $this->logAction['unbind'];
+		$tpl['products']=['pid'=>$product->pid,'id'=>$product->id];
+		$this->appendLog($order,$tpl,'unbind');
 	}
 
 	/**

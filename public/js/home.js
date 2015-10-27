@@ -10,27 +10,42 @@ Component.events={
 			opt:'',
 			path:function(){
 				var self = this;
+				$('#selecttableModal .modal-content').empty();
 				return '/'+self.opt.table+'/selecttable';
 			},
 			param:function(){
 				var self = this;
 				if(typeof(self.opt.filter)=='undefined')return;
 				var arrFilter = self.opt.filter.split(',');
-				var arrParam = [];
+				var arrParam = {};
 				for (var i = arrFilter.length - 1; i >= 0; i--) {
 					var value = $('[name="'+arrFilter[i]+'"]').val();
 					if(typeof(value)!='undefined'){
 						arrParam[arrFilter[i]] = value;					
 					}
 				};
-				return arrParam;
+				console.log($.param(arrParam));
+				var str = $.param(arrParam);
+				return str;
 			},
 			callback:function(data){
 				var self = this;
 				console.log(data);
-				$('#selecttableModal .modal-content').empty().html(data);
+				$('#selecttableModal .modal-content').html(data);
 				if(self.opt.field=='row'){
-
+					$('#selecttableModal table tbody tr').click(function(){
+						var $this = $(this);
+						Action.call('POST',$this.data('action')+'/'+self.opt.orderid,'product_id='+$this.find('[name="id"]').val(),function(data){
+							$(self.opt.targettable).find('table').empty().html(data);
+							$('#selecttableModal').modal('hide');
+						},function(data){
+							$('#selecttableModal').modal('hide');
+							$(self.opt.targettable).before('<div class="alert alert-info" role="alert">'+data.responseText+'...</div>');
+							setTimeout(function(){
+								$(self.opt.targettable).prev().remove();
+							},3000);
+						});
+					});
 				}
 				else{
 					$('#selecttableModal table tbody tr').click(function(){
@@ -97,6 +112,30 @@ Component.events={
 				$('#confirmModal').find('button[type="submit"]').click(function(){
 					$('#form').find('input[name="_method"]').remove();
 				});
+			}
+
+		},
+		unbindProduct:{
+			type:'click',
+			isAjax:'POST',
+			opt:'',
+			path:function(){
+				var self = this;
+				return self.opt.action;
+			},
+			param:function(){
+				var self = this;
+				return 'product_id='+self.opt.productid;
+			},
+			callback:function(data){
+				var self = this;
+				$(self.opt.targettable).find('table').empty().html(data);
+			},
+			errorCallback:function(data){
+				$(self.opt.targettable).before('<div class="alert alert-info" role="alert">'+data.responseText+'...</div>');
+				setTimeout(function(){
+					$(self.opt.targettable).prev().remove();
+				},3000);
 			}
 
 		}

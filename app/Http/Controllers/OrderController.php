@@ -7,6 +7,9 @@ use App\Services\ProductService;
 use Illuminate\Http\Request;
 use App\OrderField;
 use Auth;
+use Illuminate\Validation\ValidatorClass;
+use DB;
+use Validator;
 class OrderController extends Controller {
 
 	protected $service,$user;
@@ -60,6 +63,67 @@ class OrderController extends Controller {
 		}
 		
 	}
+
+	/**
+	 * 添加设备关联
+	 *
+	 *
+	 */
+	public function postCombine($id,Request $request,ProductService $productService){
+		$this->validate($request,[
+			'id'=>'exists:orders',
+			'product_id'=>'required'
+			]);
+		$product_id = $request->input('product_id');
+		DB::beginTransaction();
+		$order = $this->service->listOne($id);
+		if($order->amount == $order->products()->count()){
+			return response('设备数已满足, 请先移除',422);
+		}
+		$validator =  Validator::make($order->toArray(),[
+			'status'=>'required|in:1',
+			'is_self'=>'required|in:1,true'
+			]);
+		if(!$rtn = $productService->combineProduct($product_id,$order)){
+			DB::rollback();
+			$products = $order->products()->with('belongsToSupply')->get();
+			return view('partials.productCombinition')->with(['products'=>$products]);
+		}
+		else{
+			$this->service->combineLog($order);
+			DB::commit();
+			$products = $order->products()->with('belongsToSupply')->get();
+			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order]);
+		}
+
+	}
+
+	/**
+	 * 添加设备关联
+	 *
+	 *
+	 */
+	public function postUnbind($id,Request $request,ProductService $productService){
+		$this->validate($request,[
+			'id'=>'exists:orders',
+			'product_id'=>'required'
+			]);
+		$product_id = $request->input('product_id');
+		DB::beginTransaction();
+		$order = $this->service->listOne($id);
+		$validator = Validator::make($order->toArray(),[
+			'status'=>'required|in:1',
+			'is_self'=>'required|in:1,true'
+			]);
+		$product = $order->products()->find($product_id);
+		$order->products()->detach($product_id);
+		$this->service->unbindLog($order,$product);
+		DB::commit();
+		$products = $order->products()->with('belongsToSupply')->get();
+		return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order]);
+		
+
+	}
 	/**
 	 * 发货/批量发货
 	 *
@@ -112,6 +176,7 @@ class OrderController extends Controller {
 	 */
 	public function postReady($id,Request $request){
 		$this->validate($request,[
+			'id'=>'exists:orders',
 			'reasons'=>'string|max:150'
 			]);
 		$reasons = $request->input('reasons','');
@@ -197,8 +262,10 @@ class OrderController extends Controller {
 			]);
 
 		$rtn = $this->service->importOrders($request->input('file_name'));
-		if(gettype($rtn)=='array'&&isset($rtn['errcode'])){
-			return response($this->errorMessage[$rtn['errcode']].$rtn['msg'],400);
+		if($rtn instanceof Validator){
+			$messages = $rtn->messages();
+			$invalid = $rtn->invalid();
+			return response()->json(array_merge($messages->all(),$invalid),422);
 		}elseif($rtn===true){
 			return response('导入成功',200);			
 		}else{

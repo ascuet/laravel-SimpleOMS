@@ -138,6 +138,33 @@ class ProductService extends BasicService{
 		$order->products()->sync($ids);
 		return true;
 	}
+
+	/**
+	 * 设备分配
+	 * @param int $id
+	 * @param App\Order $order
+	 * @return bool
+	 */
+	public function combineProduct($id,$order){
+		$product= $this->listOne($id);
+		if(is_null($product))return false;
+			//状态必须是在库
+		if($product->pstatus!=0){
+			Log::info($product->code.' not available');
+			return false;
+		}
+		//当前没有分配给其他订单(return_at没有值)
+		$distributions = $this->currentBind($product);
+		if(!is_null($distributions)){
+			Log::info($product->code.' has distributions',$distributions->toArray());
+			return false;
+		}		
+		
+		$order->products()->attach($id);
+		return true;
+	}
+
+	
 	/**
 	 * 设备发货
 	 * @param int $id

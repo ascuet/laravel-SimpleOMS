@@ -176,8 +176,10 @@ class FieldService{
 	 * @param string $method
 	 * @return array
 	 */
-	public function parseValidator($method){
-		$arrFields = $this->getFieldsByMethod($method,$this->currentRole(),$this->currentStatus());
+	public function parseValidator($method,$role=null,$status=null){
+		is_null($role)&&$role=$this->currentRole();
+		is_null($status)&&$status=$this->currentStatus();
+		$arrFields = $this->getFieldsByMethod($method,$role,$status);
 		$validate=[];
 		foreach ($arrFields as $name => $type) {
 			$options = explode('|', current($type['type']));

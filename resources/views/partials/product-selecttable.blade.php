@@ -9,8 +9,8 @@
 	</thead>
 	<tbody>
 		@foreach($data as $key=>$value)
-			<tr onclick="event.stopPropagation()" style="cursor:pointer">
-				<th><input type="checkbox" name="id" value="{{$value->id}}"></th>
+			<tr data-action="{{url('order/combine-product/')}}"  style="cursor:pointer">
+				<th onclick="event.stopPropagation()"><input type="checkbox" name="id" value="{{$value->id}}"></th>
 				{!!$field->tableCell('pid',$value)!!}
 				{!!$field->tableCell('country',$value)!!}
 			</tr>

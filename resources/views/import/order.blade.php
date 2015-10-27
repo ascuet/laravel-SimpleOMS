@@ -76,10 +76,10 @@
                                 type:'POST',
                                 url:"{{url('order/import')}}"+'?file_name='+$this.data('file'),
                                 success:function(msg){
-                                    $this.parent().text(msg);
+                                    $this.parent().text(msg.responseText);
                                 },
                                 error:function(msg){
-                                    $this.parent().text(msg);
+                                    $this.parent().text(msg.responseText);
                                 }
 
                             });

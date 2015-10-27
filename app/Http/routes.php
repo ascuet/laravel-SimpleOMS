@@ -27,6 +27,8 @@ Route::group(['middleware'=>'auth'],function(){
 		Route::get('import','OrderController@getImport');
 		Route::post('import','OrderController@postImport');
 		Route::post('ready/{id}','OrderController@postReady');
+		Route::post('combine-product/{id}','OrderController@postCombine');
+		Route::post('unbind-product/{id}','OrderController@postUnbind');
 
 	});
 	Route::group(['prefix'=>'supply'],function(){
@@ -36,7 +38,7 @@ Route::group(['middleware'=>'auth'],function(){
 	Route::group(['prefix'=>'product'],function(){
 		Route::get('entry','ProductController@getEntry');
 		Route::post('entry','ProductController@postEntry');
-
+		Route::get('selecttable','ProductController@getSelecttable');
 	});
 	Route::group(['prefix'=>'user'],function(){
 		Route::get('userlog/{id}','UserController@getUserLog');
