@@ -19,7 +19,9 @@
 			@if(in_array('submit',$actions))
 				<button type="submit" form="form" class="btn navbar-btn btn-primary">提交</button>
 			@endif
-
+			@if(in_array('entryProduct',$actions)&&isset($product->pid))
+				<button type="submit" form="form" formmethod="POST" formaction="{{url('product/entry/'.$currentProduct->id)}}" class="btn navbar-btn btn-primary">入库</button>
+			@endif
 			@if(in_array('backpage',$actions))
 				<a href="{{URL::previous()}}" class="btn navbar-btn btn-default">返回</a>
 			@endif

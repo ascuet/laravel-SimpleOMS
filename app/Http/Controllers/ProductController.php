@@ -21,21 +21,22 @@ class ProductController extends Controller {
 	 *
 	 */
 	public function getEntry(Request $request ,ProductField $fieldService){
-		$pid = $request->input('pid');
-		$product = $this->service->fetchOne(['pid'=>$pid]);
-		if(is_null($product)){
+		$pid = $request->input('pid',null);
+		if(is_null($pid)){
 			return view('product-entry');			
 		}
+		$product = $this->service->fetchOne(['pid'=>$pid]);
 		$order = $this->service->currentOrder($product);
 		if(is_null($order)){
 			return redirect()->back()->withErrors('未找到当前订单');
 		}
-		$products = $order->products()->get();
+		$products = $order->products()->with('belongsToSupply')->get();
 		$data=[];
-		$data['product']=$product;
+		$data['currentProduct']=$product;
+		$data['actions']=['entryProduct','backpage'];
 		$data['order']=$order;
 		$data['products']=$products;
-		return view('product-entry')->with($data);
+		return view('product-entry')->with($data)->withInput($request->flash());
 	}
 
 	/**

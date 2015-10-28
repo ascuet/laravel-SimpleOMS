@@ -41,7 +41,7 @@ Route::group(['middleware'=>'auth'],function(){
 	});
 	Route::group(['prefix'=>'product'],function(){
 		Route::get('entry','ProductController@getEntry');
-		Route::post('entry','ProductController@postEntry');
+		Route::post('entry/{id}','ProductController@postEntry');
 		Route::get('selecttable','ProductController@getSelecttable');
 	});
 	Route::group(['prefix'=>'user'],function(){
