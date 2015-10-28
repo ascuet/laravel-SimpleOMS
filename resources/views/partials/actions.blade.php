@@ -23,9 +23,20 @@
 			@if(in_array('backpage',$actions))
 				<a href="{{URL::previous()}}" class="btn navbar-btn btn-default">返回</a>
 			@endif
-
+			@if(in_array('cancel',$actions)&&$order->status==1)
+				<button type="button" class="btn btn-danger"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/cancel/'.$order->id)}}" data-description="取消订单" data-target="#confirmModal">取消</button>
+			@endif
+			@if(in_array('backward',$actions)&&$order->status==2)
+				<button type="button" class="btn btn-danger"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/backward/'.$order->id)}}" data-description="回退订单并入库所有设备" data-target="#confirmModal">回退</button>
+			@endif
 			@if(in_array('orderReady',$actions)&&$order->status==0)
 				<button type="button" class="btn btn-success"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/ready/'.$order->id)}}" data-description="将订单转入待发货" data-target="#confirmModal">准备发货</button>
+			@endif
+			@if(in_array('sendOrder',$actions)&&$order->status==1)
+				<button type="button" class="btn btn-success"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/send?id='.$order->id)}}" data-description="订单发货" data-target="#confirmModal">发货</button>
+			@endif
+			@if(in_array('finishOrder',$actions)&&$order->status==2)
+				<button type="button" class="btn btn-success"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/finish/'.$order->id)}}" data-description="完成订单并将所有设备入库" data-target="#confirmModal">完成</button>
 			@endif
     	</div>
   	</div>

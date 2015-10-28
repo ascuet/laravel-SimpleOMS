@@ -29,6 +29,10 @@ Route::group(['middleware'=>'auth'],function(){
 		Route::post('ready/{id}','OrderController@postReady');
 		Route::post('combine-product/{id}','OrderController@postCombine');
 		Route::post('unbind-product/{id}','OrderController@postUnbind');
+		Route::post('cancel/{id}','OrderController@postCancel');
+		Route::post('send','OrderController@postSend');
+		Route::post('finish/{id}','OrderController@postFinish');
+		Route::post('backward/{id}','OrderController@postBackward');
 
 	});
 	Route::group(['prefix'=>'supply'],function(){

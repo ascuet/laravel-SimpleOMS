@@ -350,7 +350,36 @@ class OrderService extends BasicService{
 		return true;
 	}
 
+	/**
+	* Edit object
+	* @param array $data
+	* @param int $id
+	* @return object|bool
+	*/
+	public function edit( $data,$id){
+		//保持数据一致性
+		DB::beginTransaction();
+		$class = $this->listOne($id);
 
+		if(!$class = $this->updateInstance($data,$class)){
+			DB::rollback();
+			return false;
+		}
+		else{
+			if($class->belongsToSupply->is_self!=1){
+				$class->products()->detach();
+			}
+			if($class->is_deliver!=1){
+				$class->delivery_no='';
+				$class->delivery_company='';
+				$class->save();
+			}
+
+			DB::commit();
+			return $class;
+		}
+
+	}
 	/**
 	* List object
 	* @param array $col

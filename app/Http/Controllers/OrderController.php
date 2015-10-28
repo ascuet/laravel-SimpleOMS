@@ -26,12 +26,10 @@ class OrderController extends Controller {
 	 * 回退订单
 	 *
 	 */
-	public function postBackward(Request $request,ProductService $productService){
+	public function postBackward($id,Request $request,ProductService $productService){
 		$this->validate($request,[
-			'id'=>'required',
 			'reasons'=>'string|max:150'
 			]);
-		$id = $request->input('id');
 		if(!$this->service->edit($request->all(),$id)){
 			return redirect()->back()->withErrors('更新数据失败');			
 		}
@@ -153,10 +151,10 @@ class OrderController extends Controller {
 			}
 		}
 		else{
-			if(!$this->service->edit($request->all(),$id)){
+			if(!$this->service->edit($request->all(),$ids)){
 				return redirect()->back()->withErrors('更新数据失败');			
 			}
-			$rtn = $this->service->sendOrder($id,$reasons,$productService);
+			$rtn = $this->service->sendOrder($ids,$reasons,$productService);
 			if(gettype($rtn)=='string'&&isset($this->errorMessage[$rtn])){
 				return redirect()->back()->withErrors($this->errorMessage[$rtn]);
 			}
@@ -198,12 +196,10 @@ class OrderController extends Controller {
 	 * 取消
 	 *
 	 */
-	public function postCancel(Request $request,ProductService $productService){
+	public function postCancel($id,Request $request,ProductService $productService){
 		$this->validate($request,[
-			'id'=>'required',
 			'reasons'=>'string|max:150'
 			]);
-		$id = $request->input('id');
 		$reasons = $request->input('reasons','');
 		if(!$this->service->edit($request->all(),$id)){
 			return redirect()->back()->withErrors('更新数据失败');			
