@@ -18,6 +18,8 @@
 				<div class="row">
 					{!! $field->editFieldHTML('pid','设备号',$product) !!}
 					{!! $field->editFieldHTML('house','库存名',$product) !!}
+					{!! $field->editFieldHTML('belongsToSupply_name','库存名',$product) !!}
+
 				</div>
 				<div class="row">
 					{!! $field->editFieldHTML('pstatus','设备状态',$product) !!}

@@ -136,7 +136,7 @@ class FieldService{
 		if($this->get()->where('method',$name)->isEmpty()){
 			$this->setFields($name);			
 		}
-		$status=$status===''?$status:intval($status);
+		$status=$status===''||$status==='out'?$status:intval($status);
 		//dd($role.','.$status);
 		$arrFields = $this->get()->where('method',$name)->where('role',$role)->where('status',$status)->toArray();
 		$rtn=[];
@@ -303,7 +303,7 @@ class FieldService{
 					continue;
 				}
 				$array = $this->model->arrayField($name);
-				$rtn = $array[$value->$name];
+				$rtn = isset($array[$value->$name])?$array[$value->$name]:$value->$name;
 				break;
 			default:
 				$rtn = $value->$name;
@@ -475,21 +475,22 @@ class FieldService{
 				$html='<input type="hidden" name="'.$name.'" value="'.$value.'"/>';
 				break;
 			default:
+				$form = in_array('form', $options)?'form="form"':'';
 				$method = explode('_', $name,2)[0];
 				if(method_exists($obj, $method)){
 					$fieldName = explode('_', $name,2)[1];
 					if(empty($value)){
 						$relation = $obj->$method;
 						if(is_null($relation)){
-							$rtn = '未选择';
+							$value = '未选择';
 						}
 						else{
-							$rtn = $relation->$fieldName;
+							$value = $relation->$fieldName;
 						}
 
 					}
 				}
-				$html='	<input type="text" name="'.$name.'" class="form-control" value="'.$value.'" '.$required.' '.$readonly.'>';
+				$html='	<input type="text" '.$form.' name="'.$name.'" class="form-control" value="'.$value.'" '.$required.' '.$readonly.'>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';

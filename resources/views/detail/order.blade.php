@@ -7,7 +7,7 @@
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
 		@if($order->status>0 && $order->belongsToSupply->is_self==1)
-		<li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">关联设备</a></li>
+		<li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">发货信息</a></li>
 		@endif
 		<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">操作记录</a></li>
 	</ul>
@@ -59,10 +59,12 @@
 					{!! $field->editFieldHTML('amount','数量',$order) !!}
 					{!! $field->editFieldHTML('belongsToSupply_supply','供应商',$order) !!}
 					{!! $field->editFieldHTML('house','库存名',$order) !!}
+					{!! $field->editFieldHTML('belongsToSupply_name','库存名',$order) !!}
 				</div>
 				<hr>
 				<h3>发货信息</h3>
 				<div class="row">
+					@if($order->status==0||$order->status==1)
 					<div class="form-group col-md-6">
 						<label for="" class="col-sm-2 col-sm-offset-1">发货策略</label>
 						<div class="col-sm-4">
@@ -72,7 +74,8 @@
 							  <span class="input-group-addon">天发货</span>
 							</div>				
 						</div>
-						</div>
+					</div>
+					@endif
 					{!! $field->editFieldHTML('send_date','发货日期',$order) !!}
 					{!! $field->editFieldHTML('is_deliver','发货方式',$order) !!}
 
@@ -82,13 +85,29 @@
 				{!! $field->editFieldHTML('status','订单状态',$order) !!}
 			</form>
 		</div>
-		@if($order->status>0 && $order->belongsToSupply->is_self==1)
+		@if($order->status>0 )
 		<div class="tab-pane" id="products" role="tabpanel">
+			@if($order->is_deliver==1)
+			<?php $readonly=$order->status!=1?'readonly':'';?>
+			<h3>快递信息</h3>
+			<div class="row">
+				{!! $field->editFieldHTML('delivery_company','快递公司',$order) !!}
+				{!! $field->editFieldHTML('delivery_no','快递单号',$order) !!}
+			</div>
+			<hr>
+			@endif
+
+			@if($order->belongsToSupply->is_self==1)
 			<?php $products = $order->products()->with('belongsToSupply')->get()?>
-			<h3>关联设备 <small>仓库: {{$order->belongsToSupply->name}}</small> <button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-orderid="{{$order->id}}" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button></h3>
+			<h3>关联设备 <small>仓库: {{$order->belongsToSupply->name}} 日期:{{$order->send_date->toDateString()}} </small> 
+				@if(in_array('combineProduct',$actions)&&$order->status==1)
+				<button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-orderid="{{$order->id}}" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button>
+				@endif
+			</h3>
 			<table class="table table-hover table-striped table-bordered table-condensed">
 				@include('partials.productCombinition')
 			</table>
+			@endif
 		</div>
 		@endif
 		<div class="tab-pane" id="logs" role="tabpanel">

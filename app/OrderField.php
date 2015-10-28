@@ -62,6 +62,9 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['textarea'=>'required|readonly'],['address'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile','address'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['textarea'=>'required|readonly'],['address'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['text'=>'form'],['delivery_no','delivery_company'],[1],[0,1,3]);
+				$this->setFieldsBatch('edit',['text'=>'readonly'],['delivery_no','delivery_company'],[2,3],[0,1,3]);
+				$this->setFieldsBatch('edit',['text'=>'readonly'],['delivery_no','delivery_company'],[1,2,3],[2,4,5]);
 				$this->setFieldsBatch('edit',['date'=>'required|full|readonly'],['order_date'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('edit',['number'=>'required'],['amount'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['amount'],[2,3,-1],[0,1,2]);
@@ -75,7 +78,9 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['date'=>'required|noDefault'],['send_date'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['send_date'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['date'=>'required|readonly'],['send_date'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['number'=>'required|event:calculate_days'],['days'],[0,1,2,3,-1]);
+				$this->setFieldsBatch('edit',['number'=>'required|event:calculate_days'],['days'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['days'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['days'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['select'=>'readonly'],['belongsToSupply_supply'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'readonly|disabled'],['belongsToSupply_supply'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'readonly|disabled'],['belongsToSupply_supply'],[0,1,2,3,-1],[3,4,5]);		

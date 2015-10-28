@@ -85,13 +85,13 @@ class OrderController extends Controller {
 		if(!$rtn = $productService->combineProduct($product_id,$order)){
 			DB::rollback();
 			$products = $order->products()->with('belongsToSupply')->get();
-			return view('partials.productCombinition')->with(['products'=>$products]);
+			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['unbindProduct']]);
 		}
 		else{
 			$this->service->combineLog($order);
 			DB::commit();
 			$products = $order->products()->with('belongsToSupply')->get();
-			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order]);
+			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['unbindProduct']]);
 		}
 
 	}
@@ -118,7 +118,7 @@ class OrderController extends Controller {
 		$this->service->unbindLog($order,$product);
 		DB::commit();
 		$products = $order->products()->with('belongsToSupply')->get();
-		return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order]);
+		return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['unbindProduct']]);
 		
 
 	}
@@ -174,7 +174,6 @@ class OrderController extends Controller {
 	 */
 	public function postReady($id,Request $request){
 		$this->validate($request,[
-			'id'=>'exists:orders',
 			'reasons'=>'string|max:150'
 			]);
 		$reasons = $request->input('reasons','');
@@ -218,12 +217,10 @@ class OrderController extends Controller {
 	 * 完成
 	 *
 	 */
-	public function postFinish(Request $request,ProductService $productService){
+	public function postFinish($id,Request $request,ProductService $productService){
 		$this->validate($request,[
-			'id'=>'required',
 			'reasons'=>'string|max:150'
 			]);
-		$id = $request->input('id');
 		$reasons = $request->input('reasons','');
 		if(!$this->service->edit($request->all(),$id)){
 			return redirect()->back()->withErrors('更新数据失败');			
@@ -387,7 +384,7 @@ class OrderController extends Controller {
 		$fieldService->currentStatus($order->status);
 		$data['order']=$order;
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage','orderReady','cancel','backward','sendOrder','finishOrder'];
+		$data['actions']=['submit','backpage','orderReady','cancel','backward','sendOrder','finishOrder','combineProduct','unbindProduct'];
 		return view('detail.order')->with($data);
 	}
 

@@ -83,7 +83,7 @@ class ProductService extends BasicService{
 			return false;
 		}
 		$product->pstatus=0;
-		$product->orders()->updateExistingPivot($order->id,['return_at',Carbon::now()]);
+		$product->orders()->updateExistingPivot($order->id,['return_at'=>Carbon::now()]);
 		if($reason){
 			$this->entryLog($product,$order,$reason);
 		}
@@ -208,7 +208,7 @@ class ProductService extends BasicService{
 	 * @param string $reason
 	 * @return void
 	 */
-	public function entryLog($obj,$order,$reason='常规入库'){
+	public function entryLog($obj,$order,$reasons='常规入库'){
 		$tpl = $this->logAction['entry'];
 		$tpl['reasons']=$reasons;
 		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id)];
@@ -222,7 +222,7 @@ class ProductService extends BasicService{
 	 * @param string $reason
 	 * @return void
 	 */
-	public function sendLog($obj,$order,$reason='常规出库'){
+	public function sendLog($obj,$order,$reasons='常规出库'){
 		$tpl = $this->logAction['send'];
 		$tpl['reasons']=$reasons;
 		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id)];

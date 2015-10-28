@@ -42,7 +42,7 @@ class Product extends Model {
 			return $this->statusName[$this->status];
 		}
 		else{
-			return $this->statusName[$status];
+			return isset($this->statusName[$status])?$this->statusName[$status]:$this->statusName['out'];
 		}
 	}
 	public function arrayField($name){

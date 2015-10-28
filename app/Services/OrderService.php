@@ -307,7 +307,7 @@ class OrderService extends BasicService{
 			return 'statusChanged';
 		}
 		//入库所有设备
-		$arrProduct = $order->products()->wherePivot('return_at',null)->get('id')->toArray();
+		$arrProduct = $order->products()->wherePivot('return_at',null)->get()->lists('id');
 		if($productService->batchProductEntry($arrProduct,$order)){
 			Log::info($order->oid.' error when entry products');
 			DB::rollback();

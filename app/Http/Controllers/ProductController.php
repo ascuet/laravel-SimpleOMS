@@ -89,7 +89,7 @@ class ProductController extends Controller {
 	public function index(Request $request,ProductField $fieldService)
 	{
 		$arrRequest = $request->all();
-		$status = isset($arrRequest['status'])?$arrRequest['status']:'';
+		$status = isset($arrRequest['pstatus'])?$arrRequest['pstatus']:'';
 		is_array($status)&&$status='';
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus($status===''?$status:intval($status));
@@ -158,7 +158,7 @@ class ProductController extends Controller {
 		//
 		$product = $this->service->listOne($id);
 		$fieldService->currentRole($this->user->auth);
-		$fieldService->currentStatus($product->status);
+		$fieldService->currentStatus($product->pstatus);
 		$data['product']=$product;
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];
