@@ -14,7 +14,7 @@
 		<td>{{$product->belongsToSupply->name}}</td>
 		<td>
 			@if(in_array('unbindProduct',$actions)&&$order->status==1)
-			<button type="button" class="btn btn-danger btn-sm" data-event="unbindProduct" data-productid="{{$product->id}}" data-targetTable="#products" data-action="{{url('order/unbind-product/'.$order->id)}}">移除</button></td>
+			<button type="button" class="btn btn-danger btn-sm" onclick="Component.modules.unbindProduct(event)" data-productid="{{$product->id}}" data-targetTable="#products" data-action="{{url('order/unbind-product/'.$order->id)}}">移除</button></td>
 			@else
 			无
 			@endif

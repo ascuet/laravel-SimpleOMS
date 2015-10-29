@@ -29,38 +29,15 @@ Component.events={
 				return str;
 			},
 			callback:function(data){
-				var self = this;
-				console.log(data);
-				$('#selecttableModal .modal-content').html(data);
-				if(self.opt.field=='row'){
-					$('#selecttableModal table tbody tr').click(function(){
-						var $this = $(this);
-						Action.call('POST',$this.data('action')+'/'+self.opt.orderid,'product_id='+$this.find('[name="id"]').val(),function(data){
-							$(self.opt.targettable).find('table').empty().html(data);
-							$('#selecttableModal').modal('hide');
-						},function(data){
-							$('#selecttableModal').modal('hide');
-							$(self.opt.targettable).before('<div class="alert alert-info" role="alert">'+data.responseText+'...</div>');
-							setTimeout(function(){
-								$(self.opt.targettable).prev().remove();
-							},3000);
-						});
-					});
-				}
-				else{
-					$('#selecttableModal table tbody tr').click(function(){
-						var $this = $(this);
-						$('input:hidden[name="'+self.opt.name+'"]').val($this.find('[name="id"]').val());
-						$('input:hidden[name="'+self.opt.name+'"]').siblings('input[type="text"]').val($this.find('.td-'+self.opt.field).text());
-						$('#selecttableModal').modal('hide');
-					});
-				}
+				var self=this;
+				Component.modules.selecttable_callback(data,self.opt);
 				
 			},
 			errorCallback:function(data){
 
 			}
 		},
+		
 		calculate_days:{
 			type:'change',
 			isAjax:false,
@@ -114,30 +91,6 @@ Component.events={
 				});
 			}
 
-		},
-		unbindProduct:{
-			type:'click',
-			isAjax:'POST',
-			opt:'',
-			path:function(){
-				var self = this;
-				return self.opt.action;
-			},
-			param:function(){
-				var self = this;
-				return 'product_id='+self.opt.productid;
-			},
-			callback:function(data){
-				var self = this;
-				$(self.opt.targettable).find('table').empty().html(data);
-			},
-			errorCallback:function(data){
-				$(self.opt.targettable).before('<div class="alert alert-info" role="alert">'+data.responseText+'...</div>');
-				setTimeout(function(){
-					$(self.opt.targettable).prev().remove();
-				},3000);
-			}
-
 		}
 
 		
@@ -170,7 +123,68 @@ Component.events={
 
 };
 
+Component.modules={
+	selecttable_filter:function(e){
+		console.log(e);
+		var $this = $(e.target);
+		var	path=$this.data('action');
+		if(typeof($this.data('filter'))=='undefined')return;
+		var arrFilter = $this.data('filter').split(',');
+		var arrParam = {};
+		for (var i = arrFilter.length - 1; i >= 0; i--) {
+			var value = $('#selecttableModal').find('[name="'+arrFilter[i]+'"]').val();
+			if(typeof(value)!='undefined'){
+				arrParam[arrFilter[i]] = value;					
+			}
+		};
+		var str = $.param(arrParam);
+		Action.call('GET',path,str,function(data){
+			Component.modules.selecttable_callback(data,$this.data());
 
+		},function(data){
+
+		});
+
+	},
+	unbindProduct:function(e){
+		var $this=$(e.target);
+		Action.call('POST',$this.data('action'),'product_id='+$this.data('productid'),function(data){
+			$($this.data('targettable')).find('table').empty().html(data);
+		},function(data){
+			$($this.data('targettable')).before('<div class="alert alert-info" role="alert">'+data.responseText+'...</div>');
+			setTimeout(function(){
+					$($this.data('targettable')).prev().remove();
+				},3000);
+		});
+	},
+	selecttable_callback:function(data,opt){
+		$('#selecttableModal .modal-content').html(data);
+		if(opt.field=='row'){
+			$('#selecttableModal table tbody tr').click(function(){
+				var $this = $(this);
+				Action.call('POST',$this.data('action')+'/'+$('input[name="obj_id"]').val(),'product_id='+$this.find('[name="id"]').val(),function(data){
+					$(opt.targettable).find('table').empty().html(data);
+					$('#selecttableModal').modal('hide');
+				},function(data){
+					$('#selecttableModal').modal('hide');
+					$(opt.targettable).before('<div class="alert alert-info" role="alert">'+data.responseText+'...</div>');
+					setTimeout(function(){
+						$(opt.targettable).prev().remove();
+					},3000);
+				});
+			});
+		}
+		else{
+			$('#selecttableModal table tbody tr').click(function(){
+				var $this = $(this);
+				$('input:hidden[name="'+opt.name+'"]').val($this.find('[name="id"]').val());
+				$('input:hidden[name="'+opt.name+'"]').siblings('input[type="text"]').val($this.find('.td-'+opt.field).text());
+				$('#selecttableModal').modal('hide');
+			});
+		}
+	}
+
+};
 $(document).ready(function(){
 	Component.events.init();
 	$('[data-event="calculate_days"]').trigger('change');

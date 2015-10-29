@@ -1,3 +1,17 @@
+<div class="row">
+
+	<div class="col-md-6 col-md-offset-3">
+		<div class="input-group">
+			<span class="input-group-addon">设备号</span>
+			<input type="text" name="pid" value="{{old('pid')}}" class="form-control">
+			<span class="input-group-btn">
+				<button class="btn btn-default" onclick="Component.modules.selecttable_filter(event)" type="button" data-event="selecttable_filter" data-targettable="#products" data-filter="pid" data-field="row" data-action="{{url('product/selecttable?house='.old('house').'&country='.old('country'))}}">查找</button>
+			</span>
+		</div>
+	</div>
+	
+</div>
+
 <table class="table table-hover table-condensed">
 	<thead>
 		<tr>

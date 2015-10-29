@@ -3,7 +3,7 @@
 	
 <div class="container">
 		@include('partials.info')
-	<h1>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h1>
+	<h1>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h1><input type="hidden" name="obj_id" value="{{$order->id}}">
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
 		@if($order->status>0 && $order->belongsToSupply->is_self==1)
@@ -101,7 +101,7 @@
 			<?php $products = $order->products()->with('belongsToSupply')->get()?>
 			<h3>关联设备 <small>仓库: {{$order->belongsToSupply->name}} 日期:{{$order->send_date->toDateString()}} </small> 
 				@if(in_array('combineProduct',$actions)&&$order->status==1)
-				<button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-orderid="{{$order->id}}" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button>
+				<button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button>
 				@endif
 			</h3>
 			<table class="table table-hover table-striped table-bordered table-condensed">

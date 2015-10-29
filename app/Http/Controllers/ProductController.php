@@ -70,7 +70,7 @@ class ProductController extends Controller {
 		$data['field']=$fieldService;
 		$data['multi']=false;
 		$data['data']=$this->service->lists($arrRequest,'',20);
-		return view('partials.select-modal')->with($data);
+		return view('partials.select-modal')->with($data)->withInput($request->flash());
 
 	}
 	/**

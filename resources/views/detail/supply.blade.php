@@ -4,7 +4,7 @@
 <div class="container">
 		@include('partials.info')
 
-	<h1>仓库 {{$supply->name}}</h1>
+	<h1>仓库 {{$supply->name}}</h1><input type="hidden" name="obj_id" value="{{$supply->id}}">
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
 		<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">操作记录</a></li>
