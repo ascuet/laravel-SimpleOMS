@@ -49,7 +49,7 @@ class ProductController extends Controller {
 		if(gettype($rtn)=='string'&&isset($this->errorMessage[$rtn])){
 			return redirect()->back()->withErrors($this->errorMessage[$rtn]);
 		}elseif($rtn===true){
-			return redirect()->back()->withSuccess('入库成功');
+			return redirect('product/entry')->withSuccess('入库成功');
 		}
 		else{
 			return redirect()->back()->withErrors('发生未知错误');

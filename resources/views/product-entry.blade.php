@@ -8,6 +8,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form action="{{url('product/entry')}}" id="form" method="GET" class="form-horizontal">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label for="" class="col-sm-2 col-sm-offset-1">设备号</label>
                     <div class="col-sm-6">
@@ -40,7 +41,7 @@
         </thead>
         <tbody>
                 <tr>
-                    <th><input type="checkbox" name="id" value="{{$value->id}}"></th>
+                    <th><input type="checkbox" name="id" value="{{$order->id}}"></th>
                 <td>{{$order->gid}}</td>
                 <td>{{$order->gname}}</td>
                 <td>{{$order->country}}</td>
@@ -70,7 +71,7 @@
                 @else
                 <tr>
                 @endif
-                    <th><input type="checkbox" name="id" value="{{$value->id}}"></th>
+                    <th><input type="checkbox" name="id" value="{{$product->id}}"></th>
                 <td>{{$product->pid}}</td>
                 <td>{{$product->country}}</td>
                 <td>{{$product->belongsToSupply->name}}</td>

@@ -5,6 +5,7 @@ use Validator;
 use App\ProductField;
 use Log;
 use Carbon\Carbon;
+use DB;
 class ProductService extends BasicService{
 	protected $class='App\Product';
 
@@ -44,7 +45,7 @@ class ProductService extends BasicService{
 			return 'orderNotFound';
 		}
 		$product->pstatus=0;
-		$product->orders()->updateExistingPivot($order->id,['return_at',Carbon::now()]);
+		$product->orders()->updateExistingPivot($order->id,['return_at'=>Carbon::now()]);
 		$this->entryLog($product,$order);
 		//入库设备
 		$product->save();

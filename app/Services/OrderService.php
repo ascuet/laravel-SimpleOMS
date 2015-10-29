@@ -211,6 +211,17 @@ class OrderService extends BasicService{
 				elseif($order->is_deliver==0){
 					$order->delivery_company='';
 					$order->delivery_no='';
+					if(!$products->isEmpty()&&$products->count()==$order->amount){
+						foreach ($products as $product) {
+								if(!$productService->sendProduct($product->id,$order)){
+									DB::rollback();
+									return 'productInvalid';
+								}
+							}	
+					}
+					else{
+						return 'productInvalid';
+					}
 					continue;
 				}
 				else{
