@@ -10,6 +10,7 @@ class Order extends Model {
 	protected $fillable = ['oid','gid','gname','order_date','country','amount','sum','go_date','back_date','send_date','gmobile','address','memo','message','source','house','is_deliver'];
 
 	protected $casts = [
+		'is_important'=>'boolean'
 	];
 	protected $statusName=['0'=>'待处理','1'=>'待发货','2'=>'已发货','3'=>'已完成','-1'=>'已取消',''=>''];
 	protected $array=[

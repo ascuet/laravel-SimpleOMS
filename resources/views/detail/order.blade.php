@@ -6,7 +6,7 @@
 	<h1>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h1><input type="hidden" name="obj_id" value="{{$order->id}}">
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
-		@if($order->status>0 && $order->belongsToSupply->is_self==1)
+		@if($order->status>0)
 		<li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">发货信息</a></li>
 		@endif
 		<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">操作记录</a></li>

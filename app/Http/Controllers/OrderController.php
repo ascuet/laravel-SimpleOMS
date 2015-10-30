@@ -7,9 +7,11 @@ use App\Services\ProductService;
 use Illuminate\Http\Request;
 use App\OrderField;
 use Auth;
-use Illuminate\Validation\ValidatorClass;
+use Illuminate\Validation\Validator as ValidatorClass;
 use DB;
 use Validator;
+use Session;
+use URL;
 class OrderController extends Controller {
 
 	protected $service,$user;
@@ -21,6 +23,23 @@ class OrderController extends Controller {
 		$this->service = $service;
 		$this->user = Auth::user();
 	}
+
+	/**
+	 * 切换高亮
+	 *
+	 *
+	 */
+	public function postToggleStar($id){
+		DB::beginTransaction();
+		$order = $this->service->listOne($id);
+		if(!is_null($order)){
+			$order->is_important = $order->is_important?false:true;
+			$order->save();
+			DB::commit();
+			return view('partials.star')->with(['data'=>$order->is_important]);
+		}
+	}
+
 
 	/**
 	 * 回退订单
@@ -181,8 +200,8 @@ class OrderController extends Controller {
 			return redirect()->back()->withErrors('更新数据失败');			
 		}
 		$rtn = $this->service->prepareOrder($id,$reasons);
-		if(gettype($rtn)=='string'&&isset($this->errorMessage[$rtn])){
-			return redirect()->back()->withErrors($this->errorMessage[$rtn]);
+		if($rtn instanceof ValidatorClass){
+			return redirect()->back()->withErrors($rtn->messages()->all());
 		}elseif($rtn===true){
 			return redirect()->back()->withSuccess('进入待发货');				
 		}
@@ -321,6 +340,7 @@ class OrderController extends Controller {
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		$data['actions']=['create','delete','import'];
+		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
 
@@ -334,6 +354,7 @@ class OrderController extends Controller {
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
 		$data=[];
+		$data['class']='order';
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];
 		return view('create.order')->with($data);
@@ -382,6 +403,7 @@ class OrderController extends Controller {
 		$order = $this->service->listOne($id,['belongsToSupply']);
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus($order->status);
+		$data['class']='order';
 		$data['order']=$order;
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage','orderReady','cancel','backward','sendOrder','finishOrder','combineProduct','unbindProduct'];

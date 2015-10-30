@@ -5,7 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Services\SupplyService;
 use App\SupplyField;
 use Illuminate\Http\Request;
-
+use Session;
+use URL;
 class SupplyController extends Controller {
 
 	protected $service,$user;
@@ -29,6 +30,8 @@ class SupplyController extends Controller {
 		$data['class']='supply';
 		$data['field']=$fieldService;
 		$data['multi']=false;
+		$arrRequest['supply']=$arrRequest['belongsToSupply_supply'];
+		unset($arrRequest['belongsToSupply_supply']);
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		return view('partials.select-modal')->with($data);
 
@@ -50,6 +53,7 @@ class SupplyController extends Controller {
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		$data['actions']=['create','delete'];
+		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
 
@@ -63,6 +67,7 @@ class SupplyController extends Controller {
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
 		$data=[];
+		$data['class']='supply';
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];
 		return view('create.supply')->with($data);
@@ -111,6 +116,7 @@ class SupplyController extends Controller {
 		$supply = $this->service->listOne($id);
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
+		$data['class']='supply';
 		$data['supply']=$supply;
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];

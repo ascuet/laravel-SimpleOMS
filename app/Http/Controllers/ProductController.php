@@ -6,6 +6,8 @@ use App\ProductField;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
+use Session;
+use URL;
 class ProductController extends Controller {
 	protected $service,$user;
 	protected $errorMessage = [];
@@ -28,7 +30,7 @@ class ProductController extends Controller {
 		$product = $this->service->fetchOne(['pid'=>$pid]);
 		$order = $this->service->currentOrder($product);
 		if(is_null($order)){
-			return redirect()->back()->withErrors('未找到当前订单');
+			return redirect()->back()->withErrors('设备已入库');
 		}
 		$products = $order->products()->with('belongsToSupply')->get();
 		$data=[];
@@ -100,6 +102,7 @@ class ProductController extends Controller {
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		$data['actions']=['create','delete'];
+		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
 
@@ -113,6 +116,7 @@ class ProductController extends Controller {
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
 		$data=[];
+		$data['class']='product';
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];
 		return view('create.product')->with($data);
@@ -159,6 +163,7 @@ class ProductController extends Controller {
 		$product = $this->service->listOne($id);
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus($product->pstatus);
+		$data['class']='product';
 		$data['product']=$product;
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];

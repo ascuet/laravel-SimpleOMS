@@ -23,7 +23,7 @@
 				<button type="submit" form="form" formmethod="POST" formaction="{{url('product/entry/'.$currentProduct->id)}}" class="btn navbar-btn btn-primary">入库</button>
 			@endif
 			@if(in_array('backpage',$actions))
-				<a href="{{URL::previous()}}" class="btn navbar-btn btn-default">返回</a>
+				<a href="{{Session::get('index_url')}}" class="btn navbar-btn btn-default">返回</a>
 			@endif
 			@if(in_array('cancel',$actions)&&$order->status==1)
 				<button type="button" class="btn btn-danger"  data-backdrop="static" data-toggle="modal" data-event="confirm" data-action="{{url('order/cancel/'.$order->id)}}" data-description="取消订单" data-target="#confirmModal">取消</button>

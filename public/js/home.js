@@ -58,7 +58,12 @@ Component.events={
 				var day = 24*60*60*1000;
 				$('input[name="send_date"]').removeClass('datepicker');
 				if($('input[name="send_date"]').val()==""){
-					$('input[name="days_before"]').val(4);
+					if($('input[name="is_deliver"]').val()==0){
+						$('input[name="days_before"]').val(1);
+					}
+					else{
+						$('input[name="days_before"]').val(4);						
+					}
 
 				}else{
 					if($('input[name="days_before"]').val()==''){
@@ -76,6 +81,19 @@ Component.events={
 					send_date.setTime(date2);
 					$('input[name="send_date"]').val(send_date.getFullYear()+'-'+String(send_date.getMonth()+1).charLeftAll(0,2)+'-'+String(send_date.getDate()).charLeftAll(0,2));
 
+				}
+			}
+		},
+		change_deliver:{
+			type:'change',
+			isAjax:false,
+			opt:'',
+			handler:function($this){
+				if($this.val()==0){
+					$('input[name="days_before"]').val(1).trigger('input');
+				}
+				if($this.val()==1){
+					$('input[name="days_before"]').val(4).trigger('input');
 				}
 			}
 		},
@@ -182,6 +200,23 @@ Component.modules={
 				$('#selecttableModal').modal('hide');
 			});
 		}
+	},
+	toggleStar:function(e){
+		e.stopPropagation();
+		var $this=$(e.target);
+		Action.call('POST','/order/toggle-star/'+$this.parents('tr').find('[name="id[]"]').val(),'',function(data){
+			$this.parent().empty().append(data);
+		},function(data){
+
+		});
+	},
+	redStar:function(e){
+		var $this=$(e.target);
+		$this.addClass('red-star');
+	},
+	transStar:function(e){
+		var $this=$(e.target);
+		$this.removeClass('red-star');
 	}
 
 };

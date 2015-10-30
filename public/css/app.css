@@ -6245,3 +6245,10 @@ input.form-control[readonly].datetimepicker,input.form-control[readonly].datepic
   position: fixed;
   z-index: 2;
 }
+.glyphicon.glyphicon-star{
+  font-size: 25px;
+  color: transparent;
+}
+.glyphicon.glyphicon-star.red-star{
+  color: red;
+}

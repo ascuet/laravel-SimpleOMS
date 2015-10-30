@@ -37,6 +37,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('data',['date'=>''],['back_date'],[2,3]);
 				$this->setFieldsBatch('data',['date'=>''],['send_date'],[0,1,'']);
 				$this->setFieldsBatch('data',['array'=>''],['is_deliver','source']);
+				$this->setFieldsBatch('data',['star'=>''],['is_important']);
 				$this->setFieldsBatch('data',['array'=>''],['status'],['']);
 				break;
 			case 'add':
@@ -51,7 +52,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('add',['number'=>'required|event:calculate_days'],['days'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['select'=>'readonly'],['belongsToSupply_supply'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|filter:belongsToSupply_supply'],['house'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['radio'=>'required'],['is_deliver'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['radio'=>'required|event:change_deliver'],['is_deliver'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['textarea'=>''],['memo','message'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['select'=>'required'],['source'],[''],[0,1,2]);
 				break;
@@ -87,7 +88,7 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|filter:belongsToSupply_supply'],['house'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['radio'=>'required'],['is_deliver'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['radio'=>'required|event:change_deliver'],['is_deliver'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['radio'=>'required|readonly'],['is_deliver'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['radio'=>'required|readonly'],['is_deliver'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['textarea'=>''],['memo','message'],[0,1,2,3,-1],[0,1,2,5]);

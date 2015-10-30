@@ -33,6 +33,7 @@ Route::group(['middleware'=>'auth'],function(){
 		Route::post('send','OrderController@postSend');
 		Route::post('finish/{id}','OrderController@postFinish');
 		Route::post('backward/{id}','OrderController@postBackward');
+		Route::post('toggle-star/{id}','OrderController@postToggleStar');
 
 	});
 	Route::group(['prefix'=>'supply'],function(){

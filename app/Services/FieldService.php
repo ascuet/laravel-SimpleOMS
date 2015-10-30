@@ -305,6 +305,16 @@ class FieldService{
 				$array = $this->model->arrayField($name);
 				$rtn = isset($array[$value->$name])?$array[$value->$name]:$value->$name;
 				break;
+			case 'star':
+				if($value->$name){
+					$rtn='<span onclick="Component.modules.toggleStar(event)" onmouseover="Component.modules.redStar(event)" onmouseout="Component.modules.transStar(event)" class="glyphicon glyphicon-star red-star" aria-hidden="true"></span>';
+					
+				}
+				else{
+					$rtn='<span onclick="Component.modules.toggleStar(event)" onmouseover="Component.modules.redStar(event)" onmouseout="Component.modules.transStar(event)" class="glyphicon glyphicon-star" aria-hidden="true"></span>';
+
+				}
+				break;
 			default:
 				$rtn = $value->$name;
 				$method = explode('_', $name,2)[0];
@@ -348,20 +358,19 @@ class FieldService{
 		$readonly = in_array('readonly', $options)?'readonly':'';
 		$required = in_array('required', $options)?'required':'';
 		$disabled = in_array('disabled', $options)?'disabled':'';
+		$param='';
+		foreach ($options as $option) {
+			if (strpos($option, ':') !== false)
+			{
+				list($option, $set) = explode(':', $option, 2);
 
+				$param.='data-'.$option.'="'.$set.'" ';
+			}
+		}
 		switch (key($field['type'])) {
 			case 'date':
 				$noDefault = in_array('noDefault', $options)?true:false;
 				$full = in_array('full', $options)?true:false;
-				$param='';
-				foreach ($options as $option) {
-					if (strpos($option, ':') !== false)
-					{
-						list($option, $set) = explode(':', $option, 2);
-
-						$param.='data-'.$option.'="'.$set.'" ';
-					}
-				}
 				$value = empty($value)&&$required==='required'&&!$noDefault?Carbon::now():$value;
 				if(!empty($value)){
 					$value = $full?$value->toDateTimeString():$value->toDateString();
@@ -375,22 +384,14 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'number':
-				$param='';
-				foreach ($options as $option) {
-					if (strpos($option, ':') !== false)
-					{
-						list($option, $set) = explode(':', $option, 2);
-
-						$param.='data-'.$option.'="'.$set.'" ';
-					}
-				}
+				
 				$html='<input type="number" class="input-sm form-control" name="'.$name.'" '.$param.'  step="1"  value="'.$value.'" '.$readonly.' '.$required.' '.$disabled.'/>';
 				$html = '<div class="col-sm-3">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'decimal':
-				$html='<input type="number" class="input-sm form-control" name="'.$name.'" step="0.01"  value="'.$value.'" '.$readonly.' '.$required.'/>';
+				$html='<input type="number" class="input-sm form-control" name="'.$name.'" '.$param.' step="0.01"  value="'.$value.'" '.$readonly.' '.$required.'/>';
 				$html = '<div class="col-sm-3">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -414,7 +415,7 @@ class FieldService{
 					$selected = $key==$value?'selected':'';
 					$html.='<option value="'.$key.'" '.$selected.'>'.$v.'</option>';
 				}
-				$html='<select class="form-control" name="'.$name.'" '.$readonly.' '.$disabled.'>'.$html.'</select>';
+				$html='<select class="form-control" name="'.$name.'" '.$param.' '.$readonly.' '.$disabled.'>'.$html.'</select>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -424,7 +425,7 @@ class FieldService{
 				foreach ($array as $key => $v) {
 					$checked = $key==$value?'checked':'';
 					$html.='<div class="radio-inline">
-					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$checked.'> '.$v.'</label>
+					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$param.' '.$checked.'> '.$v.'</label>
 					</div>';
 				}
 				$html = '<div class="col-sm-9">'.$html.'</div>';
@@ -432,7 +433,7 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'textarea':
-				$html='<textarea class="form-control" rows="3" name="'.$name.'" '.$required.' '.$readonly.' >'.$value.'</textarea>';
+				$html='<textarea class="form-control" rows="3" name="'.$name.'" '.$param.' '.$required.' '.$readonly.' >'.$value.'</textarea>';
 				$html = '<div class="col-sm-9">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group col-md-6">'.$html.'</div>';
@@ -444,21 +445,21 @@ class FieldService{
 					{
 						list($option, $set) = explode(':', $option, 2);
 
-						$param[$option]=$set;
+						$params[$option]=$set;
 					}
 				}
 				$static='未选择';
 				if(!empty($value)){
-					list($relation,$attr)=explode('_', $param['related']);
+					list($relation,$attr)=explode('_', $params['related']);
 					$static = $obj->$relation->$attr;
 				}
 				$filter='';
-				if(isset($param['filter'])){
-					$filter= 'data-filter="'.$param['filter'].'"';
+				if(isset($params['filter'])){
+					$filter= 'data-filter="'.$params['filter'].'"';
 				}
 				$html='<input type="text" class="form-control" value="'.$static.'" readonly >
 				<span class="input-group-btn">
-				<button type="button" class="btn btn-success" data-toggle="modal" data-name="'.$name.'" data-table="'.$param['table'].'" data-field="'.$param['field'].'" '.$filter.' data-event="selecttable" data-target="#selecttableModal">选择</button>
+				<button type="button" class="btn btn-success" data-toggle="modal" data-name="'.$name.'" data-table="'.$params['table'].'" data-field="'.$params['field'].'" '.$filter.' data-event="selecttable" data-target="#selecttableModal">选择</button>
 				</span>
 				<input type="hidden" name="'.$name.'" value="'.$value.'" '.$required.' >';
 				$html = '<div class=" col-sm-5"><div class="input-group input-group-sm">'.$html.'</div></div>';
@@ -466,7 +467,7 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'password':
-				$html='	<input type="password" name="'.$name.'" class="form-control" value="" '.$required.' '.$readonly.'>';
+				$html='	<input type="password" name="'.$name.'" '.$param.' class="form-control" value="" '.$required.' '.$readonly.'>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
@@ -490,7 +491,7 @@ class FieldService{
 
 					}
 				}
-				$html='	<input type="text" '.$form.' name="'.$name.'" class="form-control" value="'.$value.'" '.$required.' '.$readonly.'>';
+				$html='	<input type="text" '.$form.' name="'.$name.'" '.$param.' class="form-control" value="'.$value.'" '.$required.' '.$readonly.'>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';

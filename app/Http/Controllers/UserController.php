@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\UserField;
+use Session;
+use URL;
 class UserController extends Controller {
 	protected $service,$user;
 	protected $errorMessage = [];
@@ -38,6 +40,7 @@ class UserController extends Controller {
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		$data['actions']=['create','delete'];
+		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
 
@@ -51,6 +54,7 @@ class UserController extends Controller {
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
 		$data=[];
+		$data['class']='user';
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];
 		return view('create.user')->with($data);
@@ -102,6 +106,7 @@ class UserController extends Controller {
 		$user = $this->service->listOne($id);
 		$fieldService->currentRole($this->user->auth);
 		$fieldService->currentStatus('');
+		$data['class']='user';
 		$data['user']=$user;
 		$data['field']=$fieldService;
 		$data['actions']=['submit','backpage'];

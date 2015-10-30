@@ -1,6 +1,7 @@
 <thead>
 	<tr>
 		<th>#</th>
+		{!!$field->tableHead('is_important','重要')!!}
 		{!!$field->tableHead('gid','淘宝ID')!!}
 		{!!$field->tableHead('gname','客户姓名')!!}
 		{!!$field->tableHead('order_date','订单时间')!!}
@@ -22,7 +23,8 @@
 <tbody>
 	@foreach($data as $key=>$value)
 		<tr onclick="location.href='{{url('order/'.$value->id.'/edit')}}'" style="cursor:pointer">
-			<th onclick="event.stopPropagation()"><input type="checkbox" name="id[]" value="{{$value->id}}"></th>
+			<th onclick="event.stopPropagation()"><input type="checkbox" name="id[]" value="{{$value->id}}"></th>			
+			{!!$field->tableCell('is_important',$value)!!}
 			{!!$field->tableCell('gid',$value)!!}
 			{!!$field->tableCell('gname',$value)!!}
 			{!!$field->tableCell('order_date',$value)!!}

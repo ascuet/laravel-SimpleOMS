@@ -18,6 +18,7 @@ class OrderService extends BasicService{
 			$exportField=[
 			'oid','gid','gname','gmobile','order_date','country','amount','sum','go_date','back_date','days','send_date','supply','house_name','address','is_deliver','memo','source','products'
 			];
+	protected $fieldName=['oid'=>'订单号','gid'=>'淘宝ID','gname'=>'客户姓名','order_date'=>'订单时间','country'=>'国家','amount'=>'数量','sum'=>'金额','days'=>'天数','go_date'=>'出国日期','back_date'=>'回国日期','gmobile'=>'客户电话','address'=>'地址','memo'=>'买家留言','message'=>'客服备注','status'=>'订单状态','source'=>'来源','house'=>'库存','send_date'=>'发货日期','is_deliver'=>'发货方式','delivery_no'=>'快递单号','delivery_company'=>'快递公司','modified_at'=>'操作时间','reasons'=>'操作意见','is_important'=>'星标'];
 	public function __construct(OrderField $fieldService){
 		parent::__construct();
 		$this->fieldService = $fieldService;
@@ -258,13 +259,25 @@ class OrderService extends BasicService{
 			DB::rollback();
 			return 'statusChanged';
 		}
-		$prepare = ['oid','gid','gname','order_date','country','amount','sum','days','go_date','back_date','gmobile','address','house','send_date','is_deliver'];
-		foreach ($prepare as $field) {
-			if($order->$field===''||is_null($order->$field)){
-				Log::info($field.' not set, prepare failed');
-				DB::rollback();
-				return $order->$field;
-			}
+		$prepare = [
+		'oid'=>'required',
+		'gid'=>'required',
+		'gname'=>'required',
+		'order_date'=>'required',
+		'country'=>'required',
+		'amount'=>'required|integer',
+		'sum'=>'required|numeric',
+		'days'=>'required|integer|min:1',
+		'go_date'=>'required',
+		'back_date'=>'required',
+		'gmobile'=>'required',
+		'address'=>'required',
+		'house'=>'required|exists:supplies,id',
+		'send_date'=>'required|after:'.\Carbon\Carbon::now()->addDays(-1)->toDateString(),
+		'is_deliver'=>'required|in:0,1'];
+		$validator=Validator::make($order->toArray(),$prepare);
+		if($validator->fails()){
+			return $validator;
 		}
 		$order->status = 1;
 		$order->reasons = $reasons;
@@ -377,15 +390,17 @@ class OrderService extends BasicService{
 			return false;
 		}
 		else{
-			if($class->belongsToSupply->is_self!=1){
-				$class->products()->detach();
-			}
-			if($class->is_deliver!=1){
-				$class->delivery_no='';
-				$class->delivery_company='';
-				$class->save();
-			}
+			if($class->status==1){
+				if($class->belongsToSupply->is_self!=1){
+					$class->products()->detach();
+				}
+				if($class->is_deliver!=1){
+					$class->delivery_no='';
+					$class->delivery_company='';
+					$class->save();
+				}
 
+			}
 			DB::commit();
 			return $class;
 		}
