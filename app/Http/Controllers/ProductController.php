@@ -28,6 +28,9 @@ class ProductController extends Controller {
 			return view('product-entry');			
 		}
 		$product = $this->service->fetchOne(['pid'=>$pid]);
+		if(is_null($product)){			
+			return redirect()->back()->withErrors('无此设备');
+		}
 		$order = $this->service->currentOrder($product);
 		if(is_null($order)){
 			return redirect()->back()->withErrors('设备已入库');

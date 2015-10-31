@@ -34,7 +34,7 @@ class ProductField extends FieldService {
 				$this->setFieldsBatch('add',['text'=>'required|unique:products,pid,NULL,id,deleted_at,NULL'],['pid'],[''],[0,4]);
 				$this->setFieldsBatch('add',['text'=>'required'],['country'],[''],[0,4]);
 				$this->setFieldsBatch('add',['text'=>''],['traffic'],[''],[0,4]);
-				$this->setFieldsBatch('add',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|required'],['house'],[''],[0,4]);
+				$this->setFieldsBatch('add',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|required|filter:is_self[]=1'],['house'],[''],[0,4]);
 				$this->setFieldsBatch('add',['select'=>'required'],['pstatus'],[''],[0,4]);
 				$this->setFieldsBatch('add',['textarea'=>''],['memo'],[''],[0,4]);	
 				break;
@@ -46,7 +46,7 @@ class ProductField extends FieldService {
 				$this->setFieldsBatch('edit',['text'=>''],['traffic'],[0,1],[0,4]);	
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['traffic'],[],[1,2,3,5]);	
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['traffic'],['out'],[0,4]);
-				$this->setFieldsBatch('edit',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name'],['house'],[0,1],[0,4]);
+				$this->setFieldsBatch('edit',['selecttable'=>'table:supply|field:name|related:belongsToSupply_name|filter:is_self[]=1'],['house'],[0,1],[0,4]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],['out'],[0,4]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['belongsToSupply_name'],[],[1,2,3,5]);
 				$this->setFieldsBatch('edit',['select'=>'required'],['pstatus'],[0,1],[0,4]);

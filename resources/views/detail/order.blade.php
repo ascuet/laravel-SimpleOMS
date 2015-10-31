@@ -101,7 +101,7 @@
 			<?php $products = $order->products()->with('belongsToSupply')->get()?>
 			<h3>关联设备 <small>仓库: {{$order->belongsToSupply->name}} 日期:{{$order->send_date->toDateString()}} </small> 
 				@if(in_array('combineProduct',$actions)&&$order->status==1)
-				<button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-filter="house,country" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button>
+				<button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-filter="house,country,pstatus=0" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button>
 				@endif
 			</h3>
 			<table class="table table-hover table-striped table-bordered table-condensed">

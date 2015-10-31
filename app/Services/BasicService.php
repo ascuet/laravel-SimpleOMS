@@ -259,7 +259,7 @@ use Queue;
 	public function fetchOne($opt){
 		$class = new $this->class;
 		foreach ($opt as $key => $value) {
-			$class->where($key,$value);
+			$class=$class->where($key,$value);
 		}
 		return $class->first();
 	}

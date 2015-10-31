@@ -16,7 +16,9 @@ class OrderController extends Controller {
 
 	protected $service,$user;
 	protected $errorMessage = [
-		'importError'=>'导入时错误:'
+		'importError'=>'导入时错误:',
+		'deliveryInvalid'=>'快递信息未填完整',
+		'productInvalid'=>'设备数不符'
 	];
 
 	public function __construct(OrderService $service){
@@ -36,7 +38,7 @@ class OrderController extends Controller {
 			$order->is_important = $order->is_important?false:true;
 			$order->save();
 			DB::commit();
-			return view('partials.star')->with(['data'=>$order->is_important]);
+			return view('partials.star')->with(['data'=>['is_important'=>$order->is_important]]);
 		}
 	}
 
@@ -95,16 +97,16 @@ class OrderController extends Controller {
 		DB::beginTransaction();
 		$order = $this->service->listOne($id);
 		if($order->amount == $order->products()->count()){
+			DB::rollback();
 			return response('设备数已满足, 请先移除',422);
 		}
-		$validator =  Validator::make($order->toArray(),[
-			'status'=>'required|in:1',
-			'is_self'=>'required|in:1,true'
-			]);
+		if($order->status!=1||$order->belongsToSupply->is_self!=1){
+			DB::rollback();
+			return response('订单状态变化,请刷新重试',422);
+		}
 		if(!$rtn = $productService->combineProduct($product_id,$order)){
 			DB::rollback();
-			$products = $order->products()->with('belongsToSupply')->get();
-			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['unbindProduct']]);
+			return response('设备状态变化或已绑定其他订单',422);
 		}
 		else{
 			$this->service->combineLog($order);
@@ -128,10 +130,9 @@ class OrderController extends Controller {
 		$product_id = $request->input('product_id');
 		DB::beginTransaction();
 		$order = $this->service->listOne($id);
-		$validator = Validator::make($order->toArray(),[
-			'status'=>'required|in:1',
-			'is_self'=>'required|in:1,true'
-			]);
+		if($order->status!=1||$order->belongsToSupply->is_self!=1){
+			return response('订单状态变化,请刷新重试',422);
+		}
 		$product = $order->products()->find($product_id);
 		$order->products()->detach($product_id);
 		$this->service->unbindLog($order,$product);

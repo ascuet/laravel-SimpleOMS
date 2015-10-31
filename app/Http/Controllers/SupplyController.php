@@ -30,8 +30,10 @@ class SupplyController extends Controller {
 		$data['class']='supply';
 		$data['field']=$fieldService;
 		$data['multi']=false;
-		$arrRequest['supply']=$arrRequest['belongsToSupply_supply'];
-		unset($arrRequest['belongsToSupply_supply']);
+		if(isset($arrRequest['belongsToSupply_supply'])){			
+			$arrRequest['supply']=$arrRequest['belongsToSupply_supply'];
+			unset($arrRequest['belongsToSupply_supply']);
+		}
 		$data['data']=$this->service->lists($arrRequest,'',20);
 		return view('partials.select-modal')->with($data);
 

@@ -23,6 +23,12 @@ Component.events={
 					if(typeof(value)!='undefined'){
 						arrParam[arrFilter[i]] = value;					
 					}
+					else{
+
+						if((arrFilter[i].split('=')).length>1){
+							arrParam[arrFilter[i].split('=')[0]]=arrFilter[i].split('=')[1];
+						}
+					}
 				};
 				console.log($.param(arrParam));
 				var str = $.param(arrParam);
@@ -216,7 +222,9 @@ Component.modules={
 	},
 	transStar:function(e){
 		var $this=$(e.target);
-		$this.removeClass('red-star');
+		if($this.siblings('input[name="is_important"]').val()!=1){
+			$this.removeClass('red-star');			
+		}
 	}
 
 };
