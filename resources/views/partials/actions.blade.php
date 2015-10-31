@@ -10,6 +10,9 @@
 			@if(in_array('delete',$actions))
 			<button type="submit" form="destroy" class="btn navbar-btn btn-danger">批量删除</button>
 			@endif
+			@if(in_array('multiSend',$actions))
+			<button type="submit" form="destroy" formmethod="POST" formaction="{{url('order/send')}}" data-event="multi_send" class="btn navbar-btn btn-success">批量发货</button>
+			@endif
 			@if (in_array('import',$actions))
 				@if($class==='order')
 				<a href="{{url('order/import')}}" class="btn navbar-btn btn-warning">导入</a>

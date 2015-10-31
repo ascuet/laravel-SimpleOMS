@@ -26,6 +26,7 @@ Route::group(['middleware'=>'auth'],function(){
 	Route::group(['prefix'=>'order'],function(){
 		Route::get('import','OrderController@getImport');
 		Route::post('import','OrderController@postImport');
+		Route::get('export','OrderController@getExport');
 		Route::post('ready/{id}','OrderController@postReady');
 		Route::post('combine-product/{id}','OrderController@postCombine');
 		Route::post('unbind-product/{id}','OrderController@postUnbind');

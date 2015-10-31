@@ -67,7 +67,7 @@
         <tbody>
             @foreach($products as $product)
                 @if($product->pid == old('pid'))
-                <tr class="warning">
+                <tr class="success">
                 @else
                 <tr>
                 @endif

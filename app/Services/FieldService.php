@@ -220,22 +220,28 @@ class FieldService{
 	    		<span class="input-group-addon">到</span>
 	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$old.'" />
 				</div>';
-				$html = '<div class="col-sm-9">'.$html.'</div>';
-				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
+				$html = '<div class="col-sm-8">'.$html.'</div>';
+				$html='<label class=" col-sm-2 col-sm-offset-2" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'checkbox':
+				$options = explode('|',current($field['type']));
+				$displayRow = in_array('row', $options)?true:false;
 				$array = $this->model->arrayField($name);
 				foreach ($array as $key => $value) {
 					if(gettype($old)=='string')$old=[];
 					$checked =in_array( $key,$old)?'checked':'';
-					$html.='<div class="checkbox-inline">
-					  <label><input type="checkbox" name="'.$name.'[]" value="'.$key.'" '.$checked.'>' .$value.'</label>
-					</div>';
+					$html.='<label for="'.$name.'_'.$key.'" class="checkbox-inline"><input type="checkbox" id="'.$name.'_'.$key.'" name="'.$name.'[]" value="'.$key.'" '.$checked.'>' .$value.'</label>';
 				}
-				$html = '<div class="col-sm-9">'.$html.'</div>';
-				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
-				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
+				if($displayRow){
+					$html = '<div class="col-sm-10">'.$html.'</div>';
+					$html='<label class=" col-sm-1 col-sm-offset-1" >'.$label.'</label>'.$html;
+					$html='<div class="form-group form-group-sm col-md-12">'.$html.'</div>';
+				}else{
+					$html = '<div class="col-sm-8">'.$html.'</div>';
+					$html='<label class=" col-sm-2 col-sm-offset-2" >'.$label.'</label>'.$html;
+					$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
+				}
 				break;
 			case 'select':
 				$array = $this->model->arrayField($name);
@@ -246,7 +252,7 @@ class FieldService{
 				}
 				$html='<select class="form-control" name="'.$name.'">'.$html.'</select>';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
-				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
+				$html='<label class=" col-sm-2 col-sm-offset-2" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'hidden':
@@ -255,7 +261,7 @@ class FieldService{
 			default:
 				$html='	<input type="text" name="'.$name.'" class="form-control" value="'.$old.'">';
 				$html = '<div class="col-sm-6">'.$html.'</div>';
-				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
+				$html='<label class=" col-sm-2 col-sm-offset-2" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 		}
@@ -424,9 +430,7 @@ class FieldService{
 				$array=$this->model->arrayField($name);
 				foreach ($array as $key => $v) {
 					$checked = $key==$value?'checked':'';
-					$html.='<div class="radio-inline">
-					  <label><input type="radio" name="'.$name.'" value="'.$key.'" '.$param.' '.$checked.'> '.$v.'</label>
-					</div>';
+					$html.='<label for="'.$name.'_'.$key.'" class="radio-inline"><input type="radio" id="'.$name.'_'.$key.'" name="'.$name.'" value="'.$key.'" '.$param.' '.$checked.'> '.$v.'</label>';
 				}
 				$html = '<div class="col-sm-9">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;

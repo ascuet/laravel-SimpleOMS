@@ -1,6 +1,6 @@
 <thead>
 	<tr>
-		<th>#</th>
+		<th><input type="checkbox" onclick="Component.modules.select_all(event)"></th>
 		{!!$field->tableHead('is_important','重要')!!}
 		{!!$field->tableHead('gid','淘宝ID')!!}
 		{!!$field->tableHead('gname','客户姓名')!!}

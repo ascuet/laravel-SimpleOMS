@@ -16,11 +16,11 @@ class Order extends Model {
 	protected $array=[
 		'belongsToSupply_supply'=>[],
 		'is_deliver'=>['自取','快递'],
+		'country'=>[],
 		'source'=>['淘宝','天猫','线下','微信'],
 		'status'=>['0'=>'待处理','1'=>'待发货','2'=>'已发货','3'=>'已完成','-1'=>'已取消']
 	];
 	protected $dates=['order_date','go_date','back_date','send_date','modified_at'];
-	
 	public function products(){
 		return $this->belongsToMany('App\Product')->withPivot('return_at')->withTimestamps();
 	}
@@ -50,9 +50,9 @@ class Order extends Model {
 
 		if(empty($this->array[$name])){
 			$method = explode('_', $name)[0];
-			$fieldName = explode('_', $name)[1];
 			switch ($method) {
 				case 'belongsToSupply':
+					$fieldName = explode('_', $name)[1];
 					$list= \App\Supply::distinct()->lists($fieldName);
 					$rtn = array();
 					foreach ($list as $key => $value) {
@@ -60,7 +60,14 @@ class Order extends Model {
 					}
 					return $rtn;
 					break;
-				
+				case 'country':
+					$list= Self::distinct()->lists('country');
+					$rtn = array();
+					foreach ($list as $key => $value) {
+						$rtn[$value]=$value;
+					}
+					return $rtn;
+					break;
 				default:
 					# code...
 					break;
@@ -68,5 +75,9 @@ class Order extends Model {
 		}
 
 		return $this->array[$name];
+	}
+
+	public function products_pid(){
+		return implode(',',$this->products->lists('pid'));
 	}
 }

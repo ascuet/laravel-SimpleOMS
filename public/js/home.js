@@ -115,6 +115,14 @@ Component.events={
 				});
 			}
 
+		},
+		multi_send:{
+			type:'click',
+			isAjax:false,
+			opt:'',
+			handler:function($this){
+				$('#'+$this.attr('form')).find('input[name="_method"]').remove();
+			}
 		}
 
 		
@@ -225,6 +233,11 @@ Component.modules={
 		if($this.siblings('input[name="is_important"]').val()!=1){
 			$this.removeClass('red-star');			
 		}
+	},
+	select_all:function(e){
+		var $this=$(e.target);
+		$tbody = $this.parents('table').find('tbody');
+		$tbody.find('input[type="checkbox"]').prop('checked',$this.prop('checked'));
 	}
 
 };

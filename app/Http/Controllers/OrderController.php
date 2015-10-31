@@ -153,22 +153,21 @@ class OrderController extends Controller {
 			]);
 		$ids = $request->input('id');
 		$reasons = $request->input('reasons','');
-		gettype($ids)==='string'&&$arrId =explode(',', $ids);
 
-		if(isset($arrId)&&count($arrId)>1){
+		if(is_array($ids)){
 			$i = 0;
-			foreach ($arrId as $id) {
+			foreach ($ids as $id) {
 				$rtn = $this->service->sendOrder($id,'批量发货',$productService);
 				if(gettype($rtn)=='string'&&isset($this->errorMessage[$rtn])){
-					return redirect()->back()->withErrors('成功发货 '.$i.' 个订单, '.$this->errorMessage[$rtn]);
+					return redirect()->back()->withErrors('成功发货 '.$i.' 个订单, 其余订单不符合发货要求');
 				}
-				if($rtn===true){
+				elseif($rtn===true){
 					$i++;
 				}else{
 					return redirect()->back()->withErrors('发生错误');
 				}
-				
 			}
+			return redirect()->back()->withErrors('成功发货 '.$i.' 个订单');
 		}
 		else{
 			if(!$this->service->edit($request->all(),$ids)){
@@ -275,7 +274,7 @@ class OrderController extends Controller {
 			]);
 
 		$rtn = $this->service->importOrders($request->input('file_name'));
-		if($rtn instanceof Validator){
+		if($rtn instanceof ValidatorClass){
 			$messages = $rtn->messages();
 			$invalid = $rtn->invalid();
 			return response()->json(array_merge($messages->all(),$invalid),422);
@@ -291,8 +290,14 @@ class OrderController extends Controller {
 	 * 导出
 	 *
 	 */
-	public function getExport(){
-		
+	public function getExport(Request $request,OrderField $fieldService){		
+		$arrRequest = $request->all();
+		$status = isset($arrRequest['status'])?$arrRequest['status']:'';
+		$fieldService->currentRole($this->user->auth);
+		is_array($status)&&$status='';
+		$fieldService->currentStatus($status===''?$status:intval($status));
+				
+		return $this->service->exportOrder($arrRequest);
 	}
 	
 	/**
@@ -307,7 +312,6 @@ class OrderController extends Controller {
 	 *
 	 */
 	public function postSelecttable(){
-
 	}
 	/**
 	 * 部分更新查询页面的列表
@@ -340,7 +344,7 @@ class OrderController extends Controller {
 		$data['class']='order';
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
-		$data['actions']=['create','delete','import'];
+		$data['actions']=['create','delete','import','multiSend'];
 		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}

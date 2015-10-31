@@ -16,9 +16,9 @@ class OrderService extends BasicService{
 			'oid','gid','sum','message','gname','address','gmobile','order_date','country','amount','memo','source'
 			],
 			$exportField=[
-			'oid','gid','gname','gmobile','order_date','country','amount','sum','go_date','back_date','days','send_date','supply','house_name','address','is_deliver','memo','source','products'
+			'oid','gid','gname','gmobile','order_date','country','amount','sum','go_date','back_date','days','send_date','belongsToSupply_supply','belongsToSupply_name','address','is_deliver','memo','source','products_pid'
 			];
-	protected $fieldName=['oid'=>'订单号','gid'=>'淘宝ID','gname'=>'客户姓名','order_date'=>'订单时间','country'=>'国家','amount'=>'数量','sum'=>'金额','days'=>'天数','go_date'=>'出国日期','back_date'=>'回国日期','gmobile'=>'客户电话','address'=>'地址','memo'=>'买家留言','message'=>'客服备注','status'=>'订单状态','source'=>'来源','house'=>'库存','send_date'=>'发货日期','is_deliver'=>'发货方式','delivery_no'=>'快递单号','delivery_company'=>'快递公司','modified_at'=>'操作时间','reasons'=>'操作意见','is_important'=>'星标'];
+	protected $fieldName=['oid'=>'订单号','gid'=>'淘宝ID','gname'=>'客户姓名','gmobile'=>'客户电话','order_date'=>'订单时间','country'=>'国家','amount'=>'数量','sum'=>'金额','go_date'=>'出国日期','back_date'=>'回国日期','days'=>'天数','send_date'=>'发货日期','belongsToSupply_supply'=>'供应商','belongsToSupply_name'=>'仓库名','address'=>'地址','is_deliver'=>'发货方式','memo'=>'买家留言','message'=>'客服备注','status'=>'订单状态','source'=>'来源','house'=>'库存','delivery_no'=>'快递单号','delivery_company'=>'快递公司','modified_at'=>'操作时间','reasons'=>'操作意见','is_important'=>'星标','products_pid'=>'相关设备'];
 	public function __construct(OrderField $fieldService){
 		parent::__construct();
 		$this->fieldService = $fieldService;
@@ -94,7 +94,75 @@ class OrderService extends BasicService{
 		}
 		return $this->create($import);
 	}
+	/**
+	 * 导出订单
+	 * @param array $opt
+	 * @return response
+	 */
+	public function exportOrder($opt){
+		$obj = $this->selectQuery($opt);
+		$orders = $obj->with('belongsToSupply')->with('products')->latest('order_date')->get();
+		$fields = $this->fieldService->getFieldsByMethod('export',$this->user->auth,'');
+	//	dd($fields);
+		$export=[];
+		$export[] =array_values(array_only($this->fieldName,$this->exportField));
+		foreach ($orders as $order) {
+			$row=[];
+			foreach ($this->exportField as $key) {
+				$options=[];
+				switch (key($fields[$key]['type'])) {
+				case 'array':
+					if(is_null($order->$key)){
+					$rtn = '';
+						continue;
+					}
+					$array = $order->arrayField($key);
+					$rtn = isset($array[$order->$key])?$array[$order->$key]:$order->$key;
+					break;
+				case 'date':
+					if(is_null($order->$key)){
+						$rtn = '';
+						continue;
+					}
+					$options = explode('|', current($fields[$key]['type']));
+					$full = in_array('full', $options)?true:false;
+					$rtn = $full?$order->$key->toDatetimeString():$order->$key->toDateString();
+					break;
+				default:
+					if($key=='products_pid'){
+						$rtn = $order->products_pid();
+					}
+					else{
+						$rtn = $order->$key;
+						$method = explode('_', $key,2)[0];
+						if(method_exists($order, $method)){
+							$fieldName = explode('_', $key,2)[1];
 
+							if(is_null($rtn)){
+								$relation = $order->$method;
+								if(is_null($relation)){
+									$rtn = '';
+								}
+								else{
+									$rtn = $relation->$fieldName;
+								}
+
+							}
+						}
+					}
+						
+					break;
+				}
+				$row[$key]=$rtn;
+			}
+			$export[]=$row;
+		}
+		return Excel::create(\Carbon\Carbon::now()->format('YmdHis'),function($excel) use ($export){
+			$excel->sheet('导出数据',function($sheet)use ($export){
+				$sheet->fromArray($export,'','A1',true,false);
+			});
+		})->download('xls');
+	}
 	/**
 	 * 回退订单 已发货->待发货
 	 * @param int $id
@@ -418,6 +486,25 @@ class OrderService extends BasicService{
 			return $obj->with('belongsToSupply')->latest('modified_at')->latest('order_date')->paginate($page);
 		}
 		return $obj->get($col);
+	}
+
+	/**
+	* Delete object
+	* @param int $id
+	* @return object|string
+	*/
+	public function delete($id){
+		$class=$this->listOne($id);
+		if($class->status!=0){
+			return false;
+		}
+		$this->deleteLogs($class);
+		if(!$class){
+			Log::info('savingLogError');
+			return false;
+		}
+		return $class::where('id',$id)->delete();
+
 	}
 	/**
 	 * 回退订单操作记录

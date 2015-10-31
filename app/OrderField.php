@@ -20,11 +20,12 @@ class OrderField extends FieldService {
 		switch ($method) {
 			case 'select':
 				//select
-				$this->setFieldsBatch('select',['text'=>'fuzzy'],['oid','gid','gname','gmobile','country','belongsToSupply_name']);
+				$this->setFieldsBatch('select',['text'=>'fuzzy'],['oid','gid','gname','gmobile','belongsToSupply_name']);
 				$this->setFieldsBatch('select',['date'=>'fuzzy'],['go_date','back_date']);
 				$this->setFieldsBatch('select',['date'=>'fuzzy'],['send_date'],[0,1,-1,'']);
 				$this->setFieldsBatch('select',['date'=>'fuzzy|full'],['order_date','modified_at']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['is_deliver','source']);
+				$this->setFieldsBatch('select',['checkbox'=>'row'],['country']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['status'],['']);
 				$this->setFieldsBatch('select',['hidden'=>''],['status'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('select',['select'=>''],['belongsToSupply_supply']);
@@ -105,10 +106,10 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('import',['string'=>''],['gid','gname','sum','message','gmobile','address','memo','source'],[''],[0,1,2]);
 				break;
 			case 'export':
-				$this->setFieldsBatch('export',['string'=>''],['oid','gid','gname','gmobile','country','amount','sum','days','belongsToSupply_name','belongsToSupply_supply','address','memo','message']);
-				$this->setFieldsBatch('export',['date'=>'full'],['order_date']);
-				$this->setFieldsBatch('export',['date'=>''],['go_date','back_date','send_date']);
-				$this->setFieldsBatch('export',['array'=>''],['is_deliver','source','status']);
+				$this->setFieldsBatch('export',['string'=>''],['oid','gid','gname','gmobile','country','amount','sum','days','belongsToSupply_name','belongsToSupply_supply','address','memo','message','products_pid'],[''],[0,1,2]);
+				$this->setFieldsBatch('export',['date'=>'full'],['order_date'],[''],[0,1,2]);
+				$this->setFieldsBatch('export',['date'=>''],['go_date','back_date','send_date'],[''],[0,1,2]);
+				$this->setFieldsBatch('export',['array'=>''],['is_deliver','source','status'],[''],[0,1,2]);
 				break;
 			default:
 				# code...
