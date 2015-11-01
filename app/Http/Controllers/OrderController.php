@@ -12,18 +12,20 @@ use DB;
 use Validator;
 use Session;
 use URL;
+use App\Services\Authorize;
 class OrderController extends Controller {
 
-	protected $service,$user;
+	protected $service,$user,$permission;
 	protected $errorMessage = [
 		'importError'=>'导入时错误:',
 		'deliveryInvalid'=>'快递信息未填完整',
 		'productInvalid'=>'设备数不符'
 	];
 
-	public function __construct(OrderService $service){
+	public function __construct(OrderService $service,Authorize $permission){
 		$this->service = $service;
 		$this->user = Auth::user();
+		$this->permission = $permission;
 	}
 
 	/**
@@ -344,7 +346,7 @@ class OrderController extends Controller {
 		$data['class']='order';
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
-		$data['actions']=['create','delete','import','multiSend'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['OrderController@create','OrderController@destroy','OrderController@getImport','OrderController@postSend','OrderController@getExport']);
 		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
@@ -361,7 +363,8 @@ class OrderController extends Controller {
 		$data=[];
 		$data['class']='order';
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['OrderController@store']);
+		$data['actions'][]='backpage';
 		return view('create.order')->with($data);
 	}
 
@@ -411,7 +414,8 @@ class OrderController extends Controller {
 		$data['class']='order';
 		$data['order']=$order;
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage','orderReady','cancel','backward','sendOrder','finishOrder','combineProduct','unbindProduct'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['OrderController@update','OrderController@postReady','OrderController@postCancel','OrderController@postBackward','OrderController@postSend','OrderController@postFinish','OrderController@postCombine','OrderController@postUnbind']);
+		$data['actions'][]='backpage';
 		return view('detail.order')->with($data);
 	}
 

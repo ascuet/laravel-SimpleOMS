@@ -7,14 +7,16 @@ use App\SupplyField;
 use Illuminate\Http\Request;
 use Session;
 use URL;
+use App\Services\Authorize;
 class SupplyController extends Controller {
 
-	protected $service,$user;
+	protected $service,$user,$permission;
 	protected $errorMessage = [];
 
-	public function __construct(SupplyService $service){
+	public function __construct(SupplyService $service,Authorize $permission){
 		$this->service = $service;
 		$this->user = Auth::user();
+		$this->permission=$permission;
 	}
 
 	/**
@@ -54,7 +56,7 @@ class SupplyController extends Controller {
 		$data['class']='supply';
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
-		$data['actions']=['create','delete'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['SupplyController@create','SupplyController@destroy']);
 		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
@@ -71,7 +73,8 @@ class SupplyController extends Controller {
 		$data=[];
 		$data['class']='supply';
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['SupplyController@store']);
+		$data['actions'][]='backpage';
 		return view('create.supply')->with($data);
 	}
 
@@ -121,7 +124,8 @@ class SupplyController extends Controller {
 		$data['class']='supply';
 		$data['supply']=$supply;
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['SupplyController@store']);
+		$data['actions'][]='backpage';
 		return view('detail.supply')->with($data);
 	}
 

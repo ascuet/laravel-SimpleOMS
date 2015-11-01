@@ -15,7 +15,7 @@
 		<td>{{$product->belongsToSupply->name}}</td>
 		<td>{{$product->pivot->return_at or '未归还'}}</td>
 		<td>
-			@if(in_array('unbindProduct',$actions)&&$order->status==1)
+			@if(in_array('OrderController@postUnbind',$actions)&&$order->status==1)
 			<button type="button" class="btn btn-danger btn-sm" onclick="Component.modules.unbindProduct(event)" data-productid="{{$product->id}}" data-targetTable="#products" data-action="{{url('order/unbind-product/'.$order->id)}}">移除</button></td>
 			@else
 			无

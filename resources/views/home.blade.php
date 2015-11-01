@@ -11,8 +11,7 @@
 				@include('select.'.$class)				
 			<div class="row text-center">
 				<button class="btn btn-primary" type="submit">查询</button>
-				<button class="btn btn-default" type="reset">清空</button>
-				@if($class==='order')
+				@if($class==='order'&&in_array('OrderController@getExport',$actions))
 				<button class="btn btn-success" type="submit" formaction="{{url('order/export')}}">导出</button>			
 				@endif
 			</div>

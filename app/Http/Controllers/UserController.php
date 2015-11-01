@@ -7,19 +7,21 @@ use Illuminate\Http\Request;
 use App\UserField;
 use Session;
 use URL;
+use App\Services\Authorize;
 class UserController extends Controller {
-	protected $service,$user;
+	protected $service,$user,$permission;
 	protected $errorMessage = [];
 
-	public function __construct(UserService $service){
+	public function __construct(UserService $service,Authorize $permission){
 		$this->service = $service;
 		$this->user = Auth::user();
+		$this->permission=$permission;
 	}
 
 	public function getUserLog($id,UserField $fieldService){
 		$user = $this->service->listOne($id);
 		$data['user']=$user;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=['backpage'];
 		return view('detail.userlog')->with($data);
 	}
 	/**
@@ -39,7 +41,7 @@ class UserController extends Controller {
 		$data['class']='user';
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
-		$data['actions']=['create','delete'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['UserController@create','UserController@destroy']);
 		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
@@ -56,7 +58,8 @@ class UserController extends Controller {
 		$data=[];
 		$data['class']='user';
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['UserController@store']);
+		$data['actions'][]='backpage';
 		return view('create.user')->with($data);
 	}
 
@@ -109,7 +112,8 @@ class UserController extends Controller {
 		$data['class']='user';
 		$data['user']=$user;
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['UserController@store']);
+		$data['actions'][]='backpage';
 		return view('detail.user')->with($data);
 	}
 

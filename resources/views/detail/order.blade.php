@@ -97,7 +97,7 @@
 			@if($order->belongsToSupply->is_self==1)
 			<?php $products = $order->products()->with('belongsToSupply')->get()?>
 			<h3><strong>关联设备</strong> <small>仓库: {{$order->belongsToSupply->name}} 日期:{{$order->send_date->toDateString()}} </small> 
-				@if(in_array('combineProduct',$actions)&&$order->status==1)
+				@if(in_array('OrderController@postCombine',$actions)&&$order->status==1)
 				<button type="button"  data-toggle="modal" data-table="product" data-targettable="#products" data-field="row" data-filter="house,country,pstatus=0" data-event="selecttable" data-target="#selecttableModal" class="btn btn-success" >添加</button>
 				@endif
 			</h3>

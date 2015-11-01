@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 use App\Services\OrderService;
 use Session;
 use URL;
+use App\Services\Authorize;
 class ProductController extends Controller {
-	protected $service,$user;
+	protected $service,$user,$permission;
 	protected $errorMessage = [];
 
-	public function __construct(ProductService $service){
+	public function __construct(ProductService $service,Authorize $permission){
 		$this->service = $service;
 		$this->user = Auth::user();
+		$this->permission=$permission;
 	}
 
 	/**
@@ -38,7 +40,8 @@ class ProductController extends Controller {
 		$products = $order->products()->with('belongsToSupply')->get();
 		$data=[];
 		$data['currentProduct']=$product;
-		$data['actions']=['entryProduct','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['ProductController@postEntry']);
+		$data['actions'][]='backpage';
 		$data['order']=$order;
 		$data['products']=$products;
 		return view('product-entry')->with($data)->withInput($request->flash());
@@ -104,7 +107,7 @@ class ProductController extends Controller {
 		$data['class']='product';
 		$data['field']=$fieldService;
 		$data['data']=$this->service->lists($arrRequest,'',20);
-		$data['actions']=['create','delete'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['ProductController@create','ProductController@destroy']);
 		Session::put('index_url',URL::full());
 		return view('home')->with($data)->withInput($request->flash());
 	}
@@ -121,7 +124,8 @@ class ProductController extends Controller {
 		$data=[];
 		$data['class']='product';
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['ProductController@store']);
+		$data['actions'][]='backpage';
 		return view('create.product')->with($data);
 	}
 
@@ -169,7 +173,8 @@ class ProductController extends Controller {
 		$data['class']='product';
 		$data['product']=$product;
 		$data['field']=$fieldService;
-		$data['actions']=['submit','backpage'];
+		$data['actions']=array_only($this->permission->get($this->user->auth),['ProductController@update']);
+		$data['actions'][]='backpage';
 		return view('detail.product')->with($data);
 	}
 
