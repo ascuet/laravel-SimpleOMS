@@ -16,16 +16,16 @@
 			@if(in_array('UserController@create',$actions))
 			<a href="{{url('user/create')}}" class="btn navbar-btn btn-primary">新增</a>
 			@endif
-			@if(in_array('OrderController@delete',$actions))
+			@if(in_array('OrderController@destroy',$actions))
 			<button type="submit" form="destroy" class="btn navbar-btn btn-danger">批量删除</button>
 			@endif
-			@if(in_array('SupplyController@delete',$actions))
+			@if(in_array('SupplyController@destroy',$actions))
 			<button type="submit" form="destroy" class="btn navbar-btn btn-danger">批量删除</button>
 			@endif
-			@if(in_array('ProductController@delete',$actions))
+			@if(in_array('ProductController@destroy',$actions))
 			<button type="submit" form="destroy" class="btn navbar-btn btn-danger">批量删除</button>
 			@endif
-			@if(in_array('UserController@delete',$actions))
+			@if(in_array('UserController@destroy',$actions))
 			<button type="submit" form="destroy" class="btn navbar-btn btn-danger">批量删除</button>
 			@endif
 			@if(in_array('OrderController@postSend',$actions)&&in_array('order.index',Request::route()->getAction()))
