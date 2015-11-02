@@ -92,8 +92,10 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['radio'=>'required|event:change_deliver'],['is_deliver'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['radio'=>'required|readonly'],['is_deliver'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['radio'=>'required|readonly'],['is_deliver'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['textarea'=>''],['memo','message'],[0,1,2,3,-1],[0,1,2,5]);
-				$this->setFieldsBatch('edit',['textarea'=>'readonly'],['memo','message'],[0,1,2,3,-1],[3,4]);
+				$this->setFieldsBatch('edit',['textarea'=>''],['message'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['textarea'=>''],['memo'],[0,1,2,3,-1]);
+				$this->setFieldsBatch('edit',['textarea'=>'readonly'],['message'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['textarea'=>'readonly'],['message'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['select'=>'required'],['source'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'disabled'],['source'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['select'=>'disabled'],['source'],[0,1,2,3,-1],[3,4,5]);
