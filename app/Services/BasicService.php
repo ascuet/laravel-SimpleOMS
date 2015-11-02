@@ -280,6 +280,9 @@ use Queue;
 	 */
 	public function updateLogs($obj){
 		$dirty = $obj->getDirty();
+		if(empty($dirty)){
+			return;
+		}
 		$tpl = $this->logAction['update'];
 		$tpl['dirty']=$dirty;
 		$this->appendLog($obj,$tpl,'update');
