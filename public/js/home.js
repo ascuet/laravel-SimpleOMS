@@ -97,8 +97,7 @@ Component.events={
 			handler:function($this){
 				if($this.val()==0){
 					$('input[name="days_before"]').val(1).trigger('input');
-				}
-				if($this.val()==1){
+				}else if($this.val()==1){
 					$('input[name="days_before"]').val(4).trigger('input');
 				}
 			}
@@ -244,7 +243,7 @@ Component.modules={
 $(document).ready(function(){
 	Component.events.init();
 	$('[data-event="calculate_days"]').trigger('change');
-	$('[data-event="days_before"]').trigger('input');
+	$('[data-event="change_deliver"]:checked').trigger('change');
 	$('.datetimepicker').datetimepicker({
 		language:'zh-CN',
 		autoclose:1,

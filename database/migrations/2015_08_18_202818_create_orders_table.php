@@ -33,7 +33,7 @@ class CreateOrdersTable extends Migration {
 	        $table->integer('source')->default(0)->nullable();
 	        $table->integer('house')->default(0)->nullable();
 	        $table->timestamp('send_date')->nullable();
-	        $table->integer('is_deliver')->default(0);
+	        $table->integer('is_deliver')->default(1);
 	        $table->string('delivery_no')->nullable();
 	        $table->string('delivery_company')->nullable();
 	        $table->timestamp('modified_at')->nullable();

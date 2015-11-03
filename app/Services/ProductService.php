@@ -212,7 +212,7 @@ class ProductService extends BasicService{
 	public function entryLog($obj,$order,$reasons='常规入库'){
 		$tpl = $this->logAction['entry'];
 		$tpl['reasons']=$reasons;
-		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id)];
+		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id.'/edit')];
 		$this->appendLog($obj,$tpl,'entry');
 	}
 
@@ -226,7 +226,7 @@ class ProductService extends BasicService{
 	public function sendLog($obj,$order,$reasons='常规出库'){
 		$tpl = $this->logAction['send'];
 		$tpl['reasons']=$reasons;
-		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id)];
+		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id.'/edit')];
 		$this->appendLog($obj,$tpl,'send');
 	}
 

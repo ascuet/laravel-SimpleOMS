@@ -76,7 +76,7 @@
                                 type:'POST',
                                 url:"{{url('order/import')}}"+'?file_name='+$this.data('file'),
                                 success:function(msg){
-                                    $this.parent().text(msg.responseText);
+                                    $this.parent().text(msg);
                                 },
                                 error:function(msg){
                                     $this.parent().text(msg.responseText);
