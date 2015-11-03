@@ -79,7 +79,7 @@ class ProductService extends BasicService{
 	 */
 	public function productEntry($id,$order,$reason=false){
 		$product = $this->listOne($id);
-		if($product->pstatus==0||$product->pstatus==1){
+		if(in_array($product->pstatus,[0,1])){
 			Log::info($product->pid.' already in');
 			return false;
 		}
@@ -105,7 +105,7 @@ class ProductService extends BasicService{
 			return false;
 		}
 		foreach ($ids as $id) {
-			if(!$this->productEntry($ids,$order)){
+			if(!$this->productEntry($id,$order)){
 				return false;
 			}
 		}
@@ -212,7 +212,7 @@ class ProductService extends BasicService{
 	public function entryLog($obj,$order,$reasons='常规入库'){
 		$tpl = $this->logAction['entry'];
 		$tpl['reasons']=$reasons;
-		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id.'/edit')];
+		$tpl['order']=['text'=>$order->oid,'id'=>$order->id];
 		$this->appendLog($obj,$tpl,'entry');
 	}
 
@@ -226,7 +226,7 @@ class ProductService extends BasicService{
 	public function sendLog($obj,$order,$reasons='常规出库'){
 		$tpl = $this->logAction['send'];
 		$tpl['reasons']=$reasons;
-		$tpl['order']=['text'=>$order->oid,'href'=>url("order/".$order->id.'/edit')];
+		$tpl['order']=['text'=>$order->oid,'id'=>$order->id];
 		$this->appendLog($obj,$tpl,'send');
 	}
 

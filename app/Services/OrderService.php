@@ -525,7 +525,7 @@ class OrderService extends BasicService{
 	 */
 	public function combineLog($order){
 		$tpl = $this->logAction['combine'];
-		$tpl['products']=$order->products()->get(['pid'])->toArray();
+		$tpl['products']=$order->products()->get(['pid','product_id'])->toArray();
 		$this->appendLog($order,$tpl,'combine');
 	}
 	/**
@@ -536,7 +536,7 @@ class OrderService extends BasicService{
 	 */
 	public function unbindLog($order,$product){
 		$tpl = $this->logAction['unbind'];
-		$tpl['products']=['pid'=>$product->pid,'id'=>$product->id];
+		$tpl['products']=[['pid'=>$product->pid,'product_id'=>$product->id]];
 		$this->appendLog($order,$tpl,'unbind');
 	}
 

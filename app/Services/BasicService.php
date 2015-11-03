@@ -11,14 +11,14 @@ use Queue;
 	protected $fieldService,$user,
 	$logAction=[
 		'create'=>[
-			'body'=>'创建{object}'
+			'body'=>'创建 {object}'
 		],
 		'update'=>[
-			'body'=>'修改{object}, {dirty}',
+			'body'=>'修改 {object}, {dirty}',
 			'dirty'=>''
 		],
 		'delete'=>[
-			'body'=>'删除{object}'
+			'body'=>'删除 {object}'
 		],
 	];
 

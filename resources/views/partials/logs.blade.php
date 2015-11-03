@@ -24,13 +24,21 @@
 					foreach ($actions as $k => $v) {
 						switch ($k) {
 							case 'dirty':
-								$replacement = json_encode($v,JSON_UNESCAPED_UNICODE);
+								$replacement='';
+								foreach ($v as $key => $value) {
+									$replacement.=$key.':'.$value.', ';
+								}
+								//$replacement = json_encode($v,JSON_UNESCAPED_UNICODE);
 								break;
 							case 'products':
-								$replacement = json_encode($v,JSON_UNESCAPED_UNICODE);
+								$replacement = '';
+								foreach ($v as $product) {
+									$replacement.='<a href="'.url('product/'.$product['product_id'].'/edit').'">'.$product['pid'].'</a> ';
+								}
+								//$replacement = json_encode($v,JSON_UNESCAPED_UNICODE);
 								break;
 							case 'order':
-								$replacement = '<a href="'.url($v['href']).'">'.$v['text'].'</a>';
+								$replacement = '<a href="'.url($k.'/'.$v['id'].'/edit').'">'.$v['text'].'</a>';
 								break;
 							default:
 								$replacement = $v;
