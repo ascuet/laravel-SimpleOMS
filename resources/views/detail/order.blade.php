@@ -62,7 +62,7 @@
 						<div class="col-sm-4">
 							<div class="input-group input-group-sm">
 							  <span class="input-group-addon">提前</span>
-								<input class="form-control" type="number" data-event="days_before" step="1" min="0" name="days_before">
+								<input class="form-control" type="number" data-event="days_before" step="1" name="days_before">
 							  <span class="input-group-addon">天发货</span>
 							</div>				
 						</div>

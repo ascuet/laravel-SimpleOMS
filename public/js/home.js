@@ -52,7 +52,7 @@ Component.events={
 				var date1 = new Date ($('input[name="go_date"]').val());
 				var date2 = new Date ($('input[name="back_date"]').val());
 				var day = 24*60*60*1000;
-				$('input[name="days"]').val((date2.getTime()-date1.getTime())/day);
+				$('input[name="days"]').val((date2.getTime()-date1.getTime())/day+1);
 				$('[data-event="days_before"]').trigger('input');
 			}
 		},
@@ -64,7 +64,7 @@ Component.events={
 				var day = 24*60*60*1000;
 				$('input[name="send_date"]').removeClass('datepicker');
 				if($('input[name="send_date"]').val()==""){
-					if($('input[name="is_deliver"]').val()==0){
+					if($('input[name="is_deliver"]:checked').val()==0){
 						$('input[name="days_before"]').val(1);
 					}
 					else{
@@ -243,7 +243,6 @@ Component.modules={
 $(document).ready(function(){
 	Component.events.init();
 	$('[data-event="calculate_days"]').trigger('change');
-	$('[data-event="change_deliver"]:checked').trigger('change');
 	$('.datetimepicker').datetimepicker({
 		language:'zh-CN',
 		autoclose:1,
