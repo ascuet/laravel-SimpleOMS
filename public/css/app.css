@@ -6252,3 +6252,36 @@ input.form-control[readonly].datetimepicker,input.form-control[readonly].datepic
 .glyphicon.glyphicon-star.red-star{
   color: red;
 }
+.navbar-default .btn-none {
+    color: #777777;
+}
+.btn-none {
+  font-weight: normal;
+  border-radius: 0;
+}
+.btn-none,
+.btn-none:active,
+.btn-none.active,
+.btn-none[disabled],
+fieldset[disabled] .btn-none {
+  background-color: transparent;
+  box-shadow: none;
+}
+.btn-none,
+.btn-none:hover,
+.btn-none:focus,
+.btn-none:active {
+  border-color: transparent;
+}
+.btn-none:hover,
+.btn-none:focus {  
+  color: #23527c;
+  background-color: transparent;
+}
+.btn-none[disabled]:hover,
+fieldset[disabled] .btn-none:hover,
+.btn-none[disabled]:focus,
+fieldset[disabled] .btn-none:focus {
+  color: #777777;
+  text-decoration: none;
+}

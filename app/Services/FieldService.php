@@ -365,11 +365,12 @@ class FieldService{
 		$required = in_array('required', $options)?'required':'';
 		$disabled = in_array('disabled', $options)?'disabled':'';
 		$param='';
+		$arrParam = [];
 		foreach ($options as $option) {
 			if (strpos($option, ':') !== false)
 			{
 				list($option, $set) = explode(':', $option, 2);
-
+				$arrParam[$option]=$set;
 				$param.='data-'.$option.'="'.$set.'" ';
 			}
 		}
@@ -428,6 +429,9 @@ class FieldService{
 				break;
 			case 'radio':
 				$array=$this->model->arrayField($name);
+				if($value==''&&isset($arrParam['default'])){
+					$value=$arrParam['default'];
+				}
 				foreach ($array as $key => $v) {
 					$checked = $key==$value?'checked':'';
 					$html.='<label for="'.$name.'_'.$key.'" class="radio-inline"><input type="radio" id="'.$name.'_'.$key.'" name="'.$name.'" value="'.$key.'" '.$param.' '.$checked.'> '.$v.'</label>';
