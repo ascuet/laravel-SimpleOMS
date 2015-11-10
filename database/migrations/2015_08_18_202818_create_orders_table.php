@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration {
 	        $table->timestamp('order_date');
 	        $table->string('country');
 	        $table->integer('amount');
-	        $table->decimal('sum',5,2)->default(0);
+	        $table->decimal('sum',10,2)->default(0);
 	        $table->integer('days')->default(0);
 	        $table->timestamp('go_date')->nullable();
 	        $table->timestamp('back_date')->nullable();

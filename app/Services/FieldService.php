@@ -429,7 +429,7 @@ class FieldService{
 				break;
 			case 'radio':
 				$array=$this->model->arrayField($name);
-				if($value==''&&isset($arrParam['default'])){
+				if($value===''&&isset($arrParam['default'])){
 					$value=$arrParam['default'];
 				}
 				foreach ($array as $key => $v) {
