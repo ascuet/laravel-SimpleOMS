@@ -8,7 +8,7 @@
 	
 	<form action="{{url('user')}}" id="form" method="POST" class="form-horizontal">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
-		<h3>基本信息</h3>
+		<br>
 		<div class="row">
 			{!! $field->addFieldHTML('uid','用户名') !!}
 			{!! $field->addFieldHTML('auth','权限') !!}

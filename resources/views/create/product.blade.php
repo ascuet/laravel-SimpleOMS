@@ -8,7 +8,7 @@
 	
 	<form action="{{url('product')}}" id="form" method="POST" class="form-horizontal">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
-		<h3>基本信息</h3>
+		<br>
 		<div class="row">
 			{!! $field->addFieldHTML('pid','设备号') !!}
 			{!! $field->addFieldHTML('house','库存名') !!}
