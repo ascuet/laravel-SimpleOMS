@@ -940,7 +940,6 @@ img {
   border-radius: 50%;
 }
 hr {
-  margin-top: 20px;
   margin-bottom: 20px;
   border: 0;
   border-top: 1px solid #eeeeee;
@@ -1015,8 +1014,8 @@ h2,
 .h2,
 h3,
 .h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 0px;
+  margin-bottom: 5px;
 }
 h1 small,
 .h1 small,
@@ -2390,7 +2389,7 @@ input[type="search"] {
   }
 }
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 .radio,
 .checkbox {

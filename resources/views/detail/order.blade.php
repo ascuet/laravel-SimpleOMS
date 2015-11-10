@@ -3,7 +3,7 @@
 	
 <div class="container">
 		@include('partials.info')
-	<h1>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h1><input type="hidden" name="obj_id" value="{{$order->id}}">
+	<h2>订单{{$order->oid}} <small>{{$field->statusName($order->status)}}</small></h2><input type="hidden" name="obj_id" value="{{$order->id}}">
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
 		@if($order->status>0)
@@ -13,10 +13,10 @@
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="detail" role="tabpanel">
+			<br>
 			<form action="{{url('order/'.$order->id)}}" id="form" method="POST" class="form-horizontal">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				<input type="hidden" name="_method" value="PUT">
-				<h3><strong>基本信息</strong></h3>
 				<div class="row">
 					{!! $field->editFieldHTML('oid','订单号',$order) !!}
 					{!! $field->editFieldHTML('order_date','订单时间',$order) !!}
@@ -25,8 +25,7 @@
 					{!! $field->editFieldHTML('sum','金额',$order) !!}
 					{!! $field->editFieldHTML('source','来源',$order) !!}
 				</div>
-				
-				<h3><strong>客户信息</strong></h3>
+				<hr>				
 				<div class="row">
 					{!! $field->editFieldHTML('gid','淘宝ID',$order) !!}
 					{!! $field->editFieldHTML('gname','客户姓名',$order) !!}
@@ -41,8 +40,7 @@
 					{!! $field->editFieldHTML('message','买家留言',$order) !!}
 					{!! $field->editFieldHTML('memo','客服备注',$order) !!}
 				</div>
-				
-				<h3><strong>行程</strong></h3>
+				<hr>				
 				<div class="row">
 					{!! $field->editFieldHTML('go_date','出国日期',$order) !!}
 					{!! $field->editFieldHTML('back_date','回国日期',$order) !!}
@@ -53,8 +51,7 @@
 					{!! $field->editFieldHTML('country','国家',$order) !!}	
 					
 				</div>
-				
-				<h3><strong>发货相关</strong></h3>
+				<hr>				
 				<div class="row">
 					@if($order->status==0||$order->status==1)
 					<div class="form-group col-md-6">
@@ -84,6 +81,7 @@
 		</div>
 		@if($order->status>0 )
 		<div class="tab-pane" id="products" role="tabpanel">
+			<br>
 			@if($order->is_deliver==1)
 			<?php $readonly=$order->status!=1?'readonly':'';?>
 			<h3><strong>快递信息</strong></h3>

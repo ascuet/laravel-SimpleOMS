@@ -4,7 +4,7 @@
 <div class="container">
 		@include('partials.info')
 
-	<h1>新增仓库</h1>
+	<h2>新增仓库</h2>
 	
 	<form action="{{url('supply')}}" id="form" method="POST" class="form-horizontal">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">

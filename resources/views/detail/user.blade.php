@@ -4,7 +4,7 @@
 <div class="container">
 		@include('partials.info')
 
-	<h1>用户 {{$user->uid}}</h1><input type="hidden" name="obj_id" value="{{$user->id}}">
+	<h2>用户 {{$user->uid}}</h2><input type="hidden" name="obj_id" value="{{$user->id}}">
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">详细信息</a></li>
 		<li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">操作记录</a></li>
@@ -12,11 +12,10 @@
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="detail" role="tabpanel">
-
+			<br>
 			<form action="{{url('user/'.$user->id)}}" id="form" method="POST" class="form-horizontal">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				<input type="hidden" name="_method" value="PUT">
-				<h3>基本信息</h3>
 				<div class="row">
 					{!! $field->editFieldHTML('uid','用户名',$user) !!}
 					{!! $field->editFieldHTML('auth','权限',$user) !!}
