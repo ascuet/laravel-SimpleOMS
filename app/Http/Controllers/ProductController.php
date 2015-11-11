@@ -137,6 +137,8 @@ class ProductController extends Controller {
 	public function store(Request $request,ProductField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
 		$fields = $fieldService->parseValidator('add');
 		$this->validate($request,$fields);
 

@@ -376,6 +376,8 @@ class OrderController extends Controller {
 	public function store(Request $request,OrderField $fieldService)
 	{
 		//
+		$fieldService->currentRole($this->user->auth);
+		$fieldService->currentStatus('');
 		$fields = $fieldService->parseValidator('add');
 		$this->validate($request,$fields);
 
