@@ -36,7 +36,9 @@ use Queue;
 	*/
 	public function create( $data){
 		$class=new $this->class;
-
+		$data = array_where($data,function($key,$value){
+			return $value!=='';
+		});
 		$class->fill($data);
 		
 		if($class->save()){
