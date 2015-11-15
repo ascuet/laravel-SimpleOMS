@@ -67,10 +67,10 @@
 					@endif
 					{!! $field->editFieldHTML('send_date','发货日期',$order) !!}
 					{!! $field->editFieldHTML('is_deliver','发货方式',$order) !!}
-
+					{!! $field->editFieldHTML('amount','数量',$order) !!}
 				</div>				
 				<div class="row">
-					{!! $field->editFieldHTML('amount','数量',$order) !!}
+					
 					{!! $field->editFieldHTML('belongsToSupply_supply','供应商',$order) !!}
 					{!! $field->editFieldHTML('house','库存名',$order) !!}
 					{!! $field->editFieldHTML('belongsToSupply_name','库存名',$order) !!}

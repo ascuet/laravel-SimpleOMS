@@ -55,10 +55,11 @@
 				</div>
 				</div>
 			{!! $field->addFieldHTML('send_date','发货日期') !!}
-			{!! $field->addFieldHTML('is_deliver','发货方式') !!}
+			
 
 		</div>
 		<div class="row">
+			{!! $field->addFieldHTML('is_deliver','发货方式') !!}
 			{!! $field->addFieldHTML('amount','数量') !!}
 			{!! $field->addFieldHTML('belongsToSupply_supply','供应商') !!}
 			{!! $field->addFieldHTML('house','库存名') !!}

@@ -44,7 +44,7 @@ class OrderField extends FieldService {
 			case 'add':
 				$this->setFieldsBatch('add',['text'=>'required|unique:orders,oid,NULL,id,deleted_at,NULL'],['oid'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['text'=>'required'],['country','gid','gname','gmobile'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['textarea'=>'required'],['address'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['textarea'=>'required|rows:2'],['address'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['date'=>'required|full'],['order_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['number'=>'required'],['amount'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['decimal'=>'required'],['sum'],[''],[0,1,2]);

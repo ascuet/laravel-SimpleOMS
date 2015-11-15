@@ -53,11 +53,11 @@ Component.events={
 				var date2 = new Date ($('input[name="back_date"]').val());
 				var day = 24*60*60*1000;
 				$('input[name="days"]').val((date2.getTime()-date1.getTime())/day+1);
-				$('[data-event="days_before"]').trigger('input');
+				$('[data-event="days_before"]').trigger('change');
 			}
 		},
 		days_before:{
-			type:'input',
+			type:'change',
 			isAjax:false,
 			opt:'',
 			handler:function($this){
@@ -96,9 +96,9 @@ Component.events={
 			opt:'',
 			handler:function($this){
 				if($this.val()==0){
-					$('input[name="days_before"]').val(1).trigger('input');
+					$('input[name="days_before"]').val(1).trigger('change');
 				}else if($this.val()==1){
-					$('input[name="days_before"]').val(4).trigger('input');
+					$('input[name="days_before"]').val(4).trigger('change');
 				}
 			}
 		},

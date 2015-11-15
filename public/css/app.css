@@ -2679,7 +2679,7 @@ select[multiple].form-group-lg .form-control {
 .form-horizontal .radio-inline,
 .form-horizontal .checkbox-inline {
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 3px;
   padding-top: 7px;
 }
 .form-horizontal .radio,

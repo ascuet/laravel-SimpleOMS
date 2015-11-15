@@ -211,7 +211,7 @@ class OrderService extends BasicService{
 			DB::rollback();
 			return 'statusChanged';
 		}
-		if($order->belongsToSupply()->first()->is_self!=1){
+		if($order->belongsToSupply()->withTrashed()->first()->is_self!=1){
 			Log::info($order->oid.' supply not self');
 			DB::rollback();
 			return 'supplyInvalid';
@@ -244,7 +244,7 @@ class OrderService extends BasicService{
 			DB::rollback();
 			return 'statusChanged';
 		}
-		$supply = $order->belongsToSupply()->first();
+		$supply = $order->belongsToSupply()->withTrashed()->first();
 		switch ($supply->is_self) {
 			case 0://非自有
 				$order->products()->detach();
@@ -459,7 +459,7 @@ class OrderService extends BasicService{
 		}
 		else{
 			if($class->status==1){
-				if($class->belongsToSupply->is_self!=1){
+				if($class->belongsToSupply()->withTrashed()->first()->is_self!=1){
 					$class->products()->detach();
 				}
 				if($class->is_deliver!=1){
@@ -646,7 +646,7 @@ class OrderService extends BasicService{
 
 	public function migrateOrders(){
 		$i = 0;
-		DB::table('mht_order_view')->chunk(100,function($orders) use (&$i){
+		DB::table('mht_order_view')->where('recycled',0)->chunk(100,function($orders) use (&$i){
 			foreach ($orders as $order) {
 				$insert = new Order;
 				$insert->id = $order->id;
