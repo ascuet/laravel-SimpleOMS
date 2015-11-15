@@ -693,7 +693,7 @@ class OrderService extends BasicService{
 					case 3:
 						is_null($insert->go_date)&&$insert->go_date = $insert->order_date;
 						is_null($insert->send_date)&&$insert->send_date = $insert->go_date;
-						$insert->modified_at = empty($order->finished_date)?Carbon::createFromTimestamp($order->send_date)->addDays($order->days):Carbon::createFromTimestamp($order->finished_date);
+						$insert->modified_at = empty($order->finished_date)?Carbon::createFromTimestamp($insert->back_date):Carbon::createFromTimestamp($order->finished_date);
 						break;
 					default:
 						# code...
