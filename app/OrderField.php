@@ -43,7 +43,7 @@ class OrderField extends FieldService {
 				break;
 			case 'add':
 				$this->setFieldsBatch('add',['text'=>'required|unique:orders,oid,NULL,id,deleted_at,NULL'],['oid'],[''],[0,1,2]);
-				$this->setFieldsBatch('add',['text'=>'required'],['country','gid','gname','gmobile','address'],[''],[0,1,2]);
+				$this->setFieldsBatch('add',['text'=>'required'],['country','gid','gname','gmobile'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['textarea'=>'required'],['address'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['date'=>'required|full'],['order_date'],[''],[0,1,2]);
 				$this->setFieldsBatch('add',['number'=>'required'],['amount'],[''],[0,1,2]);
@@ -58,12 +58,12 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('add',['select'=>'required'],['source'],[''],[0,1,2]);
 				break;
 			case 'edit':
-				$this->setFieldsBatch('edit',['text'=>'required'],['oid','country','gid','gname','gmobile','address'],[0,1],[0,1,2]);
-				$this->setFieldsBatch('edit',['textarea'=>'required'],['address'],[0,1],[0,1,2]);
-				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile','address'],[2,3,-1],[0,1,2]);
-				$this->setFieldsBatch('edit',['textarea'=>'required|readonly'],['address'],[2,3,-1],[0,1,2]);
-				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile','address'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['textarea'=>'required|readonly'],['address'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['text'=>'required'],['oid','country','gid','gname','gmobile'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['textarea'=>'required|rows:2'],['address'],[0,1],[0,1,2]);
+				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['textarea'=>'required|readonly|rows:2'],['address'],[2,3,-1],[0,1,2]);
+				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile'],[0,1,2,3,-1],[3,4,5]);
+				$this->setFieldsBatch('edit',['textarea'=>'required|readonly|rows:2'],['address'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['text'=>'form'],['delivery_no','delivery_company'],[1],[0,1,3]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['delivery_no','delivery_company'],[2,3],[0,1,3]);
 				$this->setFieldsBatch('edit',['text'=>'readonly'],['delivery_no','delivery_company'],[1,2,3],[2,4,5]);

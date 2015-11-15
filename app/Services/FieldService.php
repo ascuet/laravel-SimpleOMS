@@ -441,7 +441,8 @@ class FieldService{
 				$html='<div class="form-group form-group-sm col-md-6">'.$html.'</div>';
 				break;
 			case 'textarea':
-				$html='<textarea class="form-control" rows="3" name="'.$name.'" '.$param.' '.$required.' '.$readonly.' >'.$value.'</textarea>';
+				$rows = isset($arrParam['rows'])?$arrParam['rows']:3;
+				$html='<textarea class="form-control" rows="'.$rows.'" name="'.$name.'" '.$param.' '.$required.' '.$readonly.' >'.$value.'</textarea>';
 				$html = '<div class="col-sm-9">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-1" for="'.$name.'">'.$label.'</label>'.$html;
 				$html='<div class="form-group col-md-6">'.$html.'</div>';

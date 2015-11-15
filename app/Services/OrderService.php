@@ -101,7 +101,7 @@ class OrderService extends BasicService{
 	 */
 	public function exportOrder($opt){
 		$obj = $this->selectQuery($opt);
-		$orders = $obj->with('belongsToSupply')->with('products')->latest('order_date')->get();
+		$orders = $obj->with(['belongsToSupply'=>function($query){$query->withTrashed();},'products'=>function($query){$query->withTrashed();}])->latest('order_date')->get();
 		$fields = $this->fieldService->getFieldsByMethod('export',$this->user->auth,'');
 	//	dd($fields);
 		$export=[];
@@ -483,7 +483,7 @@ class OrderService extends BasicService{
 	public function lists( $opt=array(),$col=array('*'),$page=false){
 		$obj = $this->selectQuery($opt);
 		if($page){
-			return $obj->with('belongsToSupply')->latest('modified_at')->latest('order_date')->paginate($page);
+			return $obj->with(['belongsToSupply'=>function($query){$query->withTrashed();}])->latest('modified_at')->latest('order_date')->paginate($page);
 		}
 		return $obj->get($col);
 	}
@@ -606,4 +606,124 @@ class OrderService extends BasicService{
 			return true;
 		}
 	}
+
+
+	public function migrate(){
+		$this->migrateSupplies();
+		$this->migrateProducts();
+		$this->migrateOrders();
+		$this->migrateOrderProduct();
+	}
+	public function migrateSupplies(){
+		$supplies = DB::table('mht_supply')->get();
+		$i = 0;
+		foreach ($supplies as $supply) {
+			$insert = new \App\Supply;
+			$insert->fill((array)$supply);
+			if($supply->recycled==1){
+				$insert->deleted_at = Carbon::now();
+			}
+			$insert->save();
+			$i++;
+		}
+		echo $i." supplies migrated\n";
+	}
+
+	public function migrateProducts(){
+		$products = DB::table('mht_products')->get();
+		$i = 0;
+		foreach ($products as $product) {
+			$insert = new \App\Product;
+			$insert->fill((array)$product);
+			if($product->recycled==1){
+				$insert->deleted_at = Carbon::now();
+			}
+			$insert->save();
+			$i++;
+		}
+		echo $i." products migrated\n";
+	}
+
+	public function migrateOrders(){
+		$i = 0;
+		DB::table('mht_order_view')->chunk(100,function($orders) use (&$i){
+			foreach ($orders as $order) {
+				$insert = new Order;
+				$insert->id = $order->id;
+				$insert->oid = $order->oid;
+				$insert->gid =$order->gid;
+				$insert->gname = $order->gname;
+				$insert->country = $order->country;
+				$insert->amount = $order->amount;
+				$insert->sum = $order->sum;
+				$insert->days = $order->days;
+				$insert->go_date = empty($order->go_date)?null:Carbon::createFromTimestamp($order->go_date);
+				$insert->back_date = empty($order->back_date)?null:Carbon::createFromTimestamp($order->back_date);
+				$insert->order_date=empty($order->order_date)?$insert->go_date:Carbon::createFromTimestamp($order->order_date);
+				$insert->gmobile = $order->gmobile;
+				$insert->address = $order->address;
+				$insert->memo = $order->memo;
+				$insert->message = $order->message;
+				$insert->status = $order->status;
+				$insert->source = $order->source;
+				$insert->house = $order->house;	
+				$insert->send_date = empty($order->send_date)?null:Carbon::createFromTimestamp($order->send_date);
+				$insert->is_deliver = $order->is_deliver;
+				if($order->is_deliver==1){
+					$delivery = DB::table('mht_deliver')->find($order->id);
+					if(!is_null($delivery)){
+						$insert->delivery_no = $delivery->tracking;
+						$insert->delivery_company = $delivery->company;
+					}
+				}
+				switch ($order->status) {
+					case -1:
+						$insert->modified_at = empty($order->cancel_date)?Carbon::createFromTimestamp($order->order_date):Carbon::createFromTimestamp($order->cancel_date);
+						$insert->reasons = $order->reasons;
+						break;
+					case 0:
+						# code...
+						break;
+					case 1:
+						$insert->modified_at =Carbon::createFromTimestamp($order->order_date);
+						break;
+					case 2:
+						$insert->modified_at =Carbon::createFromTimestamp($order->send_date);
+						break;
+					case 3:
+						is_null($insert->go_date)&&$insert->go_date = $insert->order_date;
+						is_null($insert->send_date)&&$insert->send_date = $insert->go_date;
+						$insert->modified_at = empty($order->finished_date)?Carbon::createFromTimestamp($order->send_date)->addDays($order->days):Carbon::createFromTimestamp($order->finished_date);
+						break;
+					default:
+						# code...
+						break;
+				}
+				if($order->recycled==1){
+					$insert->deleted_at=Carbon::now();
+				}
+				$insert->save();
+			$i++;
+			}
+			echo $i." orders migrated\n";
+		});
+
+	}
+
+	public function migrateOrderProduct(){
+		$order_products = DB::table('mht_order_products')->get();
+		$i = 0;
+		foreach ($order_products as $order_product) {
+			$insert = [];
+			$insert['order_id']=$order_product->order_id;
+			$insert['product_id']=$order_product->products_id;
+			$insert['return_at']=empty($order_product->return_date)?null:Carbon::createFromTimestamp($order_product->return_date);
+			$insert['created_at']=Carbon::now();
+			$insert['updated_at']=Carbon::now();
+			DB::table('order_product')->insert($insert);
+			$i++;
+		}
+		echo $i." order_product migrated\n";
+	}
+
 }

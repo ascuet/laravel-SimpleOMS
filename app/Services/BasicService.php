@@ -143,7 +143,7 @@ use Queue;
 		$class = $class->where('id',$id);
 		if(is_array($with)){
 			foreach ($with as $w) {
-				$class = $class->with($w);
+				$class = $class->with([$w=>function($query){$query->withTrashed();}]);
 			}
 		}
 		return $class->lockForUpdate()->first();

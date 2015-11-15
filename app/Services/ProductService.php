@@ -196,9 +196,9 @@ class ProductService extends BasicService{
 		$obj = $this->selectQuery($opt);
 		if($page){
 			if(isset($opt['pstatus'])&&$opt['pstatus']=='out'){
-				return $obj->with('belongsToSupply')->latest('sent_at')->paginate($page);				
+				return $obj->with(['belongsToSupply'=>function($query){$query->withTrashed();}])->latest('sent_at')->paginate($page);				
 			}
-			return $obj->with('belongsToSupply')->orderBy('pid')->paginate($page);
+			return $obj->with(['belongsToSupply'=>function($query){$query->withTrashed();}])->orderBy('pid')->paginate($page);
 		}
 		return $obj->get($col);
 	}
