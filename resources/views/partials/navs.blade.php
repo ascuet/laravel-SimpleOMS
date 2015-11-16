@@ -18,7 +18,7 @@
 	<li>
 		<div class="navbar-btn btn-group">
 			<a class="btn btn-none" href="{{url('product')}}">设备管理</a>
-			@if(in_array(Auth::user()->auth,[0,3]))
+			@if(in_array(Auth::user()->auth,[0,1,3]))
 			<a class="btn btn-none" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
 			<ul class="dropdown-menu" role="menu">
 				<li><a href="{{ url('/product/entry') }}">入库</a></li>
