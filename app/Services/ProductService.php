@@ -61,13 +61,7 @@ class ProductService extends BasicService{
 	 */
 	public function currentOrder($product){
 		if(is_null($product))return false;
-		$order = $product->belongsToOrder()->first();
-		$order2 = $product->orders()->wherePivot('return_at',null)->first();
-		if(is_null($order) && is_null($order2)) return $order;
-		if(!is_null($order2)&& !is_null($order)&&$order2->id != $order->id){
-			return $order2;
-		}
-		if(!is_null($order2)&& is_null($order)) return $order2;
+		$order = $product->belongsToOrder()->where('status',2)->first();
 		return $order;
 	}
 	/**
@@ -76,7 +70,7 @@ class ProductService extends BasicService{
 	 * @return App\Order
 	 */
 	public function currentBind($product){
-		return $product->orders()->wherePivot('return_at',null)->first();		
+		return $product->orders()->wherePivot('return_at',null)->where('status',1)->first();		
 	}
 	/**
 	 * 设备入库

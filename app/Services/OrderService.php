@@ -727,5 +727,4 @@ class OrderService extends BasicService{
 		}
 		echo $i." order_product migrated\n";
 	}
-
 }
