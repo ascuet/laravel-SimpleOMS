@@ -77,7 +77,13 @@ class ProductController extends Controller {
 		$data['class']='product';
 		$data['field']=$fieldService;
 		$data['multi']=false;
-		$data['data']=$this->service->lists($arrRequest,'',20);
+		$products = $this->service->selectQuery($arrRequest)->with(['orders'=>function($q){
+			$q->wherePivot('return_at',null)->where('status',1);
+		}])->get();
+		$products = $products->filter(function($product){
+			return $product->orders->isEmpty();
+		});
+		$data['data']=$products;
 		return view('partials.select-modal')->with($data)->withInput($request->flash());
 
 	}

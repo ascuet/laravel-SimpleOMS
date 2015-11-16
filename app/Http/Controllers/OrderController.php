@@ -114,7 +114,7 @@ class OrderController extends Controller {
 			$this->service->combineLog($order);
 			DB::commit();
 			$products = $order->products()->with('belongsToSupply')->get();
-			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['unbindProduct']]);
+			return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['OrderController@postUnbind']]);
 		}
 
 	}
@@ -169,7 +169,7 @@ class OrderController extends Controller {
 					return redirect()->back()->withErrors('发生错误');
 				}
 			}
-			return redirect()->back()->withErrors('成功发货 '.$i.' 个订单');
+			return redirect()->back()->withSuccess('成功发货 '.$i.' 个订单');
 		}
 		else{
 			if(!$this->service->edit($request->all(),$ids)){
