@@ -24,7 +24,7 @@
 			<input type="hidden" name="_method" value="DELETE">
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<caption>共查询到 {{$data->total()}} 个结果</caption>
-				<?php echo $data->render();?>
+				<?php echo $data->appends(Request::all())->render();?>
 				@include('table.'.$class)
 			</table>
 		</form>
