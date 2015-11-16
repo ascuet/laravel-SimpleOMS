@@ -22,7 +22,7 @@ class ProductField extends FieldService {
 		switch ($method) {
 			case 'select':
 				$this->setFieldsBatch('select',['text'=>'fuzzy'],['pid','country']);
-				$this->setFieldsBatch('select',['checkbox'=>''],['belongsToSupply_name']);
+				$this->setFieldsBatch('select',['checkbox'=>'row'],['belongsToSupply_name']);
 				$this->setFieldsBatch('select',['checkbox'=>''],['pstatus'],['']);
 				$this->setFieldsBatch('select',['hidden'=>''],['pstatus'],[0,1]);
 				break;

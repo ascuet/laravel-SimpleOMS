@@ -61,7 +61,14 @@ class ProductService extends BasicService{
 	 */
 	public function currentOrder($product){
 		if(is_null($product))return false;
-		return $product->belongsToOrder()->first();
+		$order = $product->belongsToOrder()->first();
+		$order2 = $product->orders()->wherePivot('return_at',null)->first();
+		if(is_null($order) && is_null($order2)) return $order;
+		if(!is_null($order2)&& !is_null($order)&&$order2->id != $order->id){
+			return $order2;
+		}
+		if(!is_null($order2)&& is_null($order)) return $order2;
+		return $order;
 	}
 	/**
 	 * 获取设备当前绑定订单

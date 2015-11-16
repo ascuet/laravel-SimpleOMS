@@ -50,7 +50,7 @@ class Authorize{
 			'OrderController@create'=>[0,1,2],
 			'OrderController@store'=>[0,1,2],
 			'OrderController@edit'=>[0,1,2,3,4,5],
-			'OrderController@update'=>[0,1,2,3,5],
+			'OrderController@update'=>[0,1,2,3,4,5],
 			'OrderController@destroy'=>[0,1,2],
 			'SupplyController@getSelecttable'=>[0,1,2,3,4,5],
 			'SupplyController@index'=>[0,1,2,3,4,5],

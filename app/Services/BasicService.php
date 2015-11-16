@@ -206,7 +206,7 @@ use Queue;
 					case 'date':
 						$options  = explode('|',current($v['type']));
 						if(in_array('fuzzy', $options)){
-							if(isset($opt[$k.'_startdate'])&&!empty($opt[$k.'_start'])){
+							if(isset($opt[$k.'_start'])&&!empty($opt[$k.'_start'])){
 								$obj = $obj->where($k,'>=',$opt[$k.'_start']);
 							}
 							

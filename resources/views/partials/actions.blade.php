@@ -61,7 +61,7 @@
 			@if(in_array('UserController@update',$actions))
 				<button type="submit" form="form" class="btn navbar-btn btn-primary">提交</button>
 			@endif
-			@if(in_array('ProductController@postEntry',$actions)&&isset($product->pid))
+			@if(in_array('ProductController@postEntry',$actions)&&old('pid')==null)
 				<button type="submit" form="form" formmethod="POST" formaction="{{url('product/entry/'.$currentProduct->id)}}" class="btn navbar-btn btn-primary">入库</button>
 			@endif
 			@if(in_array('backpage',$actions))
