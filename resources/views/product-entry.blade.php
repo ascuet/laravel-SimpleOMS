@@ -66,7 +66,7 @@
         </thead>
         <tbody>
             @foreach($products as $product)
-                @if($product->pid == old('pid'))
+                @if(strtoupper($product->pid) == strtoupper(old('pid')))
                 <tr class="success">
                 @else
                 <tr>
