@@ -37,7 +37,7 @@ class Authorize{
 			'HomeController@postUpload'=>[0,1,2],
 			'OrderController@getImport'=>[0,1,2],
 			'OrderController@postImport'=>[0,1,2],
-			'OrderController@getExport'=>[0,1,2,3],
+			'OrderController@getExport'=>[0,1,2,3,4,5],
 			'OrderController@postReady'=>[0,1,2],
 			'OrderController@postCombine'=>[0,1,3],
 			'OrderController@postUnbind'=>[0,1,3],

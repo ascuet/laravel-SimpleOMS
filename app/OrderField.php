@@ -106,10 +106,10 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('import',['string'=>''],['gid','gname','sum','message','gmobile','address','memo','source'],[''],[0,1,2]);
 				break;
 			case 'export':
-				$this->setFieldsBatch('export',['string'=>''],['oid','gid','gname','gmobile','country','amount','sum','days','belongsToSupply_name','belongsToSupply_supply','address','memo','message','products_pid'],[''],[0,1,2]);
-				$this->setFieldsBatch('export',['date'=>'full'],['order_date'],[''],[0,1,2]);
-				$this->setFieldsBatch('export',['date'=>''],['go_date','back_date','send_date'],[''],[0,1,2]);
-				$this->setFieldsBatch('export',['array'=>''],['is_deliver','source','status'],[''],[0,1,2]);
+				$this->setFieldsBatch('export',['string'=>''],['oid','gid','gname','gmobile','country','amount','sum','days','belongsToSupply_name','belongsToSupply_supply','address','memo','message','products_pid'],[''],[]);
+				$this->setFieldsBatch('export',['date'=>'full'],['order_date'],[''],[]);
+				$this->setFieldsBatch('export',['date'=>''],['go_date','back_date','send_date'],[''],[]);
+				$this->setFieldsBatch('export',['array'=>''],['is_deliver','source','status'],[''],[]);
 				break;
 			default:
 				# code...
