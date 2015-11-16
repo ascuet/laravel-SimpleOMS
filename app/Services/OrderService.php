@@ -620,6 +620,7 @@ class OrderService extends BasicService{
 		foreach ($supplies as $supply) {
 			$insert = new \App\Supply;
 			$insert->fill((array)$supply);
+			$insert->id = $supply->id;
 			if($supply->recycled==1){
 				$insert->deleted_at = Carbon::now();
 			}
@@ -635,6 +636,7 @@ class OrderService extends BasicService{
 		foreach ($products as $product) {
 			$insert = new \App\Product;
 			$insert->fill((array)$product);
+			$insert->id = $product->id;
 			if($product->recycled==1){
 				$insert->deleted_at = Carbon::now();
 			}
