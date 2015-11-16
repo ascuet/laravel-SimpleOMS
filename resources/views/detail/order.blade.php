@@ -82,15 +82,6 @@
 		@if($order->status>0 )
 		<div class="tab-pane" id="products" role="tabpanel">
 			<br>
-			@if($order->is_deliver==1)
-			<?php $readonly=$order->status!=1?'readonly':'';?>
-			<h3><strong>快递信息</strong></h3>
-			<div class="row">
-				{!! $field->editFieldHTML('delivery_company','快递公司',$order) !!}
-				{!! $field->editFieldHTML('delivery_no','快递单号',$order) !!}
-			</div>
-			<hr>
-			@endif
 
 			@if($order->belongsToSupply->is_self==1)
 			<?php $products = $order->products()->with('belongsToSupply')->get()?>

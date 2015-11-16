@@ -248,56 +248,22 @@ class OrderService extends BasicService{
 		switch ($supply->is_self) {
 			case 0://非自有
 				$order->products()->detach();
-				if($order->is_deliver==1&&!empty($order->delivery_company)&&!empty($order->delivery_no)){
-					continue;
-				}
-				elseif($order->is_deliver==0){
-					$order->delivery_company='';
-					$order->delivery_no='';
-					continue;
-				}
-				else{
-					Log::info($order->oid.' delivery invalid: no='.$order->delivery_no.' company='.$order->delivery_company);
-					DB::rollback();
-					return 'deliveryInvalid';
-				}
 				break;
 			case 1://自有
 				$products = $order->products()->get();
-				if($order->is_deliver==1&&!empty($order->delivery_company)&&!empty($order->delivery_no)){
-					if(!$products->isEmpty()&&$products->count()==$order->amount){
-						foreach ($products as $product) {
-								if(!$productService->sendProduct($product->id,$order)){
-									DB::rollback();
-									return 'productInvalid';
-								}
-							}	
-					}
-					else{
-						return 'productInvalid';
-					}
-				}
-				elseif($order->is_deliver==0){
-					$order->delivery_company='';
-					$order->delivery_no='';
-					if(!$products->isEmpty()&&$products->count()==$order->amount){
-						foreach ($products as $product) {
-								if(!$productService->sendProduct($product->id,$order)){
-									DB::rollback();
-									return 'productInvalid';
-								}
-							}	
-					}
-					else{
-						return 'productInvalid';
-					}
-					continue;
+
+				if(!$products->isEmpty()&&$products->count()==$order->amount){
+					foreach ($products as $product) {
+							if(!$productService->sendProduct($product->id,$order)){
+								DB::rollback();
+								return 'productInvalid';
+							}
+						}	
 				}
 				else{
-					Log::info($order->oid.' delivery invalid: no='.$order->delivery_no.' company='.$order->delivery_company);
-					DB::rollback();
-					return 'deliveryInvalid';
+					return 'productInvalid';
 				}
+				
 				break;
 			default:
 				return false;
@@ -462,12 +428,6 @@ class OrderService extends BasicService{
 				if($class->belongsToSupply()->withTrashed()->first()->is_self!=1){
 					$class->products()->detach();
 				}
-				if($class->is_deliver!=1){
-					$class->delivery_no='';
-					$class->delivery_company='';
-					$class->save();
-				}
-
 			}
 			DB::commit();
 			return $class;

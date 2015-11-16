@@ -64,9 +64,6 @@ class OrderField extends FieldService {
 				$this->setFieldsBatch('edit',['textarea'=>'required|readonly|rows:2'],['address'],[2,3,-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','country','gid','gname','gmobile'],[0,1,2,3,-1],[3,4,5]);
 				$this->setFieldsBatch('edit',['textarea'=>'required|readonly|rows:2'],['address'],[0,1,2,3,-1],[3,4,5]);
-				$this->setFieldsBatch('edit',['text'=>'form'],['delivery_no','delivery_company'],[1],[0,1,3]);
-				$this->setFieldsBatch('edit',['text'=>'readonly'],['delivery_no','delivery_company'],[2,3],[0,1,3]);
-				$this->setFieldsBatch('edit',['text'=>'readonly'],['delivery_no','delivery_company'],[1,2,3],[2,4,5]);
 				$this->setFieldsBatch('edit',['date'=>'required|full|readonly'],['order_date'],[0,1,2,3,-1]);
 				$this->setFieldsBatch('edit',['number'=>'required'],['amount'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['number'=>'required|readonly'],['amount'],[2,3,-1],[0,1,2]);

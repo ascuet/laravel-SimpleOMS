@@ -184,10 +184,18 @@ use Queue;
 						if(method_exists(new $this->class, $method)){
 							$has = explode('_', $k,2)[1];
 							$obj=$obj->whereHas($method,function($q)use ($has,$opt,$k){
-								$q->whereIn($k,$opt[$k]);
+								if(is_array($opt[$k])){
+									$q->whereIn($k,$opt[$k]);									
+								}else{
+									$q->where($k,$opt[$k]);
+								}
 							});
 						}else{
-							isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->whereIn($k,$opt[$k]);						
+							if(is_array($opt[$k])){
+								$obj=$obj->whereIn($k,$opt[$k]);
+							}else{
+								$obj=$obj->where($k,$opt[$k]);
+							}
 						}
 							break;
 					case 'select':
