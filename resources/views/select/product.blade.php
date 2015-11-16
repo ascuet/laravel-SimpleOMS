@@ -4,7 +4,7 @@
 
 </div>
 <div class="row">
-	{!!$field->selectFieldHTML('belongsToSupply_name','库存名',is_null(old('belongsToSupply_name'))?'':old('belongsToSupply_name'))!!}
+	{!!$field->selectFieldHTML('house','库存名',is_null(old('house'))?'':old('house'))!!}
 
 </div>
 <div class="row">

@@ -15,7 +15,7 @@ class Product extends Model {
 	protected $statusName=['0'=>'在库','1'=>'禁用','out'=>'出库',''=>''];
 	protected $dates=['sent_at'];
 	protected $array=[
-		'belongsToSupply_name'=>[],
+		'house'=>[],
 		'pstatus'=>['0'=>'在库','1'=>'禁用'],
 	];
 	public function belongsToSupply(){
@@ -50,13 +50,12 @@ class Product extends Model {
 
 		if(empty($this->array[$name])){
 			$method = explode('_', $name)[0];
-			$fieldName = explode('_', $name)[1];
 			switch ($method) {
-				case 'belongsToSupply':
-					$list= \App\Supply::distinct()->lists($fieldName);
+				case 'house':
+					$list= \App\Supply::distinct()->get(['id','name']);
 					$rtn = array();
-					foreach ($list as $key => $value) {
-						$rtn[$value]=$value;
+					foreach ($list as $value) {
+						$rtn[$value->id]=$value->name;
 					}
 					return $rtn;
 					break;
