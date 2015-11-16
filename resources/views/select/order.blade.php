@@ -16,13 +16,13 @@
 {!!$field->selectFieldHTML('country','国家',is_null(old('country'))?'':old('country'))!!}
 </div>
 <div class="row">
-{!!$field->selectFieldHTML('order_date','订单时间',is_null(old('order_date'))?'':old('order_date'))!!}
-{!!$field->selectFieldHTML('go_date','出国日期',is_null(old('go_date'))?'':old('go_date'))!!}
+{!!$field->selectFieldHTML('order_date','订单时间',[old('order_date_start'),old('order_date_end')])!!}
+{!!$field->selectFieldHTML('go_date','出国日期',[old('go_date_start'),old('go_date_end')])!!}
 	
 </div>
 <div class="row">
-{!!$field->selectFieldHTML('back_date','回国日期',is_null(old('back_date'))?'':old('back_date'))!!}
-{!!$field->selectFieldHTML('send_date','发货日期',is_null(old('send_date'))?'':old('send_date'))!!}
+{!!$field->selectFieldHTML('back_date','回国日期',[old('back_date_start'),old('back_date_end')])!!}
+{!!$field->selectFieldHTML('send_date','发货日期',[old('send_date_start'),old('send_date_end')])!!}
 </div>
 <div class="row">
 {!!$field->selectFieldHTML('belongsToSupply_supply','供应商',is_null(old('belongsToSupply_supply'))?'':old('belongsToSupply_supply'))!!}
@@ -36,5 +36,5 @@
 </div>
 <div class="row">
 {!!$field->selectFieldHTML('status','订单状态',is_null(old('status'))?'':old('status'))!!}
-{!!$field->selectFieldHTML('modified_at','操作时间',is_null(old('modified_at'))?'':old('modified_at'))!!}	
+{!!$field->selectFieldHTML('modified_at','操作时间',[old('modified_at_start'),old('modified_at_end')])!!}	
 </div>

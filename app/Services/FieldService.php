@@ -202,11 +202,11 @@ class FieldService{
 	 * @param string $label
 	 * @return string
 	 */
-	public function selectFieldHTML($name,$label,$old=''){
+	public function selectFieldHTML($name,$label,$old=null){
 		$methodFields = $this->getFieldsByMethod('select',$this->currentRole,$this->currentStatus);
 		isset($methodFields[$name])&&$field = $methodFields[$name];
 		if(!isset($field))return '';
-
+		if(is_null($old))$old='';
 		$html='';
 		switch (key($field['type'])) {
 			case 'date':
@@ -215,10 +215,13 @@ class FieldService{
 				$dateCSS='datepicker';
 				in_array('full', $options)&&$dateFormat='yyyy-mm-dd hh:00';
 				in_array('full', $options)&&$dateCSS = 'datetimepicker';
+				if(!is_array($old))$old = [null,null];
+				$startDate = is_null($old[0])?'':$old[0];
+				$endDate = is_null($old[1])?'':$old[1];
 				$html='<div class="input-daterange input-group ">
-	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_start" data-date-format="'.$dateFormat.'" value="'.$old.'" />
+	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_start" data-date-format="'.$dateFormat.'" value="'.$startDate.'" />
 	    		<span class="input-group-addon">到</span>
-	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$old.'" />
+	    		<input type="text" class="input-sm form-control '.$dateCSS.'" name="'.$name.'_end" data-date-format="'.$dateFormat.'" value="'.$endDate.'" />
 				</div>';
 				$html = '<div class="col-sm-8">'.$html.'</div>';
 				$html='<label class=" col-sm-2 col-sm-offset-2" for="'.$name.'">'.$label.'</label>'.$html;
