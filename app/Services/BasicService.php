@@ -236,21 +236,21 @@ use Queue;
 							$has = explode('_',$k)[1];
 							if(!in_array('fuzzy', $options)){
 								$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
-									$q->where($has,$opt[$k]);
+									$q->where($has,trim($opt[$k]));
 								});
 							}
 							else{
 								$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
-									$q->where($has,'like','%'.$opt[$k].'%');
+									$q->where($has,'like','%'.trim($opt[$k]).'%');
 								});
 							}
 						}
 						else{
 							if(!in_array('fuzzy', $options)){
-								$obj = $obj->where($k,$opt[$k]);
+								$obj = $obj->where($k,trim($opt[$k]));
 							}
 							else{
-								$obj= $obj->where($k,'like','%'.$opt[$k].'%');
+								$obj= $obj->where($k,'like','%'.trim($opt[$k]).'%');
 
 							}
 						}
