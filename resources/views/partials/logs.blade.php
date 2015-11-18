@@ -1,4 +1,4 @@
-<?php $logs=$obj->hasManyLog()->where('object',str_singular($obj->getTable()))->latest('log_at')->with('belongsToUser')->get();?>
+<?php $logs=$obj->hasManyLog()->where('object',str_singular($obj->getTable()))->latest('log_at')->with('belongsToUser')->withTrashed()->get();?>
 
 <table class="table table-condensed table-hover">
 	<thead>
@@ -12,7 +12,7 @@
 		@foreach($logs as $log)
 			<tr>
 				<th scope="row">{{$log->log_at}}</th>
-				<td>{{$log->belongsToUser->uid}}</td>
+				<td>{{$log->belongsToUser->uid}}{{!is_null($log->belongsToUser->deleted_at)?'(已删除)':''}}</td>
 				<td>
 					<?php
 					$actions = $log->actions;
