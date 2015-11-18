@@ -52,7 +52,7 @@ class Product extends Model {
 			$method = explode('_', $name)[0];
 			switch ($method) {
 				case 'house':
-					$list= \App\Supply::distinct()->get(['id','name']);
+					$list= \App\Supply::distinct()->where('is_self',1)->get(['id','name']);
 					$rtn = array();
 					foreach ($list as $value) {
 						$rtn[$value->id]=$value->name;
