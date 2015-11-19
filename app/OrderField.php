@@ -59,8 +59,8 @@ class OrderField extends FieldService {
 				break;
 			case 'edit':
 				$this->setFieldsBatch('edit',['text'=>'required'],['oid','country','gid','gname','gmobile'],[0,1],[0,1,2]);
-				$this->setFieldsBatch('edit',['text'=>'required'],['country'],[2,3],[0,1]);
-				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['country'],[2,3],[2]);
+				$this->setFieldsBatch('edit',['text'=>'required'],['country'],[2,3],[0,2]);
+				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['country'],[2,3],[1]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['country'],[-1],[0,1,2]);
 				$this->setFieldsBatch('edit',['textarea'=>'required|rows:2'],['address'],[0,1],[0,1,2]);
 				$this->setFieldsBatch('edit',['text'=>'required|readonly'],['oid','gid','gname','gmobile'],[2,3,-1],[0,1,2]);
