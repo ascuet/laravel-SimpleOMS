@@ -22,8 +22,8 @@
 </thead>
 <tbody>
 	@foreach($data as $key=>$value)
-		<tr onclick="location.href='{{url('order/'.$value->id.'/edit')}}'" style="cursor:pointer">
-			<th onclick="event.stopPropagation()"><input type="checkbox" name="id[]" value="{{$value->id}}"></th>			
+		<tr onclick="Component.modules.rowAction(event)" data-location = "{{url('order/'.$value->id.'/edit')}}" style="cursor:pointer">
+			<th onclick="event.stopPropagation()" ><input type="checkbox" name="id[]" value="{{$value->id}}"></th>			
 			{!!$field->tableCell('is_important',$value)!!}
 			{!!$field->tableCell('gid',$value)!!}
 			{!!$field->tableCell('gname',$value)!!}
@@ -41,6 +41,6 @@
 			{!!$field->tableCell('source',$value)!!}
 			{!!$field->tableCell('status',$value)!!}
 			{!!$field->tableCell('modified_at',$value)!!}
-		</tr>
+		</tr>	
 	@endforeach
 </tbody>

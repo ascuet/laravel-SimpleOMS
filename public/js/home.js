@@ -237,6 +237,19 @@ Component.modules={
 		var $this=$(e.target);
 		$tbody = $this.parents('table').find('tbody');
 		$tbody.find('input[type="checkbox"]').prop('checked',$this.prop('checked'));
+	},
+	rowAction:function(e){
+		$this = $(e.target);
+		console.log($this);
+		if(window.getSelection){
+			var selector = window.getSelection();
+		}else{
+			var selector = document.selection.createRange();
+		}
+		if(selector.type!='Range'){
+			window.location.href=$this.parents('tr').data('location');
+		}
+
 	}
 
 };

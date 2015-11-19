@@ -9,7 +9,7 @@
 </thead>
 <tbody>
 	@foreach($data as $key=>$value)
-		<tr onclick="location.href='{{url('supply/'.$value->id.'/edit')}}'" style="cursor:pointer">
+		<tr onclick="Component.modules.rowAction(event)" data-location="{{url('supply/'.$value->id.'/edit')}}" style="cursor:pointer">
 			<th onclick="event.stopPropagation()"><input type="checkbox" name="id[]" value="{{$value->id}}"></th>
 			{!!$field->tableCell('name',$value)!!}
 			{!!$field->tableCell('slocation',$value)!!}
