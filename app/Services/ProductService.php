@@ -34,7 +34,7 @@ class ProductService extends BasicService{
 		DB::beginTransaction();
 		$product =$this->listOne($id);
 		//检查入库条件(出库)
-		if($product->pstatus==0||$product->pstatus==1){
+		if($product->pstatus=='0'||$product->pstatus=='1'){
 			DB::rollback();
 			Log::info($product->pid.' already in');
 			return 'productInvalid';
