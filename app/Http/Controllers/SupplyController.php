@@ -36,7 +36,7 @@ class SupplyController extends Controller {
 			$arrRequest['supply']=$arrRequest['belongsToSupply_supply'];
 			unset($arrRequest['belongsToSupply_supply']);
 		}
-		$data['data']=$this->service->lists($arrRequest,'',20);
+		$data['data']=$this->service->lists($arrRequest);
 		return view('partials.select-modal')->with($data);
 
 	}
