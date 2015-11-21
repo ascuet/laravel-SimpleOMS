@@ -176,90 +176,126 @@ use Queue;
 		if(!empty($opt)){
 			$fields = $this->fieldService->getFieldsByMethod('select',$role,$this->fieldService->currentStatus());
 			foreach ($fields as $k => $v) {
-				switch (key($v['type'])) {
-					case 'checkbox':
-						if(!isset($opt[$k])) continue;
-						if(isset($opt[$k])&&empty($opt[$k])) continue;
-						$method=explode('_',$k)[0];
-						if(method_exists(new $this->class, $method)){
-							$has = explode('_', $k,2)[1];
-							$obj=$obj->whereHas($method,function($q)use ($has,$opt,$k){
-								if(is_array($opt[$k])){
-									$q->whereIn($k,$opt[$k]);									
-								}else{
-									$q->where($k,$opt[$k]);
-								}
-							});
-						}else{
-							if(is_array($opt[$k])){
-								$obj=$obj->whereIn($k,$opt[$k]);
-							}else{
-								$obj=$obj->where($k,$opt[$k]);
-							}
-						}
-							break;
-					case 'select':
-						if(!isset($opt[$k])) continue;
-						if(isset($opt[$k])&&$opt[$k]=='') continue;
-						$method=explode('_',$k)[0];
-						if(method_exists(new $this->class, $method)){
-							$has = explode('_', $k,2)[1];
-							$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
-								$q->where($has,$opt[$k]);
-							});
-						}else{
-							isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->where($k,$opt[$k]);							
-						}
-					break;
-					case 'date':
-						$options  = explode('|',current($v['type']));
-						if(in_array('fuzzy', $options)){
-							if(isset($opt[$k.'_start'])&&!empty($opt[$k.'_start'])){
-								$obj = $obj->where($k,'>=',$opt[$k.'_start']);
-							}
-							
-							if(isset($opt[$k.'_end'])&&!empty($opt[$k.'_end'])){
-								$obj = $obj->where($k,'<',$opt[$k.'_end']);
-							}
-							
-						}
-						else{
-							$obj = $obj->where($k,$opt[$k]);
-						}
-						break;
-					default:
-						if(!isset($opt[$k])) continue;
-						if(isset($opt[$k])&&$opt[$k]=='') continue;
-						$options  = explode('|',current($v['type']));
-						$method=explode('_',$k)[0];
-						if(method_exists(new $this->class, $method)){
-							$has = explode('_',$k)[1];
-							if(!in_array('fuzzy', $options)){
-								$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
-									$q->where($has,trim($opt[$k]));
-								});
-							}
-							else{
-								$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
-									$q->where($has,'like','%'.trim($opt[$k]).'%');
-								});
-							}
-						}
-						else{
-							if(!in_array('fuzzy', $options)){
-								$obj = $obj->where($k,trim($opt[$k]));
-							}
-							else{
-								$obj= $obj->where($k,'like','%'.trim($opt[$k]).'%');
-
-							}
-						}
-						break;
-				}
+				$fieldMethod = key($v['type']).'FieldSelect';
+				$options  = explode('|',current($v['type']));
+				$obj = $this->{$fieldMethod}($obj,$k,$opt,$options);
 			}
 		}
 		return $obj;
 	}
+	/**
+	 * select query of checkbox field
+	 * @param object $obj
+	 * @param string $k
+	 * @param array $opt
+	 * @return Object
+	 */
+	protected function checkboxFieldSelect($obj,$k,$opt,$options=null){
+		if(!isset($opt[$k])) return $obj;
+		if(isset($opt[$k])&&empty($opt[$k])) return $obj;
+		$method=explode('_',$k)[0];
+		if(method_exists(new $this->class, $method)){
+			$has = explode('_', $k,2)[1];
+			$obj=$obj->whereHas($method,function($q)use ($has,$opt,$k){
+				if(is_array($opt[$k])){
+					$q->whereIn($k,$opt[$k]);									
+				}else{
+					$q->where($k,$opt[$k]);
+				}
+			});
+		}else{
+			if(is_array($opt[$k])){
+				$obj=$obj->whereIn($k,$opt[$k]);
+			}else{
+				$obj=$obj->where($k,$opt[$k]);
+			}
+		}
+		return $obj;
+	}
+
+	/**
+	 * select query of select field
+	 * @param object $obj
+	 * @param string $k
+	 * @param array $opt
+	 * @return Object
+	 */
+	protected function selectFieldSelect($obj,$k,$opt,$options=null){
+		if(!isset($opt[$k])) return $obj;
+		if(isset($opt[$k])&&$opt[$k]=='') return $obj;
+		$method=explode('_',$k)[0];
+		if(method_exists(new $this->class, $method)){
+			$has = explode('_', $k,2)[1];
+			$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
+				$q->where($has,$opt[$k]);
+			});
+		}else{
+			isset($opt[$k])&&!empty($opt[$k])&&$obj = $obj->where($k,$opt[$k]);							
+		}
+		return $obj;
+	}
+
+	/**
+	 * select query of date field
+	 * @param object $obj
+	 * @param string $k
+	 * @param array $opt
+	 * @return Object
+	 */
+	protected function dateFieldSelect($obj,$k,$opt,$options=null){
+		if(in_array('fuzzy', $options)){
+			if(isset($opt[$k.'_start'])&&!empty($opt[$k.'_start'])){
+				$obj = $obj->where($k,'>=',$opt[$k.'_start']);
+			}
+			
+			if(isset($opt[$k.'_end'])&&!empty($opt[$k.'_end'])){
+				$obj = $obj->where($k,'<',$opt[$k.'_end']);
+			}
+			
+		}
+		else{
+			$obj = $obj->where($k,$opt[$k]);
+		}
+		return $obj;
+	}
+
+	/**
+	 * select query of text field
+	 * @param object $obj
+	 * @param string $k
+	 * @param array $opt
+	 * @return Object
+	 */
+	protected function textFieldSelect($obj,$k,$opt,$options = null){
+		if(!isset($opt[$k])) return $obj;
+		if(isset($opt[$k])&&$opt[$k]=='') return $obj;
+		$method=explode('_',$k)[0];
+		if(method_exists(new $this->class, $method)){
+			$has = explode('_',$k)[1];
+			if(!in_array('fuzzy', $options)){
+				$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
+					$q->where($has,trim($opt[$k]));
+				});
+			}
+			else{
+				$obj = $obj->whereHas($method,function($q)use($has,$opt,$k){
+					$q->where($has,'like','%'.trim($opt[$k]).'%');
+				});
+			}
+		}
+		else{
+			if(!in_array('fuzzy', $options)){
+				$obj = $obj->where($k,trim($opt[$k]));
+			}
+			else{
+				$obj= $obj->where($k,'like','%'.trim($opt[$k]).'%');
+
+			}
+		}
+		return $obj;
+	}
+
+
 	/**
 	 * fetch one record by options
 	 * @param array $opt

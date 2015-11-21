@@ -74,7 +74,7 @@ class ProductField extends FieldService {
 	public function currentStatus($status=null){
 		if(is_null($status))return $this->currentStatus;
 		if(!in_array($status, array_filter($this->model->statusType()))){
-			$this->currentStatus='out';
+			$this->currentStatus=$status===''?$status:'out';
 		}
 		else{
 			$this->currentStatus=$status===''?$status:intval($status);
