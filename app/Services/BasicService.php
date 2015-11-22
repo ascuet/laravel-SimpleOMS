@@ -295,7 +295,9 @@ use Queue;
 		return $obj;
 	}
 
-
+	protected function hiddenFieldSelect($obj,$k,$opt,$options=null){
+		return $this->textFieldSelect($obj,$k,$opt,$options);
+	}
 	/**
 	 * fetch one record by options
 	 * @param array $opt
