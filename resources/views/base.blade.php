@@ -5,7 +5,7 @@
 
 @section('css')
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
-	<link href="{{ asset('/css/bootstrap-datetimepicker.css') }}" rel="stylesheet">	
+	<link href="{{ asset('/css/jquery.datetimepicker.css') }}" rel="stylesheet">	
 @stop
 
 @section('nav')

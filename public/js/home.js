@@ -256,18 +256,14 @@ Component.modules={
 $(document).ready(function(){
 	Component.events.init();
 	$('[data-event="calculate_days"]').trigger('change');
+	$.datetimepicker.setLocale('zh');
 	$('.datetimepicker').datetimepicker({
-		language:'zh-CN',
-		autoclose:1,
-		todayBtn:1,
-		todayHighlight:1,
-		minView:1,
+		format:'Y-m-d H:i:00',
+		scrollInput:false,
 		});
 	$('.datepicker').datetimepicker({
-		language:'zh-CN',
-		autoclose:1,
-		todayBtn:1,
-		todayHighlight:1,
-		minView:2,
+		format:'Y-m-d',
+		timepicker:false,
+		scrollInput:false,
 	});
 });

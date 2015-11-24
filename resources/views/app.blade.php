@@ -49,8 +49,7 @@
 	<!-- Scripts -->
 	<script src="{{ asset('/js/jquery-1.11.2.min.js') }}"></script>
 	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
-	<script src="{{ asset('/js/bootstrap-datetimepicker.js') }}"></script>
-	<script src="{{ asset('/js/bootstrap-datetimepicker.zh-CN.js') }}"></script>
+	<script src="{{ asset('/js/jquery.datetimepicker.full.js') }}"></script>
 	@yield('js')
 	
 </body>
