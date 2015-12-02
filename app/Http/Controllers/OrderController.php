@@ -140,7 +140,7 @@ class OrderController extends Controller {
 		$this->service->unbindLog($order,$product);
 		DB::commit();
 		$products = $order->products()->with('belongsToSupply')->get();
-		return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['unbindProduct']]);
+		return view('partials.productCombinition')->with(['products'=>$products,'order'=>$order,'actions'=>['OrderController@postUnbind']]);
 		
 
 	}

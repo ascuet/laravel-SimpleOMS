@@ -189,6 +189,7 @@ class OrderService extends BasicService{
 		if(!$products->isEmpty()){
 			foreach ($products as $product) {
 				$productService->productEntry($product->id,$order,'订单回退');
+				$order->products()->detach($product->id);
 			}
 		}
 		DB::commit();
