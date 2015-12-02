@@ -189,7 +189,6 @@ class OrderService extends BasicService{
 		if(!$products->isEmpty()){
 			foreach ($products as $product) {
 				$productService->productEntry($product->id,$order,'订单回退');
-				$order->products()->detach($product->id);
 			}
 		}
 		DB::commit();
@@ -466,6 +465,24 @@ class OrderService extends BasicService{
 		}
 		return $class::where('id',$id)->delete();
 
+	}
+
+	/**
+	 * append update logs 
+	 * @param Object $obj
+	 * @return Object|bool
+	 */
+	public function updateLogs($obj){
+		$dirty = $obj->getDirty();
+		if(empty($dirty)){
+			return;
+		}
+		if(array_key_exists('house', $dirty)){
+			$obj->products()->detach();
+		}
+		$tpl = $this->logAction['update'];
+		$tpl['dirty']=$dirty;
+		$this->appendLog($obj,$tpl,'update');
 	}
 	/**
 	 * 回退订单操作记录

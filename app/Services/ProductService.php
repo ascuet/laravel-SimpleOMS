@@ -181,6 +181,7 @@ class ProductService extends BasicService{
 		}
 		$product->pstatus= $order->oid;
 		$product->sent_at=Carbon::now();
+		$product->orders()->updateExistingPivot($order->id,['return_at'=>NULL]);
 		$this->sendLog($product,$order);
 		return $product->save();
 
